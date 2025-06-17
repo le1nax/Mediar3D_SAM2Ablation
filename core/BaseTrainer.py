@@ -110,7 +110,7 @@ class BaseTrainer:
         if self.best_weights is not None:
             self.model.load_state_dict(self.best_weights)
 
-    def _epoch_phase(self, phase):
+    def _epoch_phase(self, phase): ################ OVERRIDDEN BY MEDIAR TRAINER
         """Learning process for 1 Epoch (for different phases).
 
         Args:

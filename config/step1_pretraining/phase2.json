@@ -46,7 +46,7 @@
         "seed": 19940817
     },
     "pred_setups":{
-        "input_path":"/home/gihun/MEDIAR/data/Official/Tuning/images",
+        "input_path":"/home/repos/MEDIAR/data/Official/Tuning/images",
         "output_path": "./mediar_pretrain_phase2",
         "make_submission": false
     },

@@ -154,6 +154,61 @@ class Trainer(BaseTrainer):
             outputs = self.model(images)
 
         return outputs
+    
+    def _inference3D(self, img_data):
+        """Conduct model prediction"""
+
+        img_data = img_data.to(self.device)
+        img_base = img_data
+        #Lz, Ly, Lx = shape[:-1]
+        ## @todo Anisotropy 
+        # if anisotropy is not None and anisotropy != 1.0:
+        #     models_logger.info(f"resizing 3D image with anisotropy={anisotropy}")
+        #     x = transforms.resize_image(x.transpose(1,0,2,3),
+        #                             Ly=int(Lz*anisotropy), 
+        #                             Lx=int(Lx)).transpose(1,0,2,3)
+        outputs_base = self.run_3D(img_base)
+        cellprob = outputs_base[-1]
+        dP = outputs_base[:-1]
+
+        pred_mask = torch.cat([dP, cellprob.unsqueeze(0)], dim=0)
+
+        pred_mask = pred_mask.squeeze() ##@todo cpu as in prediction?
+
+        return pred_mask
+    
+    def run_3D(self, imgs): ###@todo channel adapt, batch size adapt
+        
+        #permute images  3012 3102 3201 (put 3 in first becazse window_inference wants NCHW)
+        sstr = ["YX", "ZY", "ZX"]
+        pm = [(3, 0, 1, 2), (3, 1, 0, 2), (3, 2, 0, 1)] 
+        ipm = [(0, 1, 2), (1, 0, 2), (1, 2, 0)]
+        cp = [(1, 2), (0, 2), (0, 1)]
+        cpy = [(0, 1), (0, 1), (0, 1)]
+        shape = imgs.shape[:-1]
+        yf = torch.zeros((4, *shape), dtype=torch.float32, device=self.device)
+        for p in range(3):
+            xsl = imgs.permute(pm[p]) ##images has now CZHW order
+            # per image
+            print("running %s: %d planes of size (%d, %d)" %
+                            (sstr[p], shape[pm[p][1]], shape[pm[p][2]], shape[pm[p][3]]))
+            
+            outputs = []
+            for z in range(shape[pm[p][1]]):  # iterate over Z
+                slice_img = xsl[:, z, :, :].unsqueeze(0)  # shape (1, C, H, W) 
+                out = self._window_inference(slice_img) #shape (3, HW)
+                outputs.append(out.squeeze()) #remove 1st batch dim
+
+            # Stack outputs along Z
+            y = torch.stack(outputs, dim=1)  #shape(3, Z, H, W)
+
+            y_p = y[-1].permute(ipm[p])
+            yf[-1] += y_p
+            for j in range(2):
+                yf[cp[p][j]] += y[cpy[p][j]].permute(ipm[p])
+            y = None; del y
+    
+        return yf
 
     def _post_process(self, outputs, labels=None):
         """Predict cell instances using the gradient tracking"""

@@ -12,6 +12,37 @@ from numba import jit
 
 __all__ = ["evaluate_f1_score_cellseg", "evaluate_f1_score"]
 
+def evaluate_f1_score_cellseg_edited(gt_mask, pred_mask, threshold=0.5):
+    """
+    Computes IoU, Precision, Recall, and F1-score for 3D cell segmentation masks.
+
+    Parameters:
+        gt_mask (numpy.ndarray): 3D ground truth mask (binary or labels)
+        pred_mask (numpy.ndarray): 3D predicted mask (float or binary)
+        threshold (float): Threshold to binarize the predicted mask (if not already binary)
+
+    Returns:
+        tuple: (iou, precision, recall, f1_score)
+    """
+    if gt_mask.shape != pred_mask.shape:
+        raise ValueError("Shape mismatch: ground truth and predicted masks must have the same shape.")
+
+    # Ensure masks are binary
+    pred_bin = (pred_mask >= threshold).astype(np.uint8)
+    gt_bin = (gt_mask > 0).astype(np.uint8)
+
+    intersection = np.logical_and(pred_bin, gt_bin).sum()
+    union = np.logical_or(pred_bin, gt_bin).sum()
+    pred_sum = pred_bin.sum()
+    gt_sum = gt_bin.sum()
+
+    iou = intersection / union if union != 0 else 1.0
+    precision = intersection / pred_sum if pred_sum != 0 else 1.0
+    recall = intersection / gt_sum if gt_sum != 0 else 1.0
+    f1_score = (2 * precision * recall) / (precision + recall) if (precision + recall) != 0 else 0.0
+
+    return iou, precision, recall, f1_score
+
 
 def evaluate_f1_score_cellseg(masks_true, masks_pred, threshold=0.5):
     """
@@ -95,19 +126,36 @@ def evaluate_f1_score(tp, fp, fn):
 
 
 def _remove_boundary_cells(mask):
-    """Remove cells on the boundary from the mask"""
+    """Remove cells on the boundary from a 2D or 3D mask."""
+    
+    if mask.ndim == 2:
+        W, H = mask.shape
+        bd = np.ones((W, H), dtype=bool)
+        bd[2:W-2, 2:H-2] = 0
+        bd_cells = np.unique(mask * bd)
+        
+    elif mask.ndim == 3:
+        D, W, H = mask.shape
+        bd = np.zeros((D, W, H), dtype=bool)
+        
+        # Set boundary faces to True
+        bd[0, :, :] = True
+        bd[-1, :, :] = True
+        bd[:, 0, :] = True
+        bd[:, -1, :] = True
+        bd[:, :, 0] = True
+        bd[:, :, -1] = True
+        
+        bd_cells = np.unique(mask[bd])
+        
+    else:
+        raise ValueError("Only 2D or 3D masks are supported.")
 
-    # Identify boundary cells
-    W, H = mask.shape
-    bd = np.ones((W, H))
-    bd[2 : W - 2, 2 : H - 2] = 0
-    bd_cells = np.unique(mask * bd)
-
-    # Remove cells on the boundary
-    for i in bd_cells[1:]:
+    # Remove boundary cells
+    for i in bd_cells[bd_cells != 0]:
         mask[mask == i] = 0
 
-    # Allocate labels as sequential manner
+    # Relabel sequentially
     new_label, _, _ = segmentation.relabel_sequential(mask)
 
     return new_label
@@ -142,7 +190,7 @@ def _get_true_positive(iou, threshold=0.5):
     num_matched = min(iou.shape[0], iou.shape[1])
 
     # Find optimal matching by using IoU as tie-breaker
-    costs = -(iou >= threshold).astype(np.float) - iou / (2 * num_matched)
+    costs = -(iou >= threshold).astype(float) - iou / (2 * num_matched)
     matched_gt_label, matched_pred_label = linear_sum_assignment(costs)
 
     # Consider as the same instance only if the IoU is above the threshold

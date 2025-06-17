@@ -42,7 +42,7 @@ from torch.nn.functional import grid_sample
 import numpy as np
 import fastremap
 
-from skimage import morphology
+from skimage import morphology, measure
 from scipy.ndimage import mean, find_objects
 from scipy.ndimage.filters import maximum_filter1d
 
@@ -131,7 +131,11 @@ def compute_masks(
             shape = resize if resize is not None else cellprob.shape
             mask = np.zeros(shape, np.uint16)
             p = np.zeros((len(shape), *shape), np.uint16)
-
+    else:  # nothing to compute, just make it compatible
+        shape = cellprob.shape
+        mask = np.zeros(cellprob.shape, "uint16")
+        return mask, None
+        
     return mask, p
 
 
@@ -233,7 +237,7 @@ def masks_to_flows_gpu(masks, device=None):
 
 def masks_to_flows(masks, use_gpu=False, device=None):
     if masks.max() == 0 or (masks != 0).sum() == 1:
-        # dynamics_logger.warning('empty masks!')
+        # print('empty masks!')
         return np.zeros((2, *masks.shape), "float32")
 
     if use_gpu:
@@ -427,3 +431,303 @@ def get_masks(p, iscell=None, rpad=20):
     fastremap.renumber(M0, in_place=True)  # convenient to guarantee non-skipped labels
     M0 = np.reshape(M0, shape0)
     return M0
+
+def steps_interp3D(dP, inds, niter, device=torch.device("cpu")):
+    """ Run dynamics of pixels to recover masks in 2D/3D, with interpolation between pixel values.
+
+    Euler integration of dynamics dP for niter steps.
+
+    Args:
+        p (numpy.ndarray): Array of shape (n_points, 2 or 3) representing the initial pixel locations.
+        dP (numpy.ndarray): Array of shape (2, Ly, Lx) or (3, Lz, Ly, Lx) representing the flow field.
+        niter (int): Number of iterations to perform.
+        device (torch.device, optional): Device to use for computation. Defaults to None.
+
+    Returns:
+        numpy.ndarray: Array of shape (n_points, 2) or (n_points, 3) representing the final pixel locations.
+
+    Raises:
+        None
+
+    """
+    
+    shape = dP.shape[1:]
+    ndim = len(shape)
+    
+    pt = torch.zeros((*[1]*ndim, len(inds[0]), ndim), dtype=torch.float32, device=device)
+    im = torch.zeros((1, ndim, *shape), dtype=torch.float32, device=device)
+    # Y and X dimensions, flipped X-1, Y-1
+    # pt is [1 1 1 3 n_points]
+    for n in range(ndim):
+        if ndim==3:
+            pt[0, 0, 0, :, ndim - n - 1] = torch.from_numpy(inds[n]).to(device, dtype=torch.float32)
+        else:
+            pt[0, 0, :, ndim - n - 1] = torch.from_numpy(inds[n]).to(device, dtype=torch.float32)
+        im[0, ndim - n - 1] = torch.from_numpy(dP[n]).to(device, dtype=torch.float32)
+    shape = np.array(shape)[::-1].astype("float") - 1  
+    
+    # normalize pt between  0 and  1, normalize the flow
+    for k in range(ndim):
+        im[:, k] *= 2. / shape[k]
+        pt[..., k] /= shape[k]
+
+    # normalize to between -1 and 1
+    pt *= 2 
+    pt -= 1
+    
+    # dynamics
+    for t in range(niter):
+        dPt = torch.nn.functional.grid_sample(im, pt, align_corners=False)
+        for k in range(ndim):  #clamp the final pixel locations
+            pt[..., k] = torch.clamp(pt[..., k] + dPt[:, k], -1., 1.)
+
+    #undo the normalization from before, reverse order of operations
+    pt += 1 
+    pt *= 0.5
+    for k in range(ndim):
+        pt[..., k] *= shape[k]
+
+    if ndim==3:
+        pt = pt[..., [2, 1, 0]].squeeze()
+        pt = pt.unsqueeze(0) if pt.ndim==1 else pt 
+        return pt.T
+    else:
+        pt = pt[..., [1, 0]].squeeze()
+        pt = pt.unsqueeze(0) if pt.ndim==1 else pt
+        return pt.T
+
+def follow_flows3D(dP, inds, niter=200, device=torch.device("cpu")):
+    """ Run dynamics to recover masks in 2D or 3D.
+
+    Pixels are represented as a meshgrid. Only pixels with non-zero cell-probability
+    are used (as defined by inds).
+
+    Args:
+        dP (np.ndarray): Flows [axis x Ly x Lx] or [axis x Lz x Ly x Lx].
+        mask (np.ndarray, optional): Pixel mask to seed masks. Useful when flows have low magnitudes.
+        niter (int, optional): Number of iterations of dynamics to run. Default is 200.
+        interp (bool, optional): Interpolate during 2D dynamics (not available in 3D). Default is True.
+        device (torch.device, optional): Device to use for computation. Default is None.
+
+    Returns:
+        A tuple containing (p, inds): p (np.ndarray): Final locations of each pixel after dynamics; [axis x Ly x Lx] or [axis x Lz x Ly x Lx]; 
+        inds (np.ndarray): Indices of pixels used for dynamics; [axis x Ly x Lx] or [axis x Lz x Ly x Lx].
+    """
+    shape = np.array(dP.shape[1:]).astype(np.int32)
+    ndim = len(inds)
+    
+    p = steps_interp3D(dP, inds, niter, device=device)
+        
+    return p
+
+def compute_masks3D(dP, cellprob, p=None, niter=200, cellprob_threshold=0.0,
+                  flow_threshold=0.4, do_3D=False, min_size=-1,
+                  max_size_fraction=0.4, device=torch.device("cpu")):
+    """Compute masks using dynamics from dP and cellprob.
+
+    Args:
+        dP (numpy.ndarray): The dynamics flow field array.
+        cellprob (numpy.ndarray): The cell probability array.
+        p (numpy.ndarray, optional): The pixels on which to run dynamics. Defaults to None
+        niter (int, optional): The number of iterations for mask computation. Defaults to 200.
+        cellprob_threshold (float, optional): The threshold for cell probability. Defaults to 0.0.
+        flow_threshold (float, optional): The threshold for quality control metrics. Defaults to 0.4.
+        interp (bool, optional): Whether to interpolate during dynamics computation. Defaults to True.
+        do_3D (bool, optional): Whether to perform mask computation in 3D. Defaults to False.
+        min_size (int, optional): The minimum size of the masks. Defaults to 15.
+        max_size_fraction (float, optional): Masks larger than max_size_fraction of
+            total image size are removed. Default is 0.4.
+        device (torch.device, optional): The device to use for computation. Defaults to torch.device("cpu").
+
+    Returns:
+        tuple: A tuple containing the computed masks and the final pixel locations.
+    """
+    
+    if (cellprob > cellprob_threshold).sum():  #mask at this point is a cell cluster binary map, not labels
+        inds = np.nonzero(cellprob > cellprob_threshold)
+        if len(inds[0]) == 0:
+            print("No cell pixels found.")
+            shape = cellprob.shape
+            mask = np.zeros(shape, "uint16")
+            return mask
+
+        p_final = follow_flows3D(dP * (cellprob > cellprob_threshold) / 5., 
+                               inds=inds, niter=niter, 
+                                device=device)
+        if not torch.is_tensor(p_final):
+            p_final = torch.from_numpy(p_final).to(device, dtype=torch.int)
+        else:
+            p_final = p_final.int()
+        # calculate masks
+        
+        mask = get_masks_torch(p_final, inds, dP.shape[1:], 
+                               max_size_fraction=max_size_fraction)
+        del p_final
+        # flow thresholding factored out of get_masks
+        if not do_3D:
+            if mask.max() > 0 and flow_threshold is not None and flow_threshold > 0:
+                # make sure labels are unique at output of get_masks
+                mask = remove_bad_flow_masks(mask, dP, threshold=flow_threshold,
+                                             device=device)
+
+        if mask.max() < 2**16 and mask.dtype != "uint16":
+            mask = mask.astype("uint16")
+
+    else:  # nothing to compute, just make it compatible
+        print("No cell pixels found.")
+        shape = cellprob.shape
+        mask = np.zeros(cellprob.shape, "uint16")
+        return mask
+    
+    if min_size > 0:
+        mask = fill_holes_and_remove_small_masks(mask, min_size=min_size)
+
+    if mask.dtype == np.uint32:
+        print(
+            "more than 65535 masks in image, masks returned as np.uint32")
+
+    return mask
+
+def fill_holes_and_remove_small_masks(pred_mask):
+    pred_mask = pred_mask > 0.5
+    pred_mask = morphology.remove_small_holes(pred_mask, connectivity=1)
+    pred_mask = morphology.remove_small_objects(pred_mask, 16)
+    pred_mask = measure.label(pred_mask)
+    return pred_mask
+    
+def get_masks_torch(pt, inds, shape0, rpad=20, max_size_fraction=0.4):
+    """Create masks using pixel convergence after running dynamics.
+
+    Makes a histogram of final pixel locations p, initializes masks 
+    at peaks of histogram and extends the masks from the peaks so that
+    they include all pixels with more than 2 final pixels p. Discards 
+    masks with flow errors greater than the threshold. 
+
+    Parameters:
+        p (float32, 3D or 4D array): Final locations of each pixel after dynamics,
+            size [axis x Ly x Lx] or [axis x Lz x Ly x Lx].
+        iscell (bool, 2D or 3D array): If iscell is not None, set pixels that are 
+            iscell False to stay in their original location.
+        rpad (int, optional): Histogram edge padding. Default is 20.
+        max_size_fraction (float, optional): Masks larger than max_size_fraction of
+            total image size are removed. Default is 0.4.
+
+    Returns:
+        M0 (int, 2D or 3D array): Masks with inconsistent flow masks removed, 
+            0=NO masks; 1,2,...=mask labels, size [Ly x Lx] or [Lz x Ly x Lx].
+    """
+    
+    ndim = len(shape0)
+    device = pt.device
+    
+    rpad = 20
+    pt += rpad
+    pt = torch.clamp(pt, min=0)
+    for i in range(len(pt)):
+        pt[i] = torch.clamp(pt[i], max=shape0[i]+rpad-1)
+
+    # # add extra padding to make divisible by 5
+    # shape = tuple((np.ceil((shape0 + 2*rpad)/5) * 5).astype(int))
+    shape = tuple(np.array(shape0) + 2*rpad)
+
+    # sparse coo torch
+    coo = torch.sparse_coo_tensor(pt, torch.ones(pt.shape[1], device=pt.device, dtype=torch.int), 
+                                shape)
+    h1 = coo.to_dense()
+    del coo
+
+    hmax1 = max_pool_nd(h1.unsqueeze(0), kernel_size=5)
+    hmax1 = hmax1.squeeze()
+    seeds1 = torch.nonzero((h1 - hmax1 > -1e-6) * (h1 > 10))
+    del hmax1
+    if len(seeds1) == 0:
+        print("no seeds found in get_masks_torch - no masks found.")
+        return np.zeros(shape0, dtype="uint16")
+    
+    npts = h1[tuple(seeds1.T)]
+    isort1 = npts.argsort()
+    seeds1 = seeds1[isort1]
+
+    n_seeds = len(seeds1)
+    h_slc = torch.zeros((n_seeds, *[11]*ndim), device=seeds1.device)
+    for k in range(n_seeds):
+        slc = tuple([slice(seeds1[k][j]-5, seeds1[k][j]+6) for j in range(ndim)])
+        h_slc[k] = h1[slc]
+    del h1
+    seed_masks = torch.zeros((n_seeds, *[11]*ndim), device=seeds1.device)
+    if ndim==2:
+        seed_masks[:,5,5] = 1
+    else:
+        seed_masks[:,5,5,5] = 1
+    
+    for iter in range(5):
+        # extend
+        seed_masks = max_pool_nd(seed_masks, kernel_size=3)
+        seed_masks *= h_slc > 2
+    del h_slc 
+    seeds_new = [tuple((torch.nonzero(seed_masks[k]) + seeds1[k] - 5).T) 
+            for k in range(n_seeds)]
+    del seed_masks 
+    
+    dtype = torch.int32 if n_seeds < 2**16 else torch.int64
+    M1 = torch.zeros(shape, dtype=dtype, device=device)
+    for k in range(n_seeds):
+        M1[seeds_new[k]] = 1 + k
+
+    M1 = M1[tuple(pt)]
+    M1 = M1.cpu().numpy()
+
+    dtype = "uint16" if n_seeds < 2**16 else "uint32"
+    M0 = np.zeros(shape0, dtype=dtype)
+    M0[inds] = M1
+        
+    # remove big masks
+    uniq, counts = fastremap.unique(M0, return_counts=True)
+    big = np.prod(shape0) * max_size_fraction
+    bigc = uniq[counts > big]
+    if len(bigc) > 0 and (len(bigc) > 1 or bigc[0] != 0):
+        M0 = fastremap.mask(M0, bigc)
+    fastremap.renumber(M0, in_place=True)  #convenient to guarantee non-skipped labels
+    M0 = M0.reshape(tuple(shape0))
+    
+    #print(f"mem used: {torch.cuda.memory_allocated()/1e9:.3f} gb, max mem used: {torch.cuda.max_memory_allocated()/1e9:.3f} gb")
+    return M0
+
+def max_pool_nd(h, kernel_size=5):
+    """ memory efficient max_pool in 2d or 3d """
+    ndim = h.ndim - 1
+    hmax = max_pool1d(h, kernel_size=kernel_size, axis=1)
+    hmax2 = max_pool1d(hmax, kernel_size=kernel_size, axis=2)
+    if ndim==2:
+        del hmax
+        return hmax2
+    else:
+        hmax = max_pool1d(hmax2, kernel_size=kernel_size, axis=3, out=hmax)
+        del hmax2 
+        return hmax
+
+def max_pool1d(h, kernel_size=5, axis=1, out=None):
+    """ memory efficient max_pool thanks to Mark Kittisopikul 
+    
+    for stride=1, padding=kernel_size//2, requires odd kernel_size >= 3
+
+    """
+    if out is None:
+        out = h.clone()
+    else:
+        out.copy_(h)
+
+    nd = h.shape[axis]    
+    k0 = kernel_size // 2
+    for d in range(-k0, k0+1):
+        if axis==1:
+            mv = out[:, max(-d,0):min(nd-d,nd)]
+            hv = h[:, max(d,0):min(nd+d,nd)]
+        elif axis==2:
+            mv = out[:, :, max(-d,0):min(nd-d,nd)]
+            hv = h[:,  :, max(d,0):min(nd+d,nd)]
+        elif axis==3:
+            mv = out[:, :, :, max(-d,0):min(nd-d,nd)]
+            hv = h[:, :,  :, max(d,0):min(nd+d,nd)]
+        torch.maximum(mv, hv, out=mv)
+    return out

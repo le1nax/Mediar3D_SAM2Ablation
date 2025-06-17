@@ -8,6 +8,7 @@ from zipfile import ZipFile
 from pytz import timezone
 
 from train_tools.data_utils.transforms import get_pred_transforms
+from train_tools.data_utils.transforms import get_pred_transforms_3D
 
 
 class BasePredictor:
@@ -47,9 +48,12 @@ class BasePredictor:
             img_data = img_data.to(self.device)
 
             start = time.time()
-
-            pred_mask = self._inference(img_data)
-            pred_mask = self._post_process(pred_mask.squeeze(0).cpu().numpy())
+            if not self.do_3D:
+                pred_mask = self._inference(img_data)
+                pred_mask = self._post_process(pred_mask.squeeze(0).cpu().numpy())
+            else:
+                pred_mask = self._inference3D(img_data)
+                pred_mask = self._post_process3D(pred_mask.squeeze(0).cpu().numpy())
             self.write_pred_mask(
                 pred_mask, self.output_path, img_name, self.make_submission
             )
@@ -95,10 +99,13 @@ class BasePredictor:
         tif.imwrite(file_path, pred_mask, compression="zlib")
 
     def _setups(self):
-        self.pred_transforms = get_pred_transforms()
+        if hasattr(self, "do_3D") and self.do_3D is not None:
+            self.pred_transforms = get_pred_transforms_3D()
+        else:
+            self.pred_transforms = get_pred_transforms()
         os.makedirs(self.output_path, exist_ok=True)
 
-        now = datetime.now(timezone("Asia/Seoul"))
+        now = datetime.now(timezone("Europe/Berlin"))
         dt_string = now.strftime("%m%d_%H%M")
         self.exp_name = (
             self.exp_name + dt_string if self.exp_name is not None else dt_string
@@ -109,12 +116,20 @@ class BasePredictor:
     def _get_img_data(self, img_name):
         img_path = os.path.join(self.input_path, img_name)
         img_data = self.pred_transforms(img_path)
-        img_data = img_data.unsqueeze(0)
-
+        if hasattr(self, "do_3D") and self.do_3D is not None:
+            return img_data
+        else:
+            img_data = img_data.unsqueeze(0)
         return img_data
 
     def _inference(self, img_data):
         raise NotImplementedError
 
     def _post_process(self, pred_mask):
+        raise NotImplementedError
+    
+    def _inference3D(self, img_data):
+        raise NotImplementedError
+
+    def _post_process3D(self, pred_mask):
         raise NotImplementedError

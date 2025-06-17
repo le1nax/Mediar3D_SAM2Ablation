@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 import tifffile as tif
 import skimage.io as io
 from typing import Optional, Sequence, Union
@@ -8,6 +9,8 @@ from monai.data.utils import is_supported_format, optional_import, ensure_tuple_
 from monai.data.image_reader import ImageReader, NumpyReader
 from monai.transforms import LoadImage, LoadImaged
 from monai.utils.enums import PostFix
+from monai.data.meta_tensor import MetaTensor
+
 
 DEFAULT_POST_FIX = PostFix.meta()
 itk, has_itk = optional_import("itk", allow_namespace_pkg=True)
@@ -125,6 +128,13 @@ class UnifiedITKReader(NumpyReader):
 
         suffixes: Sequence[str] = ["tif", "tiff", "png", "jpg", "bmp", "jpeg",]
         return has_itk or is_supported_format(filename, suffixes)
+    
+    def move_channel_last(self, axis, obj):
+        """Puts the channel to last"""
+
+        order = [j for j in range(obj.ndim) if j != axis] + [axis] #put axis in last position
+        obj = obj.permute(*order)
+        return obj
 
     def read(self, data: Union[Sequence[PathLike], PathLike], **kwargs):
         """Read Images from the file."""
@@ -145,14 +155,42 @@ class UnifiedITKReader(NumpyReader):
                     _obj = itk.array_view_from_image(_obj, keep_axes=False)
                 except:
                     _obj = io.imread(name)
-
+            meta = {
+                "spatial_shape": _obj.shape,  # shape before EnsureChannelFirst
+                "filename_or_obj": name,
+            }
             if len(_obj.shape) == 2:
-                _obj = np.repeat(np.expand_dims(_obj, axis=-1), 3, axis=-1)
-            elif len(_obj.shape) == 3 and _obj.shape[-1] > 3:
-                _obj = _obj[:, :, :3]
-            else:
-                pass
+                meta["dimensionality"] = 2
+                _obj = np.repeat(np.expand_dims(_obj, axis=-1), 3, axis=-1) # (H, W, 3)
+            elif len(_obj.shape) == 3:
+                if _obj.shape[0] > 3 and _obj.shape[-1] > 3:  # heuristically a (Z, H, W), add channel dimension
+                    meta["dimensionality"] = 3
+                    _obj = np.repeat(np.expand_dims(_obj, axis=-1), 3, axis=-1)  # (Z, H, W, 3)
+                
+                else: 
+                    for p in range(3):
+                        if _obj.shape[p] == 1:
+                            meta["dimensionality"] = 2
+                            _obj = np.repeat(_obj, 3, axis=p)  
+                            _obj = self.move_channel_last(p, _obj)
+                        elif _obj.shape[p] == 3:
+                            meta["dimensionality"] = 2
+                            _obj = self.move_channel_last(p, _obj)
 
+                # else, leave it alone if already fine
+            elif len(_obj.shape) == 4:
+                if _obj.shape[0] > 3 and _obj.shape[-1] > 3:  # heuristically a (Z, H, W)
+                    meta["dimensionality"] = 3
+                    _obj = _obj[..., :3]  # (Z, H, W, 3)
+                else:
+                    for p in range(4):
+                        if _obj.shape[p] == 1:
+                            meta["dimensionality"] = 3
+                            _obj = np.repeat(_obj, 3, axis=p)  
+                            _obj = self.move_channel_last(p, _obj)
+                        if _obj.shape[p] == 3:
+                            meta["dimensionality"] = 3
+                            _obj = self.move_channel_last(p, _obj)
             img_.append(_obj)
 
         return img_ if len(filenames) > 1 else img_[0]

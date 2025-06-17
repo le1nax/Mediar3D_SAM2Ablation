@@ -3,6 +3,10 @@ import os
 import wandb
 import argparse, pprint
 
+import os
+os.environ["WANDB_MODE"] = "disabled"
+
+
 from train_tools import *
 from SetupDict import TRAINER, OPTIMIZER, SCHEDULER, MODELS, PREDICTOR
 
@@ -30,7 +34,7 @@ def _get_setups(args):
         model.load_state_dict(weights, strict=model_args.pretrained.strict)
 
     # Set dataloaders
-    dataloaders = datasetter.get_dataloaders_labeled(**args.data_setups.labeled)
+    dataloaders = get_dataloaders_labeled(**args.data_setups.labeled)
 
     # Set optimizer
     optimizer_args = args.train_setups.optimizer
@@ -57,7 +61,7 @@ def _get_setups(args):
 
     # Set public dataloader
     if args.data_setups.public.enabled:
-        dataloaders = datasetter.get_dataloaders_public(
+        dataloaders = get_dataloaders_public(
             **args.data_setups.public.params
         )
         trainer.public_loader = dataloaders["public"]
@@ -87,29 +91,31 @@ def main(args):
     # Conduct experiment
     trainer.train()
 
-    # Upload model to wandb server
-    model_path = os.path.join(wandb.run.dir, "model.pth")
+    save_dir = "/work/scratch/geiger/W_B/MEDIAR_FT"
+    os.makedirs(save_dir, exist_ok=True)  # make sure it exists
+
+    # Save model
+    model_path = os.path.join(save_dir, "model.pth")
     torch.save(trainer.model.state_dict(), model_path)
-    wandb.save(model_path)
 
-    # Conduct prediction using the trained model
-    predictor = PREDICTOR[args.train_setups.trainer.name](
-        trainer.model,
-        args.train_setups.trainer.params.device,
-        args.pred_setups.input_path,
-        args.pred_setups.output_path,
-        args.pred_setups.make_submission,
-        args.pred_setups.exp_name,
-        args.pred_setups.algo_params,
-    )
+    # # Conduct prediction using the trained model
+    # predictor = PREDICTOR[args.train_setups.trainer.name](
+    #     trainer.model,
+    #     args.train_setups.trainer.params.device,
+    #     args.pred_setups.input_path,
+    #     args.pred_setups.output_path,
+    #     args.pred_setups.make_submission,
+    #     args.pred_setups.exp_name,
+    #     args.pred_setups.algo_params,
+    # )
 
-    total_time = predictor.conduct_prediction()
-    wandb.log({"total_time": total_time})
+    # total_time = predictor.conduct_prediction()
+    # wandb.log({"total_time": total_time})
 
 
 # Parser arguments for terminal execution
 parser = argparse.ArgumentParser(description="Config file processing")
-parser.add_argument("--config_path", default="./config/baseline.json", type=str)
+parser.add_argument("--config_path", default="./config/step2_finetuning/finetuning1.json", type=str)
 args = parser.parse_args()
 
 #######################################################################################

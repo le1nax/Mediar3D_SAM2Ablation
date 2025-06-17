@@ -1,16 +1,16 @@
 {
     "pred_setups":{
         "name": "mediar",
-        "input_path":"/home/gihun/MEDIAR/data/Official/Tuning/images",
-        "output_path": "./results/mediar_base_prediction",
-        "make_submission": true,
-        "model_path": "./weights/finetuned/from_phase1.pth",
-        "device": "cuda:7",
+        "input_path": "/work/scratch/geiger/Datasets/CTC/sim3d/02_test",
+        "output_path": "/work/scratch/geiger/Datasets/CTC/sim3d/02_test_res",
+        "make_submission": false,
+        "model_path": "/work/scratch/geiger/W_B/MEDIAR_PT/from_phase1.pth",
+        "device": "cuda:0",
         "model":{
             "name": "mediar-former",
             "params": {}
         },
         "exp_name": "mediar_p1_base",
-        "algo_params": {"use_tta": false}
+        "algo_params": {"use_tta": false, "do_3D": true, "cellprob_threshold": 0.00005, "plot_prob": false}
     }
 }

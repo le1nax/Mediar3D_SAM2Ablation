@@ -2,14 +2,14 @@ from torch.utils.data import DataLoader
 from monai.data import Dataset
 import pickle
 
-from .transforms import (
+from train_tools.data_utils.transforms import (
     train_transforms,
     public_transforms,
     valid_transforms,
     tuning_transforms,
     unlabeled_transforms,
 )
-from .utils import split_train_valid, path_decoder
+from train_tools.data_utils.utils import split_train_valid, path_decoder
 
 DATA_LABEL_DICT_PICKLE_FILE = "./train_tools/data_utils/custom/modalities.pkl"
 
@@ -23,7 +23,7 @@ __all__ = [
 def get_dataloaders_labeled(
     root,
     mapping_file,
-    mapping_file_tuning,
+    tuning_mapping_file,
     join_mapping_file=None,
     valid_portion=0.0,
     batch_size=8,
@@ -46,7 +46,7 @@ def get_dataloaders_labeled(
 
     # Get list of data dictionaries from decoded paths
     data_dicts = path_decoder(root, mapping_file)
-    tuning_dicts = path_decoder(root, mapping_file_tuning, no_label=True)
+    tuning_dicts = path_decoder(root, tuning_mapping_file, no_label=True)
 
     if amplified:
         with open(DATA_LABEL_DICT_PICKLE_FILE, "rb") as f:

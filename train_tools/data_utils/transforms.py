@@ -146,3 +146,18 @@ def get_pred_transforms():
     )
 
     return pred_transforms
+
+def get_pred_transforms_3D():
+    """Prediction preprocessing"""
+    pred_transforms = Compose(
+        [
+            # >>> Load and refine data
+            CustomLoadImage(image_only=True),
+            CustomNormalizeImage(channel_wise=False, percentiles=[0.0, 99.5]),
+            # @todo, take care of 3d #EnsureChannelFirst(channel_dim=-1),  # image: (3, H, W)
+            ScaleIntensity(),
+            EnsureType(data_type="tensor"),
+        ]
+    )
+
+    return pred_transforms

@@ -5,7 +5,7 @@
             "mapping_file": "./train_tools/data_utils/mapping_labeled_dic_sim.json",
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
             "amplified": false,
-            "batch_size": 20, 
+            "batch_size": 15, 
             "valid_portion": 0.1
         },
         "public":{

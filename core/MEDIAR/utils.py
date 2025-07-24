@@ -520,6 +520,45 @@ def follow_flows3D(dP, inds, niter=200, device=torch.device("cpu")):
         
     return p
 
+def filter_false_positives(pred_mask, cellcenters):
+    """
+    Keep only those cell instances in pred_mask that contain at least one non-zero pixel in cellcenters.
+
+    Args:
+        pred_mask (ndarray): Instance mask of shape (Z, H, W) or (H, W), with each cell assigned a unique integer > 0.
+        cellcenters (ndarray): Binary mask of same shape as pred_mask, where 1 indicates center of a cell.
+
+    Returns:
+        ndarray: Filtered instance mask with only valid cell instances.
+    """
+
+    for i in range(cellcenters.shape[0]):
+        center_slice = cellcenters[i]
+
+        # === Debug: count nonzero pixels in current slice ===
+        nonzero_count = np.count_nonzero(center_slice)
+        print(f"Slice {i:03d} — Cell Center Nonzero Count: {nonzero_count}")
+
+    # Make sure shapes match
+    assert pred_mask.shape == cellcenters.shape, "Shape mismatch between pred_mask and cellcenters"
+
+    # Output mask starts empty
+    filtered_mask = np.zeros_like(pred_mask, dtype=pred_mask.dtype)
+
+    # Get unique labels (ignoring background 0)
+    instance_ids = np.unique(pred_mask)
+    instance_ids = instance_ids[instance_ids != 0]
+
+    for inst_id in instance_ids:
+        inst_mask = (pred_mask == inst_id)
+        
+        # Check if instance mask overlaps with any center pixel
+        if np.any(cellcenters[inst_mask]):
+            filtered_mask[inst_mask] = inst_id
+
+    return filtered_mask
+
+
 def compute_masks3D(dP, cellprob, p=None, niter=200, cellprob_threshold=0.0,
                   flow_threshold=0.4, do_3D=False, min_size=-1,
                   max_size_fraction=0.4, device=torch.device("cpu")):

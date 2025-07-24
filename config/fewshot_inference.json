@@ -1,0 +1,16 @@
+{
+    "eval_setups":{
+        "img_path": "../../Datasets/CTC/test_images/zc2dg/test",
+        "gt_path": "../../Datasets/CTC/test_images/zc2dg/GT",
+        "cellcenter_path": "../../Datasets/CTC/test_images/zc2dg/cellcenters",
+        "pred_path": "../../Datasets/CTC/test_images/zc2dg/pred",
+        "save_path": "../../Datasets/CTC/test_images/zc2dg/res",
+        "fs_train_img": "../../Datasets/CTC/test_images/zc2dg/fs_train_img",
+        "fs_train_masks": "../../Datasets/CTC/test_images/zc2dg/fs_train_masks",
+        "fs_train_cellcenters": "../../Datasets/CTC/test_images/zc2dg/fs_train_cellcenters",
+        "fs_inference_img": "../../Datasets/CTC/test_images/zc2dg/fs_inference_img",
+        "fs_inference_masks": "../../Datasets/CTC/test_images/zc2dg/fs_inference_masks",
+        "fs_inference_cellcenters": "../../Datasets/CTC/test_images/zc2dg/fs_inference_cellcenters",
+        "slice_index": 25
+    }
+}

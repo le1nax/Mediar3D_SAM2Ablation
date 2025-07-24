@@ -18,6 +18,7 @@ class BasePredictor:
         device,
         input_path,
         output_path,
+        cellcenters_path = None,
         make_submission=False,
         exp_name=None,
         algo_params=None,
@@ -25,6 +26,7 @@ class BasePredictor:
         self.model = model
         self.device = device
         self.input_path = input_path
+        self.cellcenters_path = cellcenters_path
         self.output_path = output_path
         self.make_submission = make_submission
         self.exp_name = exp_name
@@ -46,14 +48,30 @@ class BasePredictor:
         for img_name in self.img_names:
             img_data = self._get_img_data(img_name)
             img_data = img_data.to(self.device)
+            img_data = self._get_img_data(img_name)
 
             start = time.time()
             if not self.do_3D:
                 pred_mask = self._inference(img_data)
-                pred_mask = self._post_process(pred_mask.squeeze(0).cpu().numpy())
+
+                #consider cellcenters
+                cellcenters = None
+                if(self.cellcenters_path is not None):
+                    base, ext = os.path.splitext(img_name)
+                    cellcenters_file = os.path.join(self.cellcenters_path, f"{base}_cellcenter{ext}")
+                    cellcenters=tif.imread(cellcenters_file)
+                pred_mask = self._post_process(pred_mask.squeeze(0).cpu().numpy(), cellcenters)
+
             else:
                 pred_mask = self._inference3D(img_data)
-                pred_mask = self._post_process3D(pred_mask.squeeze(0).cpu().numpy())
+
+                cellcenters = None
+                if(self.cellcenters_path is not None):
+                    base, ext = os.path.splitext(img_name)
+                    cellcenters_file = os.path.join(self.cellcenters_path, f"{base}_cellcenter{ext}")
+                    cellcenters=tif.imread(cellcenters_file)
+                pred_mask = self._post_process3D(pred_mask.squeeze(0).cpu().numpy(), cellcenters)
+
             self.write_pred_mask(
                 pred_mask, self.output_path, img_name, self.make_submission
             )
@@ -113,6 +131,8 @@ class BasePredictor:
 
         self.img_names = sorted(os.listdir(self.input_path))
 
+
+
     def _get_img_data(self, img_name):
         img_path = os.path.join(self.input_path, img_name)
         img_data = self.pred_transforms(img_path)
@@ -125,11 +145,11 @@ class BasePredictor:
     def _inference(self, img_data):
         raise NotImplementedError
 
-    def _post_process(self, pred_mask):
+    def _post_process(self, pred_mask, cellcenters=None):
         raise NotImplementedError
     
     def _inference3D(self, img_data):
         raise NotImplementedError
 
-    def _post_process3D(self, pred_mask):
+    def _post_process3D(self, pred_mask, cellcenters=None):
         raise NotImplementedError

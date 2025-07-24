@@ -12,11 +12,12 @@ from monai.transforms import (
 
 import os, sys
 import copy
+import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "../")))
 
 from core.utils import print_learning_device, print_with_logging
-from train_tools.measures import evaluate_f1_score_cellseg
+from train_tools.measures import evaluate_metrics_cellseg
 
 
 class BaseTrainer:
@@ -59,6 +60,7 @@ class BaseTrainer:
         # Cumulitive statistics
         self.loss_metric = CumulativeAverage()
         self.f1_metric = CumulativeAverage()
+        self.iou_metric = CumulativeAverage()
 
         # Post-processing functions
         self.post_pred = Compose(
@@ -69,10 +71,10 @@ class BaseTrainer:
     def train(self):
         """Train the model"""
 
-        # Print learning device name
         print_learning_device(self.device)
+        train_losses = []
+        valid_losses = []
 
-        # Learning process
         for epoch in range(1, self.num_epochs + 1):
             print(f"[Round {epoch}/{self.num_epochs}]")
 
@@ -80,6 +82,10 @@ class BaseTrainer:
             print(">>> Train Epoch")
             train_results = self._epoch_phase("train")
             print_with_logging(train_results, epoch)
+            
+            train_loss = train_results.get("Train_Dice_Loss", None)
+            if train_loss is not None:
+                train_losses.append(train_loss)
 
             if self.scheduler is not None:
                 self.scheduler.step()
@@ -90,6 +96,10 @@ class BaseTrainer:
                     print(">>> Valid Epoch")
                     valid_results = self._epoch_phase("valid")
                     print_with_logging(valid_results, epoch)
+
+                    valid_loss = valid_results.get("Valid_Dice_Loss", None)
+                    if valid_loss is not None:
+                        valid_losses.append(valid_loss)
 
                     if "Valid_F1_Score" in valid_results.keys():
                         current_f1_score = valid_results["Valid_F1_Score"]
@@ -107,9 +117,22 @@ class BaseTrainer:
 
             self.best_f1_score = 0
 
+        plt.figure(figsize=(8,5))
+        plt.plot(train_losses, label="Train Loss")
+        if len(valid_losses) > 0:
+            # Note: valid losses may be recorded only every few epochs
+            valid_epochs = list(range(self.valid_frequency, self.valid_frequency*len(valid_losses)+1, self.valid_frequency))
+            plt.plot(valid_epochs, valid_losses, label="Validation Loss")
+        plt.xlabel("Epoch")
+        plt.ylabel("Loss")
+        plt.title("Training and Validation Loss")
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+
         if self.best_weights is not None:
             self.model.load_state_dict(self.best_weights)
-
+            
     def _epoch_phase(self, phase): ################ OVERRIDDEN BY MEDIAR TRAINER
         """Learning process for 1 Epoch (for different phases).
 
@@ -178,29 +201,31 @@ class BaseTrainer:
         return cell_counts_total_sum
 
     def _update_results(self, phase_results, metric, metric_key, phase="train"):
-        """Aggregate and flush metrics
-
-        Args:
-            phase_results (dict): base dictionary to log metrics
-            metric (_type_): cumulated metrics
-            metric_key (_type_): name of metric
-            phase (str, optional): current phase name. Defaults to "train".
-
-        Returns:
-            dict: dictionary of metrics for the current phase
-        """
-
-        # Refine metrics name
         metric_key = "_".join([phase, metric_key]).title()
 
-        # Aggregate metrics
-        metric_item = round(metric.aggregate().item(), 4)
+        if isinstance(metric, list):
+            if len(metric) > 0:
+                # Convert elements to tensors if possible
+                tensor_metrics = []
+                for m in metric:
+                    if isinstance(m, np.ndarray):
+                        tensor_metrics.append(torch.from_numpy(m))
+                    elif isinstance(m, float):
+                        tensor_metrics.append(torch.tensor(m))
+                    elif isinstance(m, torch.Tensor):
+                        tensor_metrics.append(m)
+                    else:
+                        # fallback, convert to float then tensor
+                        tensor_metrics.append(torch.tensor(float(m)))
 
-        # Log metrics to dictionary
+                metric_item = round(torch.stack(tensor_metrics).mean().item(), 4)
+            else:
+                metric_item = None
+        else:
+            metric_item = round(metric.aggregate().item(), 4)
+            metric.reset()
+
         phase_results[metric_key] = metric_item
-
-        # Flush metrics
-        metric.reset()
 
         return phase_results
 
@@ -234,7 +259,7 @@ class BaseTrainer:
     def _post_process(self, outputs, labels):
         return outputs, labels
 
-    def _get_f1_metric(self, masks_pred, masks_true):
-        f1_score = evaluate_f1_score_cellseg(masks_true, masks_pred)[-1]
+    def _get_metrics(self, masks_pred, masks_true):
+        iou, p,r, f1 = evaluate_metrics_cellseg(masks_pred, masks_true)
 
-        return f1_score
+        return iou, f1

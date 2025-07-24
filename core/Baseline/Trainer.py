@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "../../")))
 
 from core.BaseTrainer import BaseTrainer
 from core.Baseline.utils import create_interior_onehot, identify_instances_from_classmap
-from train_tools.measures import evaluate_f1_score_cellseg
+from train_tools.measures import evaluate_metrics_cellseg
 from tqdm import tqdm
 
 __all__ = ["Trainer"]
@@ -70,8 +70,10 @@ class Trainer(BaseTrainer):
                 self.loss_metric.append(loss)
 
                 if phase != "train":
-                    f1_score = self._get_f1_metric(outputs, labels)
-                    self.f1_metric.append(f1_score)
+                    iou, f1 = self._get_f1_metric(outputs, labels)
+                    self.f1_metric.append(f1)
+                    self.iou_metric.append(iou)
+
 
             # Backward pass
             if phase == "train":
@@ -95,6 +97,9 @@ class Trainer(BaseTrainer):
             phase_results = self._update_results(
                 phase_results, self.f1_metric, "f1_score", phase
             )
+            phase_results = self._update_results(
+                phase_results, self.iou_metric, "iou", phase
+            )
 
         return phase_results
 
@@ -105,9 +110,9 @@ class Trainer(BaseTrainer):
 
         return outputs, labels_onehot
 
-    def _get_f1_metric(self, masks_pred, masks_true):
+    def _get_metrics(self, masks_pred, masks_true):
         masks_pred = identify_instances_from_classmap(masks_pred[0])
         masks_true = masks_true.squeeze(0).squeeze(0).cpu().numpy()
-        f1_score = evaluate_f1_score_cellseg(masks_true, masks_pred)[-1]
+        iou, p, r, f1_score = evaluate_metrics_cellseg(masks_true, masks_pred)
 
-        return f1_score
+        return iou, f1_score

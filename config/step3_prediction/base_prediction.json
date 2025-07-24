@@ -1,16 +1,17 @@
 {
     "pred_setups":{
         "name": "mediar",
-        "input_path": "../../Datasets/CTC/sim3d/02_test",
-        "output_path": "../../Datasets/CTC/sim3d/02_test_res",
+        "input_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_img",
+        "cellcenters_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_cellcenters",
+        "output_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_res_mediar100e",
         "make_submission": false,
-        "model_path": "../../W_B/MEDIAR_PT/from_phase1.pth",
+        "model_path": "../../W_B/MEDIAR_FT/model_2025-07-24_09-09-22.pth",
         "device": "cuda:0",
         "model":{
             "name": "mediar-former",
             "params": {}
         },
         "exp_name": "mediar_p1_base",
-        "algo_params": {"use_tta": false, "do_3D": true, "cellprob_threshold": 0.00005, "plot_prob": false}
+        "algo_params": {"use_tta": false, "do_3D": true, "cellprob_threshold": 0.001, "plot_prob": false}
     }
 }

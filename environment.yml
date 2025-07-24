@@ -2,25 +2,25 @@ name: mediar
 channels:
   - conda-forge
 dependencies:
-  - _libgcc_mutex=0.1
-  - _openmp_mutex=5.1
-  - ca-certificates=2025.2.25
+  - _libgcc_mutex
+  - _openmp_mutex
+  - ca-certificates
   - ld_impl_linux-64=2.40
-  - libffi=3.4.4
-  - libgcc-ng=11.2.0
-  - libgomp=11.2.0
-  - libstdcxx-ng=11.2.0
-  - ncurses=6.4
-  - openssl=3.0.16
+  - libffi
+  - libgcc-ng
+  - libgomp
+  - libstdcxx-ng
+  - ncurses
+  - openssl
   - pip=25.0
   - python=3.9.21
   - readline=8.2
   - setuptools=75.8.0
-  - sqlite=3.45.3
-  - tk=8.6.14
+  - sqlite
+  - tk
   - wheel=0.45.1
-  - xz=5.6.4
-  - zlib=1.2.13
+  - xz
+  - zlib
   - pip:
       - appdirs==1.4.4
       - certifi==2025.4.26
@@ -96,4 +96,3 @@ dependencies:
       - urllib3==2.4.0
       - wandb==0.16.2
       - zipp==3.21.0
-prefix: /home/students/geiger/anaconda3/envs/mediar

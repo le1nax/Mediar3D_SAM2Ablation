@@ -2,6 +2,7 @@ import torch
 import os
 import wandb
 import argparse, pprint
+from datetime import datetime
 
 import os
 os.environ["WANDB_MODE"] = "disabled"
@@ -94,8 +95,11 @@ def main(args):
     save_dir = "../../W_B/MEDIAR_FT"
     os.makedirs(save_dir, exist_ok=True)  # make sure it exists
 
-    # Save model
-    model_path = os.path.join(save_dir, "test_model.pth")
+    # Current time string: e.g. '2025-07-11_18-25-42'
+    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+    # Save path
+    model_path = os.path.join(save_dir, f"model_{current_time}.pth")
     print(f"Saving model to: {model_path}")
     try:
         os.makedirs(save_dir, exist_ok=True)  # ensure directory exists

@@ -12,7 +12,7 @@ from numba import jit
 
 __all__ = ["evaluate_f1_score_cellseg", "evaluate_f1_score"]
 
-def evaluate_f1_score_cellseg_edited(gt_mask, pred_mask, threshold=0.5):
+def evaluate_metrics_cellseg(pred_mask, gt_mask, threshold=0.5):
     """
     Computes IoU, Precision, Recall, and F1-score for 3D cell segmentation masks.
 

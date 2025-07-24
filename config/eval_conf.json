@@ -1,8 +1,9 @@
 {
     "eval_setups":{
-        "img_path": "../../Datasets/CTC/sim3d/02_test",
-        "gt_path": "../../Datasets/CTC/sim3d/02_test_GT",
-        "pred_path": "../../Datasets/CTC/sim3d/02_test_res",
+        "img_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_img",
+        "gt_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_masks",
+        "pred_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_res_mediar100e",
         "save_path": "../../Datasets/CTC/sim3d/eval_res"
     }
 }
+

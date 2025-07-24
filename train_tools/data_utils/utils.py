@@ -34,51 +34,39 @@ def split_train_valid(data_dicts, valid_portion=0.1):
 
 
 def path_decoder(root, mapping_file, no_label=False, unlabeled=False):
-    """Decode img/label file paths from root & mapping directory.
+    """Decode img/label/cellcenter file paths from root & mapping directory.
 
     Args:
-        root (str):
-        mapping_file (str): json file containing image & label file paths.
-        no_label (bool, optional): whether to include "label" key. Defaults to False.
+        root (str): Base path for dataset
+        mapping_file (str): JSON file containing image & label file paths
+        no_label (bool): If True, do not include labels in output
+        unlabeled (bool): If True, exclude certain corrupted images
 
     Returns:
-        list: list of dictionary. (ex. [{"img": img_path, "label": label_path}, ...])
+        list[dict]: list of dictionaries (with keys "img", "label", optionally "cellcenter")
     """
-
     data_dicts = []
 
     with open(mapping_file, "r") as file:
         data = json.load(file)
 
         for map_key in data.keys():
+            data_dict_item = []
 
-            # If no_label, assign "img" key only
-            if no_label:
-                data_dict_item = [
-                    {"img": os.path.join(root, elem["img"]),} for elem in data[map_key]
-                ]
+            for elem in data[map_key]:
+                item = {"img": os.path.join(root, elem["img"])}
 
-            # If label exists, assign both "img" and "label" keys
-            else:
-                data_dict_item = [
-                    {
-                        "img": os.path.join(root, elem["img"]),
-                        "label": os.path.join(root, elem["label"]),
-                    }
-                    for elem in data[map_key]
-                ]
+                if not no_label and "label" in elem:
+                    item["label"] = os.path.join(root, elem["label"])
 
-            # Add refined datasets to be returned
+                if "cellcenter" in elem:
+                    item["cellcenter"] = os.path.join(root, elem["cellcenter"])
+
+                data_dict_item.append(item)
+
             data_dicts += data_dict_item
 
     if unlabeled:
-        refined_data_dicts = []
-
-        # Exclude the corrupted image to prevent errror
-        for data_dict in data_dicts:
-            if "00504" not in data_dict["img"]:
-                refined_data_dicts.append(data_dict)
-
-        data_dicts = refined_data_dicts
+        data_dicts = [d for d in data_dicts if "00504" not in d["img"]]
 
     return data_dicts

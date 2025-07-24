@@ -10,7 +10,7 @@ from matplotlib.widgets import Slider
 sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "../../")))
 
 from core.BasePredictor import BasePredictor
-from core.MEDIAR.utils import compute_masks, compute_masks3D
+from core.MEDIAR.utils import compute_masks, compute_masks3D, filter_false_positives
 
 __all__ = ["Predictor"]
 
@@ -22,6 +22,7 @@ class Predictor(BasePredictor):
         device,
         input_path,
         output_path,
+        cellcenters_path=None,
         make_submission=False,
         exp_name=None,
         algo_params=None,
@@ -31,6 +32,7 @@ class Predictor(BasePredictor):
             device,
             input_path,
             output_path,
+            cellcenters_path,
             make_submission,
             exp_name,
             algo_params,
@@ -91,7 +93,7 @@ class Predictor(BasePredictor):
 
         return y
 
-    def _post_process(self, pred_mask):
+    def _post_process(self, pred_mask, cellcenters):
         """Generate cell instance masks."""
         dP, cellprob = pred_mask[:2], self._sigmoid(pred_mask[-1])
         H, W = pred_mask.shape[-2], pred_mask.shape[-1]
@@ -105,7 +107,7 @@ class Predictor(BasePredictor):
                 device=self.device,
                 cellprob_threshold=0.5,
             )[0]
-
+        
         else:
             print("\n[Whole Slide] Grid Prediction starting...")
             roi_size = 2000
@@ -160,7 +162,8 @@ class Predictor(BasePredictor):
                     ] = pred_mask
 
             pred_mask = pred_pad[:H, :W]
-
+        
+        pred_mask = filter_false_positives(pred_mask, cellcenters)
         return pred_mask
 
     def _sigmoid(self, z):
@@ -252,7 +255,7 @@ class Predictor(BasePredictor):
 
             y_p = y[-1].permute(ipm[p])
             yf[-1] += y_p
-            pltval= self._sigmoid(yf[-1,40,:,:].cpu().squeeze())
+            pltval= self._sigmoid(yf[-1,30,:,:].cpu().squeeze())
             self.plot_imageSlider(image=pltval)
             for j in range(2):
                 yf[cp[p][j]] += y[cpy[p][j]].permute(ipm[p])
@@ -316,7 +319,7 @@ class Predictor(BasePredictor):
 
         # return pred_mask
 
-    def _post_process3D(self, pred_mask): ## @todo
+    def _post_process3D(self, pred_mask, cellcenters): ## @todo
 
         """Generate cell instance masks."""
         dP, cellprob = pred_mask[:3], self._sigmoid(pred_mask[-1])
@@ -327,7 +330,7 @@ class Predictor(BasePredictor):
             cellprob_threshold = 0.5
         os.makedirs(self.output_path, exist_ok=True)
 
-        self.plot_image(cellprob[40])
+        self.plot_image(cellprob[30])
 
         if np.prod(H * W) < (5000 * 5000):
             pred_mask = compute_masks3D(
@@ -394,7 +397,8 @@ class Predictor(BasePredictor):
                     ] = pred_mask
 
             pred_mask = pred_pad[:H, :W]
-
+        if(cellcenters is not None):
+            pred_mask = filter_false_positives(pred_mask, cellcenters)
         return pred_mask
     
     

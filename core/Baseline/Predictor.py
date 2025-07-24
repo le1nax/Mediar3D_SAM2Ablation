@@ -17,6 +17,7 @@ class Predictor(BasePredictor):
         device,
         input_path,
         output_path,
+        cellcenters_path=None,
         make_submission=False,
         exp_name=None,
         algo_params=None,
@@ -26,6 +27,7 @@ class Predictor(BasePredictor):
             device,
             input_path,
             output_path,
+            cellcenters_path,
             make_submission,
             exp_name,
             algo_params,
@@ -44,7 +46,7 @@ class Predictor(BasePredictor):
 
         return pred_mask
 
-    def _post_process(self, pred_mask):
+    def _post_process(self, pred_mask, cellcenters=None):
         # Get probability map from the predicted logits
         pred_mask = torch.from_numpy(pred_mask)
         pred_mask = torch.softmax(pred_mask, dim=0)

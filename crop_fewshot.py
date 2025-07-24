@@ -1,12 +1,13 @@
 import numpy as np
 import pandas as pd
+import tifffile as tif
 import argparse
 import os
 from collections import OrderedDict
 from tqdm import tqdm
 
 from train_tools.utils import ConfLoader, pprint_config
-from train_tools.measures import evaluate_metrics_cellseg
+from train_tools.measures import evaluate_f1_score_cellseg, evaluate_metrics_cellseg
 
 import os
 import numpy as np
@@ -18,77 +19,108 @@ from matplotlib.widgets import TextBox
 from skimage import io
 import pandas as pd
 
+def z_project_cellcenters(cellcenters):
+    """
+    Projects all cell centers along the Z-axis so that every Z-slice contains all cell centers.
+
+    Args:
+        cellcenters (ndarray): 3D binary mask of shape (Z, H, W)
+
+    Returns:
+        ndarray: 3D binary mask with projected centers in every slice
+    """
+    # Project along Z-axis: (H, W)
+    projected = np.any(cellcenters > 0, axis=0).astype(np.uint8)
+    
+    # Tile across Z-axis: (Z, H, W)
+    projected_volume = np.repeat(projected[None, :, :], cellcenters.shape[0], axis=0)
+
+    return projected_volume
+
 
 def main(args):
+
+    slice_index = args.eval_setups.slice_index
+
+    # Output directory to save slices
+    output_img_dir = args.eval_setups.fs_train_img
+    output_val_dir = args.eval_setups.fs_train_masks
+    output_cellcenter_dir = args.eval_setups.fs_train_cellcenters
+
+    # os.makedirs(output_img_dir, exist_ok=True)
+    # os.makedirs(output_val_dir, exist_ok=True)
+    os.makedirs(output_cellcenter_dir, exist_ok=True)
+
+    # Output directory to save inference image
+    output_inference_img_dir = args.eval_setups.fs_inference_img
+    output_inference_val_dir = args.eval_setups.fs_inference_masks
+    output_inference_cellcenters_dir = args.eval_setups.fs_inference_cellcenters
+
+    # os.makedirs(output_img_dir, exist_ok=True)
+    # os.makedirs(output_val_dir, exist_ok=True)
+    os.makedirs(output_inference_cellcenters_dir, exist_ok=True)
+
+
     
     # Get files from the paths
-    gt_path, pred_path, img_path = args.eval_setups.gt_path, args.eval_setups.pred_path, args.eval_setups.img_path
-    names = sorted(os.listdir(pred_path))
+    gt_path, pred_path, img_path, cellcenters_path = args.eval_setups.gt_path, args.eval_setups.pred_path, args.eval_setups.img_path, args.eval_setups.cellcenter_path
+    img_names = sorted(os.listdir(img_path))
+    gt_names = sorted(os.listdir(gt_path))
+    cellcenter_names = sorted(os.listdir(cellcenters_path))
 
-    names_total = []
-    ious_total, precisions_total, recalls_total, f1_scores_total = [], [], [], []
 
-    for name in tqdm(names):
-        assert name.endswith("_label.tiff"), "The suffix of label name should be _label.tiff"
+    for i in tqdm(range(len(img_names))):
 
         # Load images
-        gt = io.imread(os.path.join(gt_path, name))
-        pred = io.imread(os.path.join(pred_path, name))
-
-        # Evaluate metrics
-        iou, precision, recall, f1_score = evaluate_metrics_cellseg(gt, pred, threshold=0.5)
-
-        names_total.append(name)
-        ious_total.append(np.round(iou, 4))
-        precisions_total.append(np.round(precision, 4))
-        recalls_total.append(np.round(recall, 4))
-        f1_scores_total.append(np.round(f1_score, 4))
-
-    # Compile results into DataFrame
-    cellseg_metric = OrderedDict()
-    cellseg_metric["Names"] = names_total
-    cellseg_metric["IoU"] = ious_total
-    cellseg_metric["Precision"] = precisions_total
-    cellseg_metric["Recall"] = recalls_total
-    cellseg_metric["F1_Score"] = f1_scores_total
-
-    cellseg_metric = pd.DataFrame(cellseg_metric)
-
-    # Show results
-    print("mean IoU:", np.mean(cellseg_metric["IoU"]))
-    print("mean F1 Score:", np.mean(cellseg_metric["F1_Score"]))
+        gt = tif.imread(os.path.join(gt_path, gt_names[i]))
+        img = tif.imread(os.path.join(img_path, img_names[i]))
+        cellcenters = tif.imread(os.path.join(cellcenters_path, cellcenter_names[i]))
         
 
-    ###########Vis
-
-    source_files = [f for f in os.listdir(pred_path) if f.endswith('.tiff') or f.endswith('.tif')]
-    target_files = [f for f in os.listdir(gt_path) if f.endswith('.tiff') or f.endswith('.tif')]
-
-    if len(source_files) != len(target_files):
-        raise ValueError("The number of source and target files does not match.")
-
-    # Initialize arrays to hold the images
-    images_list = []
-
-    # Load all the images from the source and target directories
-    for src_file, tgt_file in zip(source_files, target_files):
-        src_image = io.imread(os.path.join(pred_path, src_file))
-        tgt_image = io.imread(os.path.join(gt_path, tgt_file))
+        ###slice 2d train images
+        img_crop = img[:slice_index]
+        gt_crop = gt[:slice_index]
+        cellcenters_proj = z_project_cellcenters(cellcenters)
+        cellcenters_proj_crop = cellcenters_proj[:slice_index]
         
-        images_list.append((src_image, tgt_image))
+
+        for i, slice_2d in enumerate(img_crop):
+            filename = f"cell_{i:05d}.tiff"  # zero-padded to 5 digits
+            filepath = os.path.join(output_img_dir, filename)
+            tif.imwrite(filepath, slice_2d)
+            print(f"Saved {len(img_crop)} slices to '{output_img_dir}' directory.")
+
+        for i, slice_2d in enumerate(gt_crop):
+            filename = f"cell_{i:05d}_label.tiff"  # zero-padded to 5 digits
+            filepath = os.path.join(output_val_dir, filename)
+            tif.imwrite(filepath, slice_2d)
+            print(f"Saved {len(gt_crop)} slices to '{output_val_dir}' directory.")
+
+        for i, slice_2d in enumerate(cellcenters_proj_crop):
+            filename = f"cell_centers_{i:05d}.tiff"  # zero-padded to 5 digits
+            filepath = os.path.join(output_cellcenter_dir, filename)
+            tif.imwrite(filepath, slice_2d)
+            print(f"Saved {len(cellcenters_proj_crop)} slices to '{output_cellcenter_dir}' directory.")
+        
+        ###crop 3d few shot inference image
+
+    #     img_infer = img[slice_index:]
+    #     gt_infer = gt[slice_index:]
+    #     cellcenters_infer = cellcenters[slice_index:]
+
+    #     infer_img_path = os.path.join(output_inference_img_dir, f"infer_{i:03d}.tiff")
+    #     infer_gt_path = os.path.join(output_inference_val_dir, f"infer_{i:03d}_label.tiff")
+    #     infer_cellcenter_path = os.path.join(output_inference_cellcenters_dir, f"infer_{i:03d}_cellcenter.tiff")
+
+    #     tif.imwrite(infer_img_path, img_infer)
+    #     tif.imwrite(infer_gt_path, gt_infer)
+    #     tif.imwrite(infer_cellcenter_path, cellcenters_infer)
 
 
-    show_QC_results(img_path, pred_path, gt_path, cellseg_metric)
-
-    # Save results
-    # if args.eval_setups.save_path is not None:
-    #     os.makedirs(args.eval_setups.save_path, exist_ok=True)
-    #     cellseg_metric.to_csv(
-    #         os.path.join(args.eval_setups.save_path, "seg_metric.csv"), index=False
-    #     )
+    # print(f"Saved inference volume to '{infer_img_path}' and '{infer_gt_path}'.")
 
 
-def show_QC_results(img_path, pred_path, gt_path, cellseg_metric):
+def show_QC_results(img_path, pred_path, gt_path, cellseg_metric, slice_index=25):
         print("now comes the plot")
 
         source_files = [f for f in os.listdir(img_path) if f.endswith('.tiff') or f.endswith('.tif')]
@@ -123,7 +155,7 @@ def show_QC_results(img_path, pred_path, gt_path, cellseg_metric):
         f1_col_idx = cellseg_metric.columns.get_loc('F1_Score')
         iou_col_idx = cellseg_metric.columns.get_loc('IoU')
 
-        slice_idx = 25  # Start with slice ..
+        slice_idx = slice_index  # Start with slice ..
         image_idx = 0
         state = {'image_idx': image_idx, 'slice_idx': slice_idx}
 
@@ -131,9 +163,9 @@ def show_QC_results(img_path, pred_path, gt_path, cellseg_metric):
         norm = mcolors.Normalize(vmin=np.percentile(source_images[image_idx, slice_idx], 1), vmax=np.percentile(source_images[image_idx, slice_idx], 99))
         mask_norm = mcolors.Normalize(vmin=0, vmax=1)
         # Set up figure and axes
-        fig, axes = plt.subplots(4, 1, figsize=(50, 15))
+        fig, axes = plt.subplots(1, 4, figsize=(32, 8))
 
-        # Initialize plots (showing slice 25 initially)
+        # Initialize plots (showing slice slice_index initially)
         im_input = axes[0].imshow(source_images[image_idx, slice_idx], norm=norm, cmap='magma', interpolation='nearest')
         
         # Overlay (Input Image and Prediction Mask) in the second axes
@@ -225,7 +257,7 @@ def show_QC_results(img_path, pred_path, gt_path, cellseg_metric):
 # Parser arguments for terminal execution
 parser = argparse.ArgumentParser(description="Config file processing")
 parser.add_argument(
-    "--config_path", default="./config/eval_conf.json", type=str
+    "--config_path", default="./config/fewshot_inference.json", type=str
 )
 args = parser.parse_args()
 
@@ -240,3 +272,5 @@ if __name__ == "__main__":
 
     # Run experiment
     main(opt)
+
+

@@ -1,5 +1,6 @@
 from torch.utils.data import DataLoader
 from monai.data import Dataset
+from pathlib import Path
 import pickle
 
 from train_tools.data_utils.transforms import (
@@ -13,6 +14,31 @@ from train_tools.data_utils.utils import split_train_valid, path_decoder
 
 DATA_LABEL_DICT_PICKLE_FILE = "./train_tools/data_utils/custom/modalities.pkl"
 
+
+import torch
+import tifffile
+import os
+
+class CustomMediarDataset(Dataset):
+    def __init__(self, data, transform=None):
+        super().__init__(data, transform)
+
+    def __getitem__(self, index):
+        data = dict(self.data[index])
+    
+        cellcenter_path = data.get("cellcenter", None)
+        if cellcenter_path is None:
+            raise FileNotFoundError(f"Missing cellcenter path for index {index}")
+
+        cellcenter_path = Path(cellcenter_path)
+        if not cellcenter_path.exists():
+            raise FileNotFoundError(f"Missing cellcenter file: {cellcenter_path}")
+
+        if self.transform:
+            data = self.transform(data)
+
+        return data
+    
 __all__ = [
     "get_dataloaders_labeled",
     "get_dataloaders_public",
@@ -96,7 +122,7 @@ def get_dataloaders_labeled(
     )
 
     # Obtain datasets with transforms
-    trainset = Dataset(train_dicts, transform=data_transforms)
+    trainset = CustomMediarDataset(train_dicts, transform=data_transforms)
     validset = Dataset(valid_dicts, transform=valid_transforms)
     tuningset = Dataset(tuning_dicts, transform=tuning_transforms)
 

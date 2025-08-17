@@ -93,7 +93,7 @@ def main(args):
     # trainer.train()
     trainer.train()
 
-    save_dir = "../../W_B/MEDIAR_FT"
+    save_dir = "../../W_B/MEDIAR_Testing"
     os.makedirs(save_dir, exist_ok=True)  # make sure it exists
 
     # Current time string: e.g. '2025-07-11_18-25-42'

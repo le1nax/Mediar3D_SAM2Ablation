@@ -164,19 +164,8 @@ class BaseTrainer:
         for epoch in range(1, self.num_epochs + 1):
             print(f"[Round {epoch}/{self.num_epochs}]")
 
-            # Train Epoch Phase
-            print(">>> Train Epoch")
-            train_results = self._epoch_phase("train")
-            print_with_logging(train_results, epoch)
-            
-            train_loss = train_results.get("Train_Dice_Loss", None)
-            if train_loss is not None:
-                train_losses.append(train_loss)
 
-            if self.scheduler is not None:
-                self.scheduler.step()
-
-            if epoch % self.valid_frequency == 0:
+            if epoch % self.valid_frequency == 0 or epoch == 1:
                 if not self.no_valid:
                     # Valid Epoch Phase
                     print(">>> Valid Epoch")
@@ -198,6 +187,18 @@ class BaseTrainer:
 
                     current_cell_count = tuning_cell_counts
                     self._update_best_model(current_cell_count)
+
+            # Train Epoch Phase
+            print(">>> Train Epoch")
+            train_results = self._epoch_phase("train")
+            print_with_logging(train_results, epoch)
+            
+            train_loss = train_results.get("Train_Dice_Loss", None)
+            if train_loss is not None:
+                train_losses.append(train_loss)
+
+            if self.scheduler is not None:
+                self.scheduler.step()
 
             print("-" * 50)
 

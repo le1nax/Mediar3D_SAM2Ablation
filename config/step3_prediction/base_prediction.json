@@ -3,9 +3,9 @@
         "name": "mediar",
         "input_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_img",
         "cellcenters_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_cellcenters",
-        "output_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_res_200e_Mediar_no_PP",
+        "output_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_res_100e_Mediarclean",
         "make_submission": false,
-        "model_path": "../../W_B/MEDIAR_FT/model_2025-07-30_19-14-27.pth",
+        "model_path": "../../W_B/MEDIAR_Testing/model_2025-08-14_17-57-43.pth",
         "device": "cuda:0",
         "model":{
             "name": "mediar-former",

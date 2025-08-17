@@ -103,28 +103,33 @@ def main(args):
     # Output directory to save slices
     output_img_dir = args.eval_setups.fs_train_img
     output_val_dir = args.eval_setups.fs_train_masks
-    output_cellcenter_dir = args.eval_setups.fs_train_cellcenters
+    #output_cellcenter_dir = args.eval_setups.fs_train_cellcenters
 
     os.makedirs(output_img_dir, exist_ok=True)
     os.makedirs(output_val_dir, exist_ok=True)
-    os.makedirs(output_cellcenter_dir, exist_ok=True)
+    #os.makedirs(output_cellcenter_dir, exist_ok=True)
 
     # Output directory to save inference image
     output_inference_img_dir = args.eval_setups.fs_inference_img
     output_inference_val_dir = args.eval_setups.fs_inference_masks
-    output_inference_cellcenters_dir = args.eval_setups.fs_inference_cellcenters
+    #output_inference_cellcenters_dir = args.eval_setups.fs_inference_cellcenters
 
     os.makedirs(output_inference_img_dir, exist_ok=True)
     os.makedirs(output_inference_val_dir, exist_ok=True)
-    os.makedirs(output_inference_cellcenters_dir, exist_ok=True)
+    #os.makedirs(output_inference_cellcenters_dir, exist_ok=True)
 
 
     
     # Get files from the paths
-    gt_path, pred_path, img_path, cellcenters_path = args.eval_setups.gt_path, args.eval_setups.pred_path, args.eval_setups.img_path, args.eval_setups.cellcenter_path
+    gt_path = args.eval_setups.gt_path
+    #pred_path = args.eval_setups.pred_path
+    img_path = args.eval_setups.img_path
+    #cellcenters_path = args.eval_setups.cellcenter_path
+
+
     img_names = sorted(os.listdir(img_path))
     gt_names = sorted(os.listdir(gt_path))
-    cellcenter_names = sorted(os.listdir(cellcenters_path))
+    #cellcenter_names = sorted(os.listdir(cellcenters_path))
 
 
     buffer = 10  # pixels to extend beyond bounding box
@@ -133,7 +138,7 @@ def main(args):
         # Load images
         gt = tif.imread(os.path.join(gt_path, gt_names[i]))
         img = tif.imread(os.path.join(img_path, img_names[i]))
-        cellcenters = tif.imread(os.path.join(cellcenters_path, cellcenter_names[i]))
+        #cellcenters = tif.imread(os.path.join(cellcenters_path, cellcenter_names[i]))
 
         assert gt.shape == img.shape, f"Shape mismatch: {img.shape} vs {gt.shape}"
 
@@ -159,8 +164,8 @@ def main(args):
         img_crop = img[zmin:zmax, ymin:ymax, xmin:xmax]
         gt_crop = gt[zmin:zmax, ymin:ymax, xmin:xmax]
 
-        img_crop = crop_along_axis(img_crop, slice(0,slice_index), axis=2)
-        gt_crop = crop_along_axis(gt_crop, slice(0,slice_index), axis=2)
+        #img_crop = crop_along_axis(img_crop, slice(0,slice_index), axis=2)
+        #gt_crop = crop_along_axis(gt_crop, slice(0,slice_index), axis=2)
 
         save_3d_slices_in_all_directions(img_crop, gt_crop, output_img_dir, output_val_dir)
 
@@ -177,21 +182,21 @@ def main(args):
         # print(f"Saved '{filepath}'.")
 
 
-        ###crop 3d few shot inference image
+        # ###crop 3d few shot inference image
 
         # img_infer = img[slice_index:]
         # gt_infer = gt[slice_index:]
        
-        #upper_cellcenters_proj = project_lower_to_upper(cellcenters, slice_index, axis=axis)
+        # #upper_cellcenters_proj = project_lower_to_upper(cellcenters, slice_index, axis=axis)
 
-        # infer_img_path = os.path.join(output_inference_img_dir, f"infer_{i:03d}.tiff")
-        # infer_gt_path = os.path.join(output_inference_val_dir, f"infer_{i:03d}_label.tiff")
-        #infer_cellcenter_path = os.path.join(output_inference_cellcenters_dir, f"infer_{i:03d}_cellcenter.tiff")
+        # infer_img_path = os.path.join(output_inference_img_dir, f"cell_{i:04d}.tiff")
+        # infer_gt_path = os.path.join(output_inference_val_dir, f"cell_{i:04d}_label.tiff")
+        # #infer_cellcenter_path = os.path.join(output_inference_cellcenters_dir, f"infer_{i:03d}_cellcenter.tiff")
         
 
         # tif.imwrite(infer_img_path, img_infer)
         # tif.imwrite(infer_gt_path, gt_infer)
-        #tif.imwrite(infer_cellcenter_path, upper_cellcenters_proj)
+        # #tif.imwrite(infer_cellcenter_path, upper_cellcenters_proj)
 
 
     # print(f"Saved inference volume to '{infer_img_path}' and '{infer_gt_path}'.")

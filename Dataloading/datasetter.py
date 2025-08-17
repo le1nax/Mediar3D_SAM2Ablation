@@ -167,7 +167,7 @@ def get_dataloaders_labeled(
 
     # Obtain datasets with transforms
     trainset = CustomMediarDataset(train_dicts, transform=data_transforms)
-    validset = Dataset(valid_dicts, transform=valid_transforms)
+    validset = CustomMediarDataset(valid_dicts, transform=valid_transforms)
     tuningset = Dataset(tuning_dicts, transform=tuning_transforms)
 
     # Set dataloader for Trainset

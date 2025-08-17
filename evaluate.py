@@ -36,7 +36,7 @@ def main(args):
         pred = io.imread(os.path.join(pred_path, name))
 
         # Evaluate metrics
-        iou, precision, recall, f1_score = evaluate_metrics_cellseg(gt, pred, threshold=0.5)
+        iou, precision, recall, f1_score = evaluate_metrics_cellseg(pred, gt, threshold=0.5)
 
         names_total.append(name)
         ious_total.append(np.round(iou, 4))
@@ -89,138 +89,114 @@ def main(args):
 
 
 def show_QC_results(img_path, pred_path, gt_path, cellseg_metric):
-        print("now comes the plot")
+    print("now comes the plot")
 
-        source_files = [f for f in os.listdir(img_path) if f.endswith('.tiff') or f.endswith('.tif')]
-        prediction_files = [f for f in os.listdir(pred_path) if f.endswith('.tiff') or f.endswith('.tif')]
-        target_files = [f for f in os.listdir(gt_path) if f.endswith('.tiff') or f.endswith('.tif')]
+    source_files = [f for f in os.listdir(img_path) if f.endswith('.tiff') or f.endswith('.tif')]
+    prediction_files = [f for f in os.listdir(pred_path) if f.endswith('.tiff') or f.endswith('.tif')]
+    target_files = [f for f in os.listdir(gt_path) if f.endswith('.tiff') or f.endswith('.tif')]
 
-        if len(source_files) != len(target_files) or len(source_files) != len(prediction_files):
-            raise ValueError("The number of source and target files does not match.")
-       
-        # Initialize arrays to hold the images
-        images_list = []
+    if len(source_files) != len(target_files) or len(source_files) != len(prediction_files):
+        raise ValueError("The number of source, prediction, and target files must match.")
 
-        # Load all the images from the source and target directories
-        for src_file, pred_file, gt_file in zip(source_files, prediction_files, target_files):
-            src_image = io.imread(os.path.join(img_path, src_file))
-            pred_image = io.imread(os.path.join(pred_path, pred_file))
-            gt_image = io.imread(os.path.join(gt_path, gt_file))
-            images_list.append((src_image, pred_image, gt_image))
+    images_list = []
+    skipped = 0
 
+    for src_file, pred_file, gt_file in zip(source_files, prediction_files, target_files):
+        src_image = io.imread(os.path.join(img_path, src_file))
+        pred_image = io.imread(os.path.join(pred_path, pred_file))
+        gt_image = io.imread(os.path.join(gt_path, gt_file))
 
-        # Convert list to a 4D numpy array (images, z, predicted_images, source_images)
-        source_images = np.array([item[0] for item in images_list])  # Source images
-        predicted_images = np.array([item[1] for item in images_list])  # Target images
-        ground_truth_images = np.array([item[2] for item in images_list])  # GT images
+        if src_image.shape != pred_image.shape or src_image.shape != gt_image.shape:
+            print(f"[Skipped] Shape mismatch:\n - {src_file}: {src_image.shape}\n - {pred_file}: {pred_image.shape}\n - {gt_file}: {gt_image.shape}")
+            skipped += 1
+            continue
 
-        # Get image dimensions
-        num_images = source_images.shape[0]  # N (number of images)
-        Image_Z = source_images.shape[1]  # Z (slices per image)
-        Image_Y = source_images.shape[2]  # Y (height)
-        Image_X = source_images.shape[3]  # X (width)
+        images_list.append((src_image, pred_image, gt_image))
 
-        f1_col_idx = cellseg_metric.columns.get_loc('F1_Score')
-        iou_col_idx = cellseg_metric.columns.get_loc('IoU')
+    if not images_list:
+        raise RuntimeError("No images with matching shapes were found. Cannot continue.")
 
-        slice_idx = 2  # Start with slice ..
-        image_idx = 0
-        state = {'image_idx': image_idx, 'slice_idx': slice_idx}
+    if skipped > 0:
+        print(f"⚠️ Skipped {skipped} image triplets due to shape mismatches.")
 
-        # Normalize input image
-        norm = mcolors.Normalize(vmin=np.percentile(source_images[image_idx, slice_idx], 1), vmax=np.percentile(source_images[image_idx, slice_idx], 99))
-        mask_norm = mcolors.Normalize(vmin=0, vmax=1)
-        # Set up figure and axes
-        fig, axes = plt.subplots(4, 1, figsize=(50, 15))
+    source_images = np.stack([item[0] for item in images_list])
+    predicted_images = np.stack([item[1] for item in images_list])
+    ground_truth_images = np.stack([item[2] for item in images_list])
 
-        # Initialize plots (showing slice 25 initially)
-        im_input = axes[0].imshow(source_images[image_idx, slice_idx], norm=norm, cmap='magma', interpolation='nearest')
-        
-        # Overlay (Input Image and Prediction Mask) in the second axes
-        im_overlay_input = axes[1].imshow(source_images[image_idx, slice_idx],norm=norm, cmap='magma', interpolation='nearest')  # Full opacity for input
-        im_overlay_pred = axes[1].imshow(predicted_images[image_idx, slice_idx], norm=mask_norm, alpha=0.5, cmap='Blues')  # Blue prediction mask (with transparency)
+    num_images = source_images.shape[0]
+    Image_Z = source_images.shape[1]
+    Image_Y = source_images.shape[2]
+    Image_X = source_images.shape[3]
 
-        # Display the prediction image in the third axis (full opacity)
-        im_pred = axes[2].imshow(predicted_images[image_idx, slice_idx], cmap='Blues', norm=mask_norm, interpolation='nearest')
+    f1_col_idx = cellseg_metric.columns.get_loc('F1_Score')
+    iou_col_idx = cellseg_metric.columns.get_loc('IoU')
 
-        # Ground truth in the last axes
-        im_gt = axes[3].imshow(ground_truth_images[image_idx, slice_idx], interpolation='nearest', norm=mask_norm, cmap='Greens')
+    slice_idx = 2
+    image_idx = 0
+    state = {'image_idx': image_idx, 'slice_idx': slice_idx}
 
-        # Titles
+    norm = mcolors.Normalize(vmin=np.percentile(source_images[image_idx, slice_idx], 1),
+                             vmax=np.percentile(source_images[image_idx, slice_idx], 99))
+    mask_norm = mcolors.Normalize(vmin=0, vmax=1)
+
+    fig, axes = plt.subplots(4, 1, figsize=(50, 15))
+
+    im_input = axes[0].imshow(source_images[image_idx, slice_idx], norm=norm, cmap='magma', interpolation='nearest')
+    im_overlay_input = axes[1].imshow(source_images[image_idx, slice_idx], norm=norm, cmap='magma', interpolation='nearest')
+    im_overlay_pred = axes[1].imshow(predicted_images[image_idx, slice_idx], norm=mask_norm, alpha=0.5, cmap='Blues')
+    im_pred = axes[2].imshow(predicted_images[image_idx, slice_idx], cmap='Blues', norm=mask_norm, interpolation='nearest')
+    im_gt = axes[3].imshow(ground_truth_images[image_idx, slice_idx], interpolation='nearest', norm=mask_norm, cmap='Greens')
+
+    axes[0].set_title(f'Training source (Image={image_idx}, Z={slice_idx})')
+    axes[1].set_title("Overlay: Input + Prediction")
+    axes[2].set_title("Prediction")
+    axes[3].set_title(f"Ground Truth, F1-Score: {round(cellseg_metric.iloc[image_idx, f1_col_idx], 3)}, IoU: {round(cellseg_metric.iloc[image_idx, iou_col_idx], 3)}")
+
+    for ax in axes:
+        ax.axis("off")
+
+    ax_slider = plt.axes([0.2, 0.02, 0.6, 0.02])
+    slider = Slider(ax_slider, "Slice", 0, Image_Z - 1, valinit=slice_idx, valstep=1)
+
+    def update(val):
+        state['slice_idx'] = int(slider.val)
+        slice_idx = state['slice_idx']
+        image_idx = state['image_idx']
+
+        im_input.set_data(source_images[image_idx, slice_idx])
+        im_overlay_input.set_data(source_images[image_idx, slice_idx])
+        im_overlay_pred.set_data(predicted_images[image_idx, slice_idx])
+        im_pred.set_data(predicted_images[image_idx, slice_idx])
+        im_gt.set_data(ground_truth_images[image_idx, slice_idx])
         axes[0].set_title(f'Training source (Image={image_idx}, Z={slice_idx})')
-        axes[1].set_title("Overlay: Input + Prediction")
-        axes[2].set_title("Prediction")
-        axes[3].set_title(f"Ground Truth, F1-Score: {round(cellseg_metric.iloc[image_idx, f1_col_idx], 3)}, IoU: {round(cellseg_metric.iloc[image_idx, iou_col_idx], 3)}")
 
+        fig.canvas.draw_idle()
 
-        print("DEBUG TRAIN DATA TYPE")
-        print(source_images[0].dtype)
-        print(source_images[0].max)
+    slider.on_changed(update)
 
-        for ax in axes:
-            ax.axis("off")
+    def on_text_submit(text):
+        try:
+            image_idx = int(text)
+            if image_idx < 0 or image_idx >= num_images:
+                print(f"Invalid image index: {image_idx}. Please enter a value between 0 and {num_images - 1}.")
+                return
+            state['image_idx'] = image_idx
+            update(slider.val)
+            im_input.set_data(source_images[image_idx, slider.val])
+            im_pred.set_data(predicted_images[image_idx, slider.val])
+            im_overlay_input.set_data(source_images[image_idx, slider.val])
+            im_overlay_pred.set_data(predicted_images[image_idx, slider.val])
+            im_gt.set_data(ground_truth_images[image_idx, slider.val])
+            axes[0].set_title(f'Training source (Image={image_idx}, Z={slider.val})')
+            axes[3].set_title(f"Ground Truth, F1-Score: {round(cellseg_metric.iloc[image_idx, f1_col_idx], 3)}, IoU: {round(cellseg_metric.iloc[image_idx, iou_col_idx], 3)}")
+        except ValueError:
+            print("Please enter a valid integer.")
 
-        # Add single slider for slice selection
-        ax_slider = plt.axes([0.2, 0.02, 0.6, 0.02])
-        slider = Slider(ax_slider, "Slice", 0, Image_Z - 1, valinit=slice_idx, valstep=1)
+    ax_image_textbox = plt.axes([0.4, 0.1, 0.15, 0.05])
+    text_box_image = TextBox(ax_image_textbox, "Image Index:", initial="0")
+    text_box_image.on_submit(lambda text: on_text_submit(text))
 
-
-        # Function to update plots when slider moves
-        def update(val):
-            state['slice_idx'] = int(slider.val)
-            slice_idx = state['slice_idx']
-            image_idx = state['image_idx']
-
-            # Update input image
-            im_input.set_data(source_images[image_idx, slice_idx])
-
-            # Update overlay images (input stays the same, prediction updates)
-            im_overlay_input.set_data(source_images[image_idx, slice_idx])  # Input image
-            im_overlay_pred.set_data(predicted_images[image_idx, slice_idx])  # Prediction mask
-
-            # Update prediction and ground truth images
-            im_pred.set_data(predicted_images[image_idx, slice_idx])  
-            im_gt.set_data(ground_truth_images[image_idx, slice_idx])  
-
-            axes[0].set_title(f'Training source (Image={image_idx}, Z={slice_idx})')
-
-            # Redraw figure
-            fig.canvas.draw_idle()
-
-        # Attach slider to the update function
-        slider.on_changed(update)
-
-        # Function to handle text input for both image and slice index
-        def on_text_submit(text):
-
-            try:
-
-                # Image selection via TextBox
-                image_idx = int(text)
-                if image_idx < 0 or image_idx >= num_images:
-                    print(f"Invalid image index: {image_idx}. Please enter a value between 0 and {num_images - 1}.")
-                    return
-                state['image_idx'] = image_idx
-                # Trigger image update with current slice_idx to reflect change
-                update(slider.val)
-                # Update the image display
-                im_input.set_data(source_images[image_idx, slider.val])  # Update input image
-                im_pred.set_data(predicted_images[image_idx, slider.val])  # Update target image
-                im_overlay_input.set_data(source_images[image_idx, slider.val])  # Update input image
-                im_overlay_pred.set_data(predicted_images[image_idx, slider.val])  # Update target image
-                im_gt.set_data(ground_truth_images[image_idx, slider.val])  # Update target image
-                axes[0].set_title(f'Training source (Image={image_idx}, Z={slider.val})')
-                axes[3].set_title(f"Ground Truth, F1-Score: {round(cellseg_metric.iloc[image_idx, f1_col_idx], 3)}, IoU: {round(cellseg_metric.iloc[image_idx, iou_col_idx], 3)}")
-
-            except ValueError:
-                print("Please enter a valid integer.")
-
-        # Create text boxes for both image and slice index selection
-        ax_image_textbox = plt.axes([0.4, 0.1, 0.15, 0.05])  # Positioning of the image textbox
-        text_box_image = TextBox(ax_image_textbox, "Image Index:", initial="0")
-        text_box_image.on_submit(lambda text: on_text_submit(text))
-
-        plt.show()
+    plt.show()
 
 # Parser arguments for terminal execution
 parser = argparse.ArgumentParser(description="Config file processing")

@@ -7,12 +7,58 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from matplotlib.widgets import Slider
 
+import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
+from matplotlib.widgets import Slider
+import matplotlib.colors as mcolors
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "../../")))
 
 from core.BasePredictor import BasePredictor
 from core.MEDIAR.utils import compute_masks, compute_masks3D, filter_false_positives
 
 __all__ = ["Predictor"]
+
+
+def show_QC_results(src_image, pred_image, gt_image):
+    """
+    Show quality control results for a single 2D slice.
+
+    Parameters:
+        src_image (ndarray): 2D source image (grayscale)
+        pred_image (ndarray): 2D predicted segmentation mask (binary or probabilistic)
+        gt_image (ndarray): 2D ground truth mask (binary or probabilistic)
+        cellseg_metric (dict, optional): Dictionary of metric results to optionally show.
+    """
+    # Normalize input image
+    norm = mcolors.Normalize(vmin=np.percentile(src_image, 1), vmax=np.percentile(src_image, 99))
+    mask_norm = mcolors.Normalize(vmin=0, vmax=1)
+
+    # Set up figure and axes
+    fig, axes = plt.subplots(4, 1, figsize=(10, 20))  # Adjusted size for readability
+
+    # 1. Source image
+    axes[0].imshow(src_image, norm=norm, cmap='magma', interpolation='nearest')
+    axes[0].set_title('Source Image')
+
+    # 2. Overlay: Source + Prediction
+    axes[1].imshow(src_image, norm=norm, cmap='magma', interpolation='nearest')
+    axes[1].imshow(pred_image, norm=mask_norm, alpha=0.5, cmap='Blues')
+    axes[1].set_title('Overlay: Source + Prediction')
+
+    # 3. Prediction only
+    axes[2].imshow(pred_image, cmap='Blues', norm=mask_norm, interpolation='nearest')
+    axes[2].set_title('Prediction')
+
+    # 4. Ground Truth
+    axes[3].imshow(gt_image, interpolation='nearest', norm=mask_norm, cmap='Greens')
+
+
+    for ax in axes:
+        ax.axis("off")
+
+    plt.tight_layout()
+    plt.show()
 
 
 class Predictor(BasePredictor):
@@ -47,6 +93,8 @@ class Predictor(BasePredictor):
         img_data = img_data.to(self.device)
         img_base = img_data
         outputs_base = self._window_inference(img_base) 
+        #outputs_base = self.model(img_base)
+
         outputs_base = outputs_base.cpu().squeeze()
         img_base.cpu()
 
@@ -163,7 +211,8 @@ class Predictor(BasePredictor):
 
             pred_mask = pred_pad[:H, :W]
         
-        pred_mask = filter_false_positives(pred_mask, cellcenters)
+        if(cellcenters is not None and cellcenters != ""):
+            pred_mask = filter_false_positives(pred_mask, cellcenters)
         return pred_mask
 
     def _sigmoid(self, z):
@@ -248,6 +297,7 @@ class Predictor(BasePredictor):
                 slice_img = xsl[:, z, :, :].unsqueeze(0)  # shape (1, C, H, W) 
                 out = self._window_inference(slice_img).squeeze() #shape (3, HW)
                 outputs.append(out) #remove 1st batch dim
+                #show_QC_results(slice_img[0,0].cpu().numpy(), out[-1].cpu().numpy(), out[-1].cpu().numpy())
 
 
             # Stack outputs along Z

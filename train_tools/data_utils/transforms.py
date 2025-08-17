@@ -83,10 +83,10 @@ valid_transforms = Compose(
             channel_wise=False,
             percentiles=[0.0, 99.5],
         ),
-        EnsureChannelFirstd(keys=["img", "label", "cellcenter"], allow_missing_keys=True, channel_dim=-1),
+        EnsureChannelFirstd(keys=["img", "label", "cellcenter", "flow"], allow_missing_keys=True, channel_dim=-1),
         RemoveRepeatedChanneld(keys=["label"], repeats=3),
         ScaleIntensityd(keys=["img"], allow_missing_keys=True),
-        EnsureTyped(keys=["img", "label", "cellcenter"], allow_missing_keys=True),
+        EnsureTyped(keys=["img", "label", "cellcenter", "flow"], allow_missing_keys=True),
     ]
 )
 

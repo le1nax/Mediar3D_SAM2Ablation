@@ -48,7 +48,6 @@ class BasePredictor:
         for img_name in self.img_names:
             img_data = self._get_img_data(img_name)
             img_data = img_data.to(self.device)
-            img_data = self._get_img_data(img_name)
 
             start = time.time()
             if not self.do_3D:
@@ -56,7 +55,7 @@ class BasePredictor:
 
                 #consider cellcenters
                 cellcenters = None
-                if(self.cellcenters_path is not None):
+                if(self.cellcenters_path is not None and self.cellcenters_path != ""):
                     base, ext = os.path.splitext(img_name)
                     cellcenters_file = os.path.join(self.cellcenters_path, f"{base}_cellcenter{ext}")
                     cellcenters=tif.imread(cellcenters_file)
@@ -120,7 +119,7 @@ class BasePredictor:
         tif.imwrite(file_path, pred_mask, compression="zlib")
 
     def _setups(self):
-        if hasattr(self, "do_3D") and self.do_3D is not None:
+        if hasattr(self, "do_3D") and self.do_3D is not False:
             self.pred_transforms = get_pred_transforms_3D()
         else:
             self.pred_transforms = get_pred_transforms()
@@ -139,7 +138,7 @@ class BasePredictor:
     def _get_img_data(self, img_name):
         img_path = os.path.join(self.input_path, img_name)
         img_data = self.pred_transforms(img_path)
-        if hasattr(self, "do_3D") and self.do_3D is not None:
+        if hasattr(self, "do_3D") and self.do_3D is not False:
             return img_data
         else:
             img_data = img_data.unsqueeze(0)

@@ -1,5 +1,9 @@
 import torch
 import torch.nn as nn
+
+import torch.nn.functional as F
+from scipy.ndimage import binary_dilation
+
 import numpy as np
 import os, sys
 from tqdm import tqdm
@@ -15,7 +19,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "../../")))
 
 from core.BaseTrainer import BaseTrainer
 from core.MEDIAR.utils import *
-import matplotlib.pyplot as plt
+from monai.losses import DiceLoss
+
+import tifffile as tiff
 
 __all__ = ["Trainer"]
 
@@ -232,6 +238,17 @@ class Trainer(BaseTrainer):
         self.mse_loss = nn.MSELoss(reduction="mean")
         self.bce_loss = nn.BCEWithLogitsLoss(reduction="mean")
 
+        self.loss_history = {
+            "epoch": [],
+            "total_loss": [],
+            "cellprob_bce": [],
+            "flow_mse": [],
+            "dice_loss": [],
+            "total_loss": [],
+            "val_loss": [],
+            "val_iou": [],
+        }
+
     def create_center_mask(self, center_mask, radius=8):
         """
         Applies a circular dilation to center_mask (B, 1, H, W) using a disk of given radius.
@@ -264,47 +281,129 @@ class Trainer(BaseTrainer):
         return dilated
     
 
-    def mediar_criterion(self, outputs, labels_onehot_flows):
-        """
-        outputs: [B, C=4, H, W] => [flow_x, flow_y, flow_z (if 3D), cellprob]
-        labels_onehot_flows: numpy array of shape [B, C=4, H, W]
-        """
+    # def mediar_criterion(self, outputs, labels_onehot_flows):
+    #     """
+    #     outputs: [B, C=4, H, W] => [flow_x, flow_y, flow_z (if 3D), cellprob]
+    #     labels_onehot_flows: numpy array of shape [B, C=4, H, W]
+    #     """
 
-        # Move to tensor
-        cellprob_target = (labels_onehot_flows[:, 1] > 0.5).to(self.device).float()  # [B, H, W]
-        gradient_flows = (labels_onehot_flows[:, 2:]).to(self.device)  # [B, 2 or 3, H, W]
+    #     # Move to tensor
+    #     cellprob_target = (labels_onehot_flows[:, 1] > 0.5).to(self.device).float()  # [B, H, W]
+    #     gradient_flows = (labels_onehot_flows[:, 2:]).to(self.device)  # [B, 2 or 3, H, W]
 
-        # Get prediction
-        cellprob_pred = outputs[:, -1]  # [B, H, W]
-        flow_pred = outputs[:, :gradient_flows.shape[1]]  # [B, 2 or 3, H, W]
-        #plot_image(flow_pred[0,0].cpu().detach().numpy())
-        # --- Supervision Mask ---
-        supervision_mask = (cellprob_target > 0.5).float().unsqueeze(1)  # [B, 1, H, W]
+    #     # Get prediction
+    #     cellprob_pred = outputs[:, -1]  # [B, H, W]
+    #     flow_pred = outputs[:, :gradient_flows.shape[1]]  # [B, 2 or 3, H, W]
+    #     #plot_image(flow_pred[0,0].cpu().detach().numpy())
+    #     # --- Supervision Mask ---
+    #     supervision_mask = (cellprob_target > 0.5).float().unsqueeze(1)  # [B, 1, H, W]
 
-        # DILATE: use max pooling to grow the mask region
-        dilation_size = 111  # odd number; use 3, 5, or 7 depending on how much extension you want
-        supervision_mask_dilated = torch.nn.functional.max_pool2d(
-            supervision_mask, kernel_size=dilation_size, stride=1, padding=dilation_size // 2
-        ).squeeze(1)  # [B, H, W]
+    #     # DILATE: use max pooling to grow the mask region
+    #     dilation_size = 111  # odd number; use 3, 5, or 7 depending on how much extension you want
+    #     supervision_mask_dilated = torch.nn.functional.max_pool2d(
+    #         supervision_mask, kernel_size=dilation_size, stride=1, padding=dilation_size // 2
+    #     ).squeeze(1)  # [B, H, W]
 
-        # ---- Cell Probability Loss ----
-        bce_loss = torch.nn.functional.binary_cross_entropy_with_logits(cellprob_pred, cellprob_target)#, reduction='none')
-        #cellprob_loss = (bce_loss * supervision_mask_dilated).sum() / supervision_mask_dilated.sum().clamp(min=1.0)
+    #     # ---- Cell Probability Loss ----
+    #     pos_weight = torch.tensor([15.0], device=self.device)
+    #     bce_loss = torch.nn.functional.binary_cross_entropy_with_logits(cellprob_pred, cellprob_target, pos_weight=pos_weight)#, reduction='none')
+    #     #cellprob_loss = (bce_loss * supervision_mask_dilated).sum() / supervision_mask_dilated.sum().clamp(min=1.0)
 
-        # ---- Flow Loss ----
-        flow_mask = supervision_mask_dilated.unsqueeze(1).repeat(1, flow_pred.shape[1], 1, 1)  # [B, C, H, W]
+    #     # ---- Flow Loss ----
+    #     flow_mask = supervision_mask_dilated.unsqueeze(1).repeat(1, flow_pred.shape[1], 1, 1)  # [B, C, H, W]
 
-        flow_pred_masked = flow_pred * flow_mask
-        #gradient_flows_masked = 5* gradient_flows * flow_mask
-        gradient_flows = 5* gradient_flows
+    #     flow_pred_masked = flow_pred * flow_mask
+    #     #gradient_flows_masked = 5* gradient_flows * flow_mask
+    #     gradient_flows = 5* gradient_flows
 
 
-        mse = torch.nn.functional.mse_loss(flow_pred, gradient_flows)#, reduction='sum')
-        denom = flow_mask.sum().clamp(min=1.0)
-        gradflow_loss = 0.5 * (mse / denom) 
+    #     mse = torch.nn.functional.mse_loss(flow_pred, gradient_flows)#, reduction='sum')
+    #     denom = flow_mask.sum().clamp(min=1.0)
+    #     gradflow_loss = 0.5 * (mse / denom) 
 
-        return bce_loss, mse * 0.5
 
+    #     dice_loss = DiceLoss(sigmoid=True)
+    #     dice_loss_res = dice_loss(cellprob_pred, cellprob_target)
+
+    #     return bce_loss, mse * 0.5, dice_loss_res
+
+    # def mediar_criterion(self, outputs, labels_onehot_flows):
+    #     """
+    #     outputs: [B, C=4, H, W] => [flow_x, flow_y, flow_z (if 3D), cellprob]
+    #     labels_onehot_flows: numpy array of shape [B, C=4, H, W]
+    #     """
+
+    #     # Move to tensor
+    #     cellprob_target = (labels_onehot_flows[:, 1] > 0.5).to(self.device).float()  # [B, H, W]
+    #     gradient_flows = (labels_onehot_flows[:, 2:]).to(self.device)  # [B, 2 or 3, H, W]
+
+    #     # Get prediction
+    #     cellprob_pred = outputs[:, -1]  # [B, H, W]
+    #     flow_pred = outputs[:, :gradient_flows.shape[1]]  # [B, 2 or 3, H, W]
+    #     #plot_image(flow_pred[0,0].cpu().detach().numpy())
+    #     # --- Supervision Mask ---
+    #     supervision_mask = (cellprob_target > 0.5).float().unsqueeze(1)  # [B, 1, H, W]
+
+    #     # DILATE: use max pooling to grow the mask region
+    #     dilation_size = 11  # odd number; use 3, 5, or 7 depending on how much extension you want
+    #     supervision_mask_dilated = torch.nn.functional.max_pool2d(
+    #         supervision_mask, kernel_size=dilation_size, stride=1, padding=dilation_size // 2
+    #     ).squeeze(1)  # [B, H, W]
+
+    #     # ---- Cell Probability Loss ----
+    #     pos_weight = torch.tensor([15.0], device=self.device)
+    #     bce_loss = torch.nn.functional.binary_cross_entropy_with_logits(cellprob_pred, cellprob_target, reduction='none')
+    #     cellprob_loss = (bce_loss * supervision_mask_dilated).sum() / supervision_mask_dilated.sum().clamp(min=1.0)
+
+    #     # ---- Flow Loss ----
+    #     flow_mask = supervision_mask_dilated.unsqueeze(1).repeat(1, flow_pred.shape[1], 1, 1)  # [B, C, H, W]
+
+    #     flow_pred_masked = flow_pred * flow_mask
+    #     gradient_flows_masked = gradient_flows * flow_mask
+
+
+    #     mse = torch.nn.functional.mse_loss(flow_pred_masked, gradient_flows_masked, reduction='sum')
+    #     denom = flow_mask.sum().clamp(min=1.0)
+    #     gradflow_loss = 0.5 * (mse / denom) 
+
+
+    #     dice_loss = DiceLoss(sigmoid=True)
+    #     dice_loss_res = dice_loss(cellprob_pred, cellprob_target)
+
+    #     return cellprob_loss, gradflow_loss, dice_loss_res
+
+    def mediar_criterion(self, outputs, labels_onehot_flows, dilation_iters=2):
+        """Loss function between true labels and prediction outputs with partial annotations support."""
+
+        # make sure it's a tensor on the right device
+        if isinstance(labels_onehot_flows, np.ndarray):
+            labels_onehot_flows = torch.from_numpy(labels_onehot_flows).to(self.device)
+        else:
+            labels_onehot_flows = labels_onehot_flows.to(self.device)
+
+        # --- Build ground truth tensors ---
+        gt_cellprob = (labels_onehot_flows[:, 1] > 0.5).float()              # (B,H,W)
+        gt_flows = labels_onehot_flows[:, 2:].float()                        # (B,2,H,W)
+
+        # --- Supervision mask (only where annotations exist) ---
+        supervision_mask = gt_cellprob.clone()
+
+        if dilation_iters > 0:
+            mask_np = supervision_mask.cpu().numpy()
+            mask_np = np.stack([binary_dilation(m, iterations=dilation_iters) for m in mask_np])
+            supervision_mask = torch.from_numpy(mask_np).to(self.device).float()
+
+        # --- Cell Recognition Loss (BCE masked) ---
+        raw_bce = F.binary_cross_entropy_with_logits(outputs[:, -1], gt_cellprob, reduction="none")
+        cellprob_loss = (raw_bce * supervision_mask).sum() / (supervision_mask.sum() + 1e-6)
+
+        # --- Cell Distinction Loss (Flow masked MSE) ---
+        raw_mse = F.mse_loss(outputs[:, :2], 5.0 * gt_flows, reduction="none")  # (B,2,H,W)
+        mask_flows = supervision_mask.unsqueeze(1)  # (B,1,H,W) -> matches (B,2,H,W)
+        gradflow_loss = (raw_mse * mask_flows).sum() / (mask_flows.sum() + 1e-6)
+
+        return cellprob_loss, 0.05 * gradflow_loss
+    
     def _crop_to_ROI(self, images, labels, flows=None, center_masks=None):
         """
         Crop each image in the batch to the ROI of its label and pad to common size divisible by 32.
@@ -426,16 +525,25 @@ class Trainer(BaseTrainer):
         self.loss_cellprob = []
         self.f1_metric = []
         self.iou_metric = []
+        self.loss_dice = []
 
 
         # Set model mode
         self.model.train() if phase == "train" else self.model.eval()
 
+        qc_counter = 0  # Reset at the beginning of each phase
+
         # Epoch process
         for batch_data in tqdm(self.dataloaders[phase]):
             images = batch_data["img"].to(self.device)
             labels = batch_data["label"].to(self.device)
-            flows = batch_data["flow"].to(self.device)
+            flows = batch_data["flow"]
+
+            # If flows is a list of file paths (str), load them
+            if isinstance(flows[0], str):       
+                flows = [torch.from_numpy(tiff.imread(f)).float().to(self.device) for f in flows]
+            if isinstance(flows, list):
+                flows = torch.stack(flows, dim=0)
 
             center_masks = batch_data.get("cellcenter", None)
             if center_masks is not None:
@@ -460,13 +568,13 @@ class Trainer(BaseTrainer):
                 images = torch.cat([images, images_pub], dim=0)
                 labels = torch.cat([labels, labels_pub], dim=0)
 
-
-            # plot_image(images[0].cpu().numpy())
-            # plot_image(labels[0].cpu().numpy())
+            #plot_image(images[0].cpu().numpy())
+            #plot_image(labels[0].cpu().numpy())
             images, labels, flows = self._crop_to_ROI(images, labels, flows)
-            # plot_image(images[0].cpu().numpy())
-            # plot_image(labels[0].cpu().numpy())
+            #plot_image(images[0].cpu().numpy())
+            #plot_image(labels[0].cpu().numpy())
             
+            self.optimizer.zero_grad()
             # Forward pass
             with torch.cuda.amp.autocast(enabled=self.amp):
                 with torch.set_grad_enabled(phase == "train"):
@@ -475,17 +583,17 @@ class Trainer(BaseTrainer):
                     #plot_image(outputs[-1].cpu().detach().numpy())
 
                     # # Map label masks to graidnet and onehot
-                    labels_onehot_flows = labels_to_flows(
-                        labels, use_gpu=True, device=self.device
-                    )
+                    # labels_onehot_flows = labels_to_flows(
+                    #     labels, use_gpu=True, device=self.device
+                    # )
 
-                    compare_flows(labels_onehot_flows, flows.to(self.device))
+                    # compare_flows(labels_onehot_flows, flows.to(self.device))
                     #plot_image(_sigmoid(outputs[0,0,:,:].cpu().detach().numpy()))
-                    #show_QC_results(images[0,0].cpu().numpy(), _sigmoid(outputs[0,-1,:,:].cpu().detach().numpy()), labels[0,-1].cpu().numpy())
+                    #show_QC_results(images[0,0].cpu().numpy(), _sigmoid(outputs[0,-2,:,:].cpu().detach().numpy()), labels[0,-1].cpu().numpy())
 
                     # Calculate loss
                     loss_prob, loss_flow = self.mediar_criterion(outputs, flows)
-                    loss = loss_prob + loss_flow
+                    loss = loss_prob + 3*loss_flow
                     self.loss_flow.append(loss_flow)
                     self.loss_cellprob.append(loss_prob)
 
@@ -497,7 +605,10 @@ class Trainer(BaseTrainer):
                         iou_score, f1_score = self._get_metrics(outputs, labels)
                         self.f1_metric.append(f1_score)
                         self.iou_metric.append(iou_score)
-                        show_QC_results(images[0, 0].cpu(), outputs[:,:], labels)
+
+                        if qc_counter < 5:
+                            show_QC_results(images[0, 0].cpu(), outputs[:,:], labels)
+                            qc_counter += 1
 
                 # Backward pass
                 if phase == "train":
@@ -509,7 +620,7 @@ class Trainer(BaseTrainer):
                         self.scaler.update()
 
                     else:
-                        loss_prob.backward()
+                        loss.backward()
                         self.optimizer.step()
 
         # Update metrics
@@ -526,6 +637,32 @@ class Trainer(BaseTrainer):
             phase_results = self._update_results(
                 phase_results, self.iou_metric, "iou", phase
             )
+
+        # Track epoch number
+        epoch_idx = len(self.loss_history["epoch"])
+        self.loss_history["epoch"].append(epoch_idx)
+
+        # Store metrics
+        bce = torch.stack(self.loss_cellprob).mean().item()
+        mse = torch.stack(self.loss_flow).mean().item()
+        total_loss = bce + mse
+
+        if phase == "train":
+            self.loss_history["cellprob_bce"].append(bce)
+            self.loss_history["flow_mse"].append(mse)
+            self.loss_history["total_loss"].append(total_loss)
+
+        # Store iou if available
+        if phase != "train":
+            self.loss_history["val_iou"].append(np.mean(self.iou_metric))
+            self.loss_history["val_loss"].append(np.mean(total_loss))
+        else:
+            self.loss_history["val_iou"].append(np.nan)
+            self.loss_history["val_loss"].append(np.nan)
+
+        # Plot if valid step
+        if phase != "train":
+            self._plot_loss_metrics()
 
         return phase_results
 
@@ -561,7 +698,50 @@ class Trainer(BaseTrainer):
             outputs = self.model(images)
 
         return outputs
-    
+
+
+    def _plot_loss_metrics(self):
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        history = self.loss_history
+
+        # Extract lists
+        epochs = np.array(history["epoch"])
+        train_total = np.array(history["total_loss"], dtype=np.float32)
+        val_total = np.array(history["val_loss"], dtype=np.float32)
+        val_iou = np.array(history["val_iou"], dtype=np.float32)
+
+        # Get minimum length to align all lists
+        min_len = min(len(epochs), len(train_total), len(val_total), len(val_iou))
+
+        # Truncate to same length
+        epochs = epochs[:min_len]
+        train_total = train_total[:min_len]
+        val_total = val_total[:min_len]
+        val_iou = val_iou[:min_len]
+
+        # Remove NaNs
+        mask = ~np.isnan(train_total) & ~np.isnan(val_total) & ~np.isnan(val_iou)
+        epochs = epochs[mask]
+        train_total = train_total[mask]
+        val_total = val_total[mask]
+        val_iou = val_iou[mask]
+
+        # Plot
+        plt.figure(figsize=(10, 6))
+        plt.plot(epochs, train_total, label="Train Total Loss", color="orange", linewidth=2)
+        plt.plot(epochs, val_total, label="Val Total Loss", color="blue", linewidth=2)
+        plt.plot(epochs, val_iou, label="Val IOU", color="green", linestyle="--", linewidth=2)
+
+        plt.xlabel("Epoch")
+        plt.ylabel("Value")
+        plt.title("Train/Val Total Loss and IOU")
+        plt.legend(loc="best")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+            
     def _inference3D(self, img_data):
         """Conduct model prediction"""
 
@@ -583,7 +763,7 @@ class Trainer(BaseTrainer):
         pred_mask = pred_mask.squeeze() ##@todo cpu as in prediction?
 
         return pred_mask
-    
+        
     def run_3D(self, imgs): ###@todo channel adapt, batch size adapt
         
         #permute images  3012 3102 3201 (put 3 in first becazse window_inference wants NCHW)

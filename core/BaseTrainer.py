@@ -165,7 +165,7 @@ class BaseTrainer:
             print(f"[Round {epoch}/{self.num_epochs}]")
 
 
-            if epoch % self.valid_frequency == 0 or epoch == 1:
+            if epoch % self.valid_frequency == 0:
                 if not self.no_valid:
                     # Valid Epoch Phase
                     print(">>> Valid Epoch")
@@ -204,18 +204,18 @@ class BaseTrainer:
 
             self.best_f1_score = 0
 
-        plt.figure(figsize=(8,5))
-        plt.plot(train_losses, label="Train Loss")
-        if len(valid_losses) > 0:
-            # Note: valid losses may be recorded only every few epochs
-            valid_epochs = list(range(self.valid_frequency, self.valid_frequency*len(valid_losses)+1, self.valid_frequency))
-            plt.plot(valid_epochs, valid_losses, label="Validation Loss")
-        plt.xlabel("Epoch")
-        plt.ylabel("Loss")
-        plt.title("Training and Validation Loss")
-        plt.legend()
-        plt.grid(True)
-        plt.show()
+        # plt.figure(figsize=(8,5))
+        # plt.plot(train_losses, label="Train Loss")
+        # if len(valid_losses) > 0:
+        #     # Note: valid losses may be recorded only every few epochs
+        #     valid_epochs = list(range(self.valid_frequency, self.valid_frequency*len(valid_losses)+1, self.valid_frequency))
+        #     plt.plot(valid_epochs, valid_losses, label="Validation Loss")
+        # plt.xlabel("Epoch")
+        # plt.ylabel("Loss")
+        # plt.title("Training and Validation Loss")
+        # plt.legend()
+        # plt.grid(True)
+        # plt.show()
 
         if self.best_weights is not None:
             self.model.load_state_dict(self.best_weights)

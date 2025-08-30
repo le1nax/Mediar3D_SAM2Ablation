@@ -131,7 +131,7 @@ class Predictor(BasePredictor):
         #img_data expecting NCHW shape
         y = sliding_window_inference(
             img_data,
-            roi_size=512,
+            roi_size=128,
             sw_batch_size=4,
             predictor=self.model if not aux else self.model_aux,
             padding_mode="constant",
@@ -285,7 +285,7 @@ class Predictor(BasePredictor):
         cp = [(1, 2), (0, 2), (0, 1)]
         cpy = [(0, 1), (0, 1), (0, 1)]
         shape = imgs.shape[:-1]
-        yf = torch.zeros((4, *shape), dtype=torch.float32, device=self.device)
+        yf = torch.zeros((4, *shape), dtype=torch.float32, device="cpu")
         for p in range(3):
             xsl = imgs.permute(pm[p]) ##images has now CZHW order
             # per image
@@ -296,7 +296,7 @@ class Predictor(BasePredictor):
             for z in range(shape[pm[p][1]]):  # iterate over Z
                 slice_img = xsl[:, z, :, :].unsqueeze(0)  # shape (1, C, H, W) 
                 out = self._window_inference(slice_img).squeeze() #shape (3, HW)
-                outputs.append(out) #remove 1st batch dim
+                outputs.append(out)
                 #show_QC_results(slice_img[0,0].cpu().numpy(), out[-1].cpu().numpy(), out[-1].cpu().numpy())
 
 

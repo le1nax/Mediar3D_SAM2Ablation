@@ -98,6 +98,7 @@ def get_dataloaders_labeled(
     batch_size=8,
     amplified=False,
     relabel=False,
+    precompute_flows=False,
 ):
     """Set DataLoaders for labeled datasets.
 
@@ -115,7 +116,7 @@ def get_dataloaders_labeled(
 
     # Get list of data dictionaries from decoded paths
     data_dicts = path_decoder(root, mapping_file)
-    data_dicts = add_flows(data_dicts, device="cuda", overwrite=False)
+    data_dicts = add_flows(data_dicts, device="cuda", overwrite=False, precompute_flows=precompute_flows)
     tuning_dicts = path_decoder(root, tuning_mapping_file, no_label=True)
 
     if amplified:
@@ -175,11 +176,11 @@ def get_dataloaders_labeled(
         trainset, batch_size=batch_size, shuffle=True, num_workers=5
     )
 
-    # Set dataloader for Validset (Batch size is fixed as 1)
-    valid_loader = DataLoader(validset, batch_size=1, shuffle=False,)
+    # Set dataloader for Validset 
+    valid_loader = DataLoader(validset, batch_size=batch_size, shuffle=False,)
 
-    # Set dataloader for Tuningset (Batch size is fixed as 1)
-    tuning_loader = DataLoader(tuningset, batch_size=1, shuffle=False)
+    # Set dataloader for Tuningset 
+    tuning_loader = DataLoader(tuningset, batch_size=batch_size, shuffle=False)
 
     # Form dataloaders as dictionary
     dataloaders = {

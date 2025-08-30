@@ -5,7 +5,7 @@ import argparse, pprint
 from datetime import datetime
 
 import os
-os.environ["WANDB_MODE"] = "disabled"
+#os.environ["WANDB_MODE"] = "disabled"
 
 
 from train_tools import *
@@ -133,7 +133,7 @@ def main(args):
 
 # Parser arguments for terminal execution
 parser = argparse.ArgumentParser(description="Config file processing")
-parser.add_argument("--config_path", default="./config/step2_finetuning/finetuning1.json", type=str)
+parser.add_argument("--config_path", default="./config/step1_pretraining/phase1.json", type=str)
 args = parser.parse_args()
 
 #######################################################################################

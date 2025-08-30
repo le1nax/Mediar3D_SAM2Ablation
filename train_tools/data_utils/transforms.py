@@ -20,14 +20,14 @@ train_transforms = Compose(
             percentiles=[0.0, 99.5],
         ),
         EnsureChannelFirstd(keys=["img", "label", "cellcenter", "flow"], channel_dim=-1, allow_missing_keys=True),
-        RemoveRepeatedChanneld(keys=["label"], repeats=3),
+        RemoveRepeatedChanneld(keys=["label"], repeats=3, allow_missing_keys=True),
         ScaleIntensityd(keys=["img"], allow_missing_keys=True),
 
         RandZoomd(
             keys=["img", "label", "cellcenter", "flow"],
             prob=0.5,
-            min_zoom=0.25,
-            max_zoom=1.5,
+            min_zoom=(0.25, 0.25),
+            max_zoom=(1.5, 1.5),
             mode=["area", "nearest", "nearest", "area"],
             keep_size=False,
             allow_missing_keys=True,

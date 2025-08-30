@@ -1,11 +1,11 @@
 {
     "pred_setups":{
         "name": "mediar",
-        "input_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_img",
-        "cellcenters_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_cellcenters",
-        "output_path": "../../Datasets/CTC/test_images/zc2dg/fs_inference_res_100e_Mediarclean",
+        "input_path": "../../Datasets/CTC/Fluo-N3DL-TRIF/02_test",
+        "cellcenters_path": "",
+        "output_path": "../../Datasets/CTC/Fluo-N3DL-TRIF/02_test_res",
         "make_submission": false,
-        "model_path": "../../W_B/MEDIAR_Testing/model_2025-08-14_17-57-43.pth",
+        "model_path": "../../W_B/MEDIAR_FT/model_TRIF_200e.pth",
         "device": "cuda:0",
         "model":{
             "name": "mediar-former",

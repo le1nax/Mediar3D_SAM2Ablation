@@ -372,37 +372,57 @@ class Trainer(BaseTrainer):
 
     #     return cellprob_loss, gradflow_loss, dice_loss_res
 
-    def mediar_criterion(self, outputs, labels_onehot_flows, dilation_iters=2):
-        """Loss function between true labels and prediction outputs with partial annotations support."""
+    # def mediar_criterion(self, outputs, labels_onehot_flows, dilation_iters=2):
+    #     """Loss function between true labels and prediction outputs with partial annotations support."""
 
-        # make sure it's a tensor on the right device
-        if isinstance(labels_onehot_flows, np.ndarray):
-            labels_onehot_flows = torch.from_numpy(labels_onehot_flows).to(self.device)
-        else:
-            labels_onehot_flows = labels_onehot_flows.to(self.device)
+    #     # make sure it's a tensor on the right device
+    #     if isinstance(labels_onehot_flows, np.ndarray):
+    #         labels_onehot_flows = torch.from_numpy(labels_onehot_flows).to(self.device)
+    #     else:
+    #         labels_onehot_flows = labels_onehot_flows.to(self.device)
 
-        # --- Build ground truth tensors ---
-        gt_cellprob = (labels_onehot_flows[:, 1] > 0.5).float()              # (B,H,W)
-        gt_flows = labels_onehot_flows[:, 2:].float()                        # (B,2,H,W)
+    #     # --- Build ground truth tensors ---
+    #     gt_cellprob = (labels_onehot_flows[:, 1] > 0.5).float()              # (B,H,W)
+    #     gt_flows = labels_onehot_flows[:, 2:].float()                        # (B,2,H,W)
 
-        # --- Supervision mask (only where annotations exist) ---
-        supervision_mask = gt_cellprob.clone()
+    #     # --- Supervision mask (only where annotations exist) ---
+    #     supervision_mask = gt_cellprob.clone()
 
-        if dilation_iters > 0:
-            mask_np = supervision_mask.cpu().numpy()
-            mask_np = np.stack([binary_dilation(m, iterations=dilation_iters) for m in mask_np])
-            supervision_mask = torch.from_numpy(mask_np).to(self.device).float()
+    #     if dilation_iters > 0:
+    #         mask_np = supervision_mask.cpu().numpy()
+    #         mask_np = np.stack([binary_dilation(m, iterations=dilation_iters) for m in mask_np])
+    #         supervision_mask = torch.from_numpy(mask_np).to(self.device).float()
 
-        # --- Cell Recognition Loss (BCE masked) ---
-        raw_bce = F.binary_cross_entropy_with_logits(outputs[:, -1], gt_cellprob, reduction="none")
-        cellprob_loss = (raw_bce * supervision_mask).sum() / (supervision_mask.sum() + 1e-6)
+    #     # --- Cell Recognition Loss (BCE masked) ---
+    #     raw_bce = F.binary_cross_entropy_with_logits(outputs[:, -1], gt_cellprob, reduction="none")
+    #     cellprob_loss = (raw_bce * supervision_mask).sum() / (supervision_mask.sum() + 1e-6)
 
-        # --- Cell Distinction Loss (Flow masked MSE) ---
-        raw_mse = F.mse_loss(outputs[:, :2], 5.0 * gt_flows, reduction="none")  # (B,2,H,W)
-        mask_flows = supervision_mask.unsqueeze(1)  # (B,1,H,W) -> matches (B,2,H,W)
-        gradflow_loss = (raw_mse * mask_flows).sum() / (mask_flows.sum() + 1e-6)
+    #     # --- Cell Distinction Loss (Flow masked MSE) ---
+    #     raw_mse = F.mse_loss(outputs[:, :2], 5.0 * gt_flows, reduction="none")  # (B,2,H,W)
+    #     mask_flows = supervision_mask.unsqueeze(1)  # (B,1,H,W) -> matches (B,2,H,W)
+    #     gradflow_loss = (raw_mse * mask_flows).sum() / (mask_flows.sum() + 1e-6)
 
-        return cellprob_loss, 0.05 * gradflow_loss
+    #     return cellprob_loss, 0.05 * gradflow_loss
+    
+
+    def mediar_criterion(self, outputs, labels_onehot_flows):
+        """loss function between true labels and prediction outputs"""
+
+        # Cell Recognition Loss
+        cellprob_loss = self.bce_loss(
+            outputs[:, -1],
+            torch.from_numpy(labels_onehot_flows[:, 1] > 0.5).to(self.device).float(),
+        )
+
+        # Cell Distinction Loss
+        gradient_flows = torch.from_numpy(labels_onehot_flows[:, 2:]).to(self.device)
+        gradflow_loss = self.mse_loss(outputs[:, :2], gradient_flows)
+
+        if torch.isnan(cellprob_loss):
+            asdf = 123  #debug
+            #cellprob_loss = torch.tensor(0.0, device=self.device)
+
+        return cellprob_loss, 2.5* gradflow_loss
     
     def _crop_to_ROI(self, images, labels, flows=None, center_masks=None):
         """
@@ -418,39 +438,50 @@ class Trainer(BaseTrainer):
         cropped_flows = []
 
         for b in range(images.shape[0]):
-            label = labels[b, 0]  # [H, W]
-            nonzero = (label > 0).nonzero(as_tuple=False)  # [N, 2]
+            # --- handle labels consistently ---
+            label = labels[b]
+            if label.ndim == 2:  # [H, W] → add channel
+                label = label.unsqueeze(0)  # [1, H, W]
+            elif label.ndim == 3:  # [C, H, W]
+                pass
+            else:
+                raise ValueError(f"Unexpected label shape: {label.shape}")
+
+            # Use first channel for ROI
+            roi_mask = label[0]  # [H, W]
+            nonzero = (roi_mask > 0).nonzero(as_tuple=False)
 
             if nonzero.shape[0] == 0:
                 cropped_images.append(images[b])
-                cropped_labels.append(labels[b])
+                cropped_labels.append(label)
                 if center_masks is not None:
-                    cropped_center_masks.append(center_masks[b])
+                    cm = center_masks[b]
+                    if cm.ndim == 2:
+                        cm = cm.unsqueeze(0)
+                    cropped_center_masks.append(cm)
                 if flows is not None:
                     cropped_flows.append(flows[b])
                 continue
 
-            y_min = nonzero[:, 0].min().item()
-            y_max = nonzero[:, 0].max().item()
-            x_min = nonzero[:, 1].min().item()
-            x_max = nonzero[:, 1].max().item()
+            # Compute ROI bounds
+            y_min, y_max = nonzero[:, 0].min().item(), nonzero[:, 0].max().item()
+            x_min, x_max = nonzero[:, 1].min().item(), nonzero[:, 1].max().item()
 
             buffer = 20
-            H, W = label.shape
-            y_start = max(y_min - buffer, 0)
-            y_end   = min(y_max + buffer, H)
-            x_start = max(x_min - buffer, 0)
-            x_end   = min(x_max + buffer, W)
+            H, W = roi_mask.shape
+            y_start, y_end = max(y_min - buffer, 0), min(y_max + buffer, H)
+            x_start, x_end = max(x_min - buffer, 0), min(x_max + buffer, W)
 
-            # Crop images, labels, center_masks (channels first)
+            # --- crop consistently ---
             cropped_images.append(images[b, :, y_start:y_end, x_start:x_end])
-            cropped_labels.append(labels[b, :, y_start:y_end, x_start:x_end])
+            cropped_labels.append(label[:, y_start:y_end, x_start:x_end])
             if center_masks is not None:
-                cropped_center_masks.append(center_masks[b, :, y_start:y_end, x_start:x_end])
-
-            # Crop flows (channels last)
+                cm = center_masks[b]
+                if cm.ndim == 2:
+                    cm = cm.unsqueeze(0)
+                cropped_center_masks.append(cm[:, y_start:y_end, x_start:x_end])
             if flows is not None:
-                cropped_flows.append(flows[b, :, y_start:y_end, x_start:x_end])
+                cropped_flows.append(flows[b, y_start:y_end, x_start:x_end])
 
         # Compute max spatial dims considering images and flows
         all_heights = [img.shape[1] for img in cropped_images]  # C,H,W -> H=1
@@ -532,18 +563,19 @@ class Trainer(BaseTrainer):
         self.model.train() if phase == "train" else self.model.eval()
 
         qc_counter = 0  # Reset at the beginning of each phase
-
+        
         # Epoch process
         for batch_data in tqdm(self.dataloaders[phase]):
             images = batch_data["img"].to(self.device)
             labels = batch_data["label"].to(self.device)
-            flows = batch_data["flow"]
+            flows = batch_data.get("flow", None)
+            if flows is not None:
+                # If flows is a list of file paths (str), load them
+                if isinstance(flows[0], str):       
+                    flows = [torch.from_numpy(tiff.imread(f)).float().to(self.device) for f in flows]
+                if isinstance(flows, list):
+                    flows = torch.stack(flows, dim=0)
 
-            # If flows is a list of file paths (str), load them
-            if isinstance(flows[0], str):       
-                flows = [torch.from_numpy(tiff.imread(f)).float().to(self.device) for f in flows]
-            if isinstance(flows, list):
-                flows = torch.stack(flows, dim=0)
 
             center_masks = batch_data.get("cellcenter", None)
             if center_masks is not None:
@@ -570,29 +602,29 @@ class Trainer(BaseTrainer):
 
             #plot_image(images[0].cpu().numpy())
             #plot_image(labels[0].cpu().numpy())
-            images, labels, flows = self._crop_to_ROI(images, labels, flows)
+            #images, labels, flows = self._crop_to_ROI(images, labels, flows)
             #plot_image(images[0].cpu().numpy())
             #plot_image(labels[0].cpu().numpy())
             
             self.optimizer.zero_grad()
             # Forward pass
-            with torch.cuda.amp.autocast(enabled=self.amp):
+            with torch.amp.autocast(device_type="cuda", enabled=self.amp):
                 with torch.set_grad_enabled(phase == "train"):
                     # Output shape is B x [grad y, grad x, cellprob] x H x W
                     outputs = self._inference(images, phase)
                     #plot_image(outputs[-1].cpu().detach().numpy())
 
-                    # # Map label masks to graidnet and onehot
-                    # labels_onehot_flows = labels_to_flows(
-                    #     labels, use_gpu=True, device=self.device
-                    # )
+                    # Map label masks to graidnet and onehot
+                    labels_onehot_flows = labels_to_flows(
+                        labels, use_gpu=True, device=self.device
+                    )
 
                     # compare_flows(labels_onehot_flows, flows.to(self.device))
                     #plot_image(_sigmoid(outputs[0,0,:,:].cpu().detach().numpy()))
                     #show_QC_results(images[0,0].cpu().numpy(), _sigmoid(outputs[0,-2,:,:].cpu().detach().numpy()), labels[0,-1].cpu().numpy())
 
                     # Calculate loss
-                    loss_prob, loss_flow = self.mediar_criterion(outputs, flows)
+                    loss_prob, loss_flow = self.mediar_criterion(outputs, labels_onehot_flows)
                     loss = loss_prob + 3*loss_flow
                     self.loss_flow.append(loss_flow)
                     self.loss_cellprob.append(loss_prob)
@@ -607,7 +639,7 @@ class Trainer(BaseTrainer):
                         self.iou_metric.append(iou_score)
 
                         if qc_counter < 5:
-                            show_QC_results(images[0, 0].cpu(), outputs[:,:], labels)
+                            #show_QC_results(images[0, 0].cpu(), outputs[:,:], labels)
                             qc_counter += 1
 
                 # Backward pass
@@ -660,9 +692,9 @@ class Trainer(BaseTrainer):
             self.loss_history["val_iou"].append(np.nan)
             self.loss_history["val_loss"].append(np.nan)
 
-        # Plot if valid step
-        if phase != "train":
-            self._plot_loss_metrics()
+        # # Plot if valid step
+        # if phase != "train":
+        #     self._plot_loss_metrics()
 
         return phase_results
 

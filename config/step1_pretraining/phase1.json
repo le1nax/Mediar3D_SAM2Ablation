@@ -1,11 +1,12 @@
 {
     "data_setups":{
         "labeled":{
-            "root": "/home/repos/MEDIAR",
-            "mapping_file": "./train_tools/data_utils/mapping_public.json",
-            "mapping_file_tuning": "/home/repos/MEDIAR/train_tools/data_utils/mapping_tuning.json",
-            "batch_size": 9, 
-            "valid_portion": 0
+            "root": "./",
+            "mapping_file": "./train_tools/data_utils/mapping_labeled_dic_sim.json",
+            "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
+            "batch_size": 1, 
+            "valid_portion": 0.1,
+            "precompute_flows": false
         },
         "public":{
             "enabled": false,

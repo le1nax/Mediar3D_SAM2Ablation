@@ -106,15 +106,13 @@ class UnifiedITKReader(NumpyReader):
 
     def verify_suffix(self, filename: Union[Sequence[PathLike], PathLike]) -> bool:
         """Verify whether the file format is supported by TIFF Reader."""
-
         suffixes: Sequence[str] = ["tif", "tiff", "png", "jpg", "bmp", "jpeg",]
         return has_itk or is_supported_format(filename, suffixes)
     
     def move_channel_last(self, axis, obj):
         """Puts the channel to last"""
-
-        order = [j for j in range(obj.ndim) if j != axis] + [axis] #put axis in last position
-        obj = obj.permute(*order)
+        order = [j for j in range(obj.ndim) if j != axis] + [axis]
+        obj = obj.transpose(order) if isinstance(obj, np.ndarray) else obj.permute(*order)
         return obj
 
     def read(self, data: Union[Sequence[PathLike], PathLike], **kwargs):
@@ -136,18 +134,20 @@ class UnifiedITKReader(NumpyReader):
                     _obj = itk.array_view_from_image(_obj, keep_axes=False)
                 except:
                     _obj = io.imread(name)
+
             meta = {
-                "spatial_shape": _obj.shape,  # shape before EnsureChannelFirst
+                "spatial_shape": _obj.shape,
                 "filename_or_obj": name,
             }
+
             if len(_obj.shape) == 2:
                 meta["dimensionality"] = 2
                 _obj = np.repeat(np.expand_dims(_obj, axis=-1), 3, axis=-1) # (H, W, 3)
+
             elif len(_obj.shape) == 3:
-                if _obj.shape[0] > 3 and _obj.shape[-1] > 3:  # heuristically a (Z, H, W), add channel dimension
+                if _obj.shape[0] > 3 and _obj.shape[-1] > 3:  
                     meta["dimensionality"] = 3
-                    _obj = np.repeat(np.expand_dims(_obj, axis=-1), 3, axis=-1)  # (Z, H, W, 3)
-                
+                    _obj = np.expand_dims(_obj, axis=-1)  # (Z, H, W, 1)
                 else: 
                     for p in range(3):
                         if _obj.shape[p] == 1:
@@ -158,9 +158,8 @@ class UnifiedITKReader(NumpyReader):
                             meta["dimensionality"] = 2
                             _obj = self.move_channel_last(p, _obj)
 
-                # else, leave it alone if already fine
             elif len(_obj.shape) == 4:
-                if _obj.shape[0] > 3 and _obj.shape[-1] > 3:  # heuristically a (Z, H, W)
+                if _obj.shape[0] > 3 and _obj.shape[-1] > 3:  
                     meta["dimensionality"] = 3
                     _obj = _obj[..., :3]  # (Z, H, W, 3)
                 else:
@@ -172,6 +171,11 @@ class UnifiedITKReader(NumpyReader):
                         if _obj.shape[p] == 3:
                             meta["dimensionality"] = 3
                             _obj = self.move_channel_last(p, _obj)
+
+            # ensure only 3 channels for encoder ---
+            if _obj.ndim >= 3 and _obj.shape[-1] > 3:
+                _obj = _obj[..., :3]
+
             img_.append(_obj)
 
         return img_ if len(filenames) > 1 else img_[0]

@@ -6,7 +6,8 @@
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
             "amplified": false,
             "batch_size": 4, 
-            "valid_portion": 0.2
+            "valid_portion": 0.2,
+            "precompute_flows": false
         },
         "public":{
             "enabled": false,
@@ -25,7 +26,7 @@
             "name": "mediar-former",
             "params": {},
             "pretrained":{
-                "enabled": true,
+                "enabled": false,
                 "weights": "../../W_B/MEDIAR_PT/from_phase1.pth",
                 "strict": false
             }

@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from skimage import exposure
 from monai.config import KeysCollection
 
@@ -15,42 +16,102 @@ __all__ = [
     "CustomNormalizeImaged",
 ]
 
+def safe_percentiles(img, lower=1, upper=99, sample_size=500_000):
+    # Ensure numpy float32
+    if torch.is_tensor(img):
+        img = img.cpu().numpy().astype(np.float32, copy=False)
+
+    flat = img.ravel()
+    n = flat.size
+
+    if n > sample_size:
+        idx = np.random.randint(0, n, size=sample_size, dtype=np.int64)
+        sample = flat[idx]
+    else:
+        sample = flat
+
+    # Ignore zeros
+    sample = sample[sample > 0]
+    if sample.size == 0:
+        return 0, 1
+
+    return np.percentile(sample, [lower, upper])
+
+def rescale_intensity_np(img, low, high, out_dtype=np.uint8):
+    img = img.astype(np.float32, copy=False)  # avoid float64
+    if high > low:
+        img = (img - low) / (high - low + 1e-8)
+        img = np.clip(img, 0, 1)
+    else:
+        img = np.zeros_like(img, dtype=np.float32)
+    img = (img * np.iinfo(out_dtype).max).astype(out_dtype, copy=False)
+    return img
 
 class CustomNormalizeImage(Transform):
-    """Normalize the image."""
+    """Memory-safe percentile normalization for large images."""
 
-    def __init__(self, percentiles=[0, 99.5], channel_wise=False):
+    def __init__(self, percentiles=[0, 99.5], channel_wise=False, sample_size=500_000):
+        """
+        percentiles: [lower, upper]
+        channel_wise: whether to normalize each channel independently
+        sample_size: number of voxels to sample for percentile computation
+        """
         self.lower, self.upper = percentiles
         self.channel_wise = channel_wise
+        self.sample_size = sample_size
 
-    def _normalize(self, img) -> np.ndarray:
-        non_zero_vals = img[np.nonzero(img)]
-        percentiles = np.percentile(non_zero_vals, [self.lower, self.upper])
-        img_norm = exposure.rescale_intensity(
-            img, in_range=(percentiles[0], percentiles[1]), out_range="uint8"
-        )
-
-        return img_norm.astype(np.uint8)
-
-    def __call__(self, img: np.ndarray) -> np.ndarray:
-        if self.channel_wise:
-            pre_img_data = np.zeros(img.shape, dtype=np.uint8)
-            for i in range(img.shape[-1]):
-                img_channel_i = img[:, :, i]
-
-                if len(img_channel_i[np.nonzero(img_channel_i)]) > 0:
-                    pre_img_data[:, :, i] = self._normalize(img_channel_i)
-
-            img = pre_img_data
-
+    @staticmethod
+    def safe_percentiles(img, lower, upper, sample_size=500_000):
+        """Compute approximate percentiles using a random sample of non-zero voxels."""
+        flat = img.ravel()
+        n = flat.size
+        if n > sample_size:
+            idx = np.random.randint(0, n, size=sample_size, dtype=np.int64)
+            sample = flat[idx]
         else:
-            img = self._normalize(img)
+            sample = flat
+        sample = sample[sample > 0]
+        if sample.size == 0:
+            return 0.0, 1.0
+        return np.percentile(sample, [lower, upper])
 
-        return img
+    @staticmethod
+    def inplace_rescale(img, low, high, out_dtype=np.uint8):
+        """Normalize in-place to [0, 255] (or other dtype)."""
+        if high > low:
+            img -= low
+            img /= (high - low + 1e-8)
+            np.clip(img, 0.0, 1.0, out=img)
+        else:
+            img.fill(0.0)
+        img *= np.iinfo(out_dtype).max
+        img[:] = img.astype(out_dtype, copy=False)
+
+    def _normalize_volume(self, img):
+        """Normalize entire volume at once (per-channel if requested)."""
+        if torch.is_tensor(img):
+            img = img.cpu().numpy()
+        if np.all(img == 0):
+            return np.zeros_like(img, dtype=np.uint8)
+
+        if self.channel_wise and img.ndim == 3:  # HWC
+            for c in range(img.shape[-1]):
+                channel = img[..., c]
+                if np.any(channel > 0):
+                    low, high = self.safe_percentiles(channel, self.lower, self.upper, self.sample_size)
+                    self.inplace_rescale(channel, low, high)
+            return img
+        else:
+            low, high = self.safe_percentiles(img, self.lower, self.upper, self.sample_size)
+            self.inplace_rescale(img, low, high)
+            return img
+
+    def __call__(self, img):
+        return self._normalize_volume(img)
 
 
 class CustomNormalizeImaged(MapTransform):
-    """Dictionary-based wrapper of NormalizeImage"""
+    """Dictionary-based wrapper of CustomNormalizeImage"""
 
     def __init__(
         self,
@@ -59,18 +120,13 @@ class CustomNormalizeImaged(MapTransform):
         channel_wise: bool = False,
         allow_missing_keys: bool = False,
     ):
-        super(CustomNormalizeImageD, self).__init__(keys, allow_missing_keys)
+        super().__init__(keys, allow_missing_keys)
         self.normalizer = CustomNormalizeImage(percentiles, channel_wise)
 
-    def __call__(
-        self, data: Mapping[Hashable, np.ndarray]
-    ) -> Dict[Hashable, np.ndarray]:
-
+    def __call__(self, data: Mapping[Hashable, np.ndarray]) -> Dict[Hashable, np.ndarray]:
         d = dict(data)
-
         for key in self.keys:
             d[key] = self.normalizer(d[key])
-
         return d
 
 

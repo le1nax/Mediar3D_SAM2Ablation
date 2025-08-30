@@ -79,7 +79,7 @@ def path_decoder(root, mapping_file, no_label=False, unlabeled=False):
 
     return data_dicts
 
-def add_flows(data_dicts, device="cuda", overwrite=False, save_as_tiff=True):
+def add_flows(data_dicts, device="cuda", overwrite=False, save_as_tiff=True, precompute_flows=False):
     """
     Adds or computes flow paths based on label paths.
 
@@ -94,6 +94,10 @@ def add_flows(data_dicts, device="cuda", overwrite=False, save_as_tiff=True):
     """
     for data in tqdm(data_dicts, desc="Checking or generating flows"):
         if "label" not in data:
+            continue
+
+        if not precompute_flows:
+            data["flow"] = None
             continue
 
         # Create "flows" folder inside the labels directory

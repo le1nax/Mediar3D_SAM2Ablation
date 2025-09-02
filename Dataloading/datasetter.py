@@ -177,10 +177,10 @@ def get_dataloaders_labeled(
     )
 
     # Set dataloader for Validset 
-    valid_loader = DataLoader(validset, batch_size=batch_size, shuffle=False,)
+    valid_loader = DataLoader(validset, batch_size=1, shuffle=False,)
 
     # Set dataloader for Tuningset 
-    tuning_loader = DataLoader(tuningset, batch_size=batch_size, shuffle=False)
+    tuning_loader = DataLoader(tuningset, batch_size=1, shuffle=False)
 
     # Form dataloaders as dictionary
     dataloaders = {

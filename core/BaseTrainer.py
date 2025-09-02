@@ -165,7 +165,7 @@ class BaseTrainer:
             print(f"[Round {epoch}/{self.num_epochs}]")
 
 
-            if epoch % self.valid_frequency == 0:
+            if epoch % self.valid_frequency == 0 and not epoch == 1:
                 if not self.no_valid:
                     # Valid Epoch Phase
                     print(">>> Valid Epoch")

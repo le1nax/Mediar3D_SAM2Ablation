@@ -100,7 +100,6 @@ def compute_masks(
     cp_mask = cellprob > cellprob_threshold
     cp_mask = morphology.remove_small_holes(cp_mask, area_threshold=16)
     cp_mask = morphology.remove_small_objects(cp_mask, min_size=16)
-
     if np.any(cp_mask):  # mask at this point is a cell cluster binary map, not labels
         # follow flows
         if p is None:

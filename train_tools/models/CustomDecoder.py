@@ -111,8 +111,9 @@ class MFAB(nn.Module):
 
 
 class DecoderBlock(nn.Module):
-    def __init__(self, in_channels, skip_channels, out_channels, use_batchnorm=True):
+    def __init__(self, in_channels, skip_channels, out_channels, use_batchnorm=True, upsample=True):
         super().__init__()
+        self.upsample = upsample
         self.conv1 = md.Conv2dReLU(
             in_channels + skip_channels,
             out_channels,
@@ -129,7 +130,8 @@ class DecoderBlock(nn.Module):
         )
 
     def forward(self, x, skip=None):
-        x = F.interpolate(x, scale_factor=2, mode="nearest")
+        if self.upsample:
+            x = F.interpolate(x, scale_factor=2, mode="nearest")
         if skip is not None:
             x = torch.cat([x, skip], dim=1)
         x = self.conv1(x)
@@ -165,7 +167,7 @@ class CustomMAnetDecoder(nn.Module):
         skip_channels = list(encoder_channels[1:]) + [0]
         out_channels = decoder_channels
 
-        self.center = PAB(head_channels, head_channels, pab_channels=pab_channels)
+        self.center = DecoderBlock(head_channels, 0, head_channels, use_batchnorm=use_batchnorm, upsample=False)
 
         # combine decoder keyword arguments
         kwargs = dict(use_batchnorm=use_batchnorm)  # no attention type here

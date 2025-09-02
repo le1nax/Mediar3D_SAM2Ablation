@@ -5,7 +5,7 @@ import argparse, pprint
 from datetime import datetime
 
 import os
-#os.environ["WANDB_MODE"] = "disabled"
+os.environ["WANDB_MODE"] = "disabled"
 
 
 from train_tools import *

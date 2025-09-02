@@ -218,6 +218,7 @@ class Trainer(BaseTrainer):
         device="cuda:0",
         no_valid=False,
         valid_frequency=1,
+        current_bsize=1,
         amp=False,
         algo_params=None,
     ):
@@ -235,6 +236,7 @@ class Trainer(BaseTrainer):
             algo_params,
         )
 
+        self.current_bsize = current_bsize
         self.mse_loss = nn.MSELoss(reduction="mean")
         self.bce_loss = nn.BCEWithLogitsLoss(reduction="mean")
 
@@ -416,13 +418,13 @@ class Trainer(BaseTrainer):
 
         # Cell Distinction Loss
         gradient_flows = torch.from_numpy(labels_onehot_flows[:, 2:]).to(self.device)
-        gradflow_loss = self.mse_loss(outputs[:, :2], gradient_flows)
+        gradflow_loss = self.mse_loss(outputs[:, :2], gradient_flows*5)
 
         if torch.isnan(cellprob_loss):
             asdf = 123  #debug
             #cellprob_loss = torch.tensor(0.0, device=self.device)
 
-        return cellprob_loss, 2.5* gradflow_loss
+        return cellprob_loss, 0.5* gradflow_loss
     
     def _crop_to_ROI(self, images, labels, flows=None, center_masks=None):
         """
@@ -568,6 +570,7 @@ class Trainer(BaseTrainer):
         for batch_data in tqdm(self.dataloaders[phase]):
             images = batch_data["img"].to(self.device)
             labels = batch_data["label"].to(self.device)
+            self.current_bsize = images.shape[0]
             flows = batch_data.get("flow", None)
             if flows is not None:
                 # If flows is a list of file paths (str), load them
@@ -621,8 +624,10 @@ class Trainer(BaseTrainer):
 
                     # compare_flows(labels_onehot_flows, flows.to(self.device))
                     #plot_image(_sigmoid(outputs[0,0,:,:].cpu().detach().numpy()))
-                    #show_QC_results(images[0,0].cpu().numpy(), _sigmoid(outputs[0,-2,:,:].cpu().detach().numpy()), labels[0,-1].cpu().numpy())
-
+                    # if qc_counter % 50 == 0:
+                    #     show_QC_results(images[0,0].cpu().numpy(), _sigmoid(outputs[0,-1,:,:].cpu().detach().numpy()), labels[0,-1].cpu().numpy())
+                        
+                    
                     # Calculate loss
                     loss_prob, loss_flow = self.mediar_criterion(outputs, labels_onehot_flows)
                     loss = loss_prob + 3*loss_flow
@@ -630,17 +635,26 @@ class Trainer(BaseTrainer):
                     self.loss_cellprob.append(loss_prob)
 
                     # Calculate valid statistics
+                    if phase == "train" and qc_counter % 30 == 0:
+                        outputs, labels = self._post_process(outputs.detach(), center_masks, labels)
+                        for b in range(self.current_bsize):
+                            iou_score, f1_score = self._get_metrics(outputs[b], labels[b])
+                            print(f"  [Train QC]  F1: {f1_score:.3f}, IoU: {iou_score:.3f}")
+
+                    # Calculate valid statistics
                     if phase != "train":
                         outputs, labels = self._post_process(outputs, center_masks, labels)
+
                         # plot_image(outputs)
                         # plot_image(labels)
-                        iou_score, f1_score = self._get_metrics(outputs, labels)
-                        self.f1_metric.append(f1_score)
-                        self.iou_metric.append(iou_score)
 
-                        if qc_counter < 5:
-                            #show_QC_results(images[0, 0].cpu(), outputs[:,:], labels)
-                            qc_counter += 1
+                        for b in range(self.current_bsize):
+                            iou_score, f1_score = self._get_metrics(outputs[b], labels[b])
+                            self.f1_metric.append(f1_score)
+                            self.iou_metric.append(iou_score)
+
+                        # if qc_counter % 50 == 0:
+                        #     show_QC_results(images[0, 0].cpu(), outputs[:,:], labels)
 
                 # Backward pass
                 if phase == "train":
@@ -654,6 +668,9 @@ class Trainer(BaseTrainer):
                     else:
                         loss.backward()
                         self.optimizer.step()
+            qc_counter += 1
+
+               
 
         # Update metrics
         phase_results = self._update_results(
@@ -696,6 +713,8 @@ class Trainer(BaseTrainer):
         # if phase != "train":
         #     self._plot_loss_metrics()
 
+
+        
         return phase_results
 
     def _inference(self, images, phase="train"):
@@ -831,18 +850,23 @@ class Trainer(BaseTrainer):
 
     def _post_process(self, outputs, cellcenters=None,labels=None):
         """Predict cell instances using the gradient tracking"""
-        outputs = outputs.squeeze(0).cpu().numpy()
-        gradflows, cellprob = outputs[:2], self._sigmoid(outputs[-1])
-        outputs = compute_masks(gradflows, cellprob, use_gpu=True, device=self.device)
-        outputs = outputs[0]  # (1, C, H, W) -> (C, H, W)
-        
-        # if(cellcenters is not None):
-        #     outputs = filter_false_positives(outputs, cellcenters)
+        outputs_batch = []
+        outputs = outputs.cpu().numpy()  # (B, C, H, W)
+        for b in range(self.current_bsize):
+            outputs_b = outputs[b]
+            gradflows, cellprob = outputs_b[:2], self._sigmoid(outputs_b[-1])
+            outputs_b = compute_masks(gradflows, cellprob, use_gpu=True, device=self.device)
+            outputs_b = outputs_b[0]  # (1, C, H, W) -> (C, H, W)
+            outputs_batch.append(outputs_b)
+            # if(cellcenters is not None):
+            # outputs = filter_false_positives(outputs, cellcenters)
+        outputs = np.stack(outputs_batch, axis=0)  # (B, C, H, W)
 
         if labels is not None:
-            labels = labels.squeeze(0).squeeze(0).cpu().numpy()
+            labels = labels.squeeze(1).cpu().numpy()
 
         return outputs, labels
+
 
     def _sigmoid(self, z):
         """Sigmoid function for numpy arrays"""

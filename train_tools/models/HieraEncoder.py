@@ -12,8 +12,9 @@ class HieraEncoderWrapper(nn.Module):
     def __init__(self, hiera_cfg="sam2_hiera_l.yaml"):
         super().__init__()
         self.encoder = build_sam2(hiera_cfg).image_encoder  # Hiera backbone
+        self.encoder.scalp = 0 #@todo abbreviation study
         #self.encoder.scalp = 0 # dont drop features (default drops last feature res (HW/32))##@todo check if pretrained weights are bound to scalp = 1
-        self._out_channels = (256, 256, 256)
+        self._out_channels = (256, 256, 256, 256)
         self._output_stride = 1
 
     def forward(self, x):

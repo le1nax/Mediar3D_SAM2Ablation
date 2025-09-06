@@ -9,7 +9,11 @@ from .HieraEncoder import HieraEncoderWrapper
 
 __all__ = ["MEDIARFormer"]
 
-
+def convert_bn_to_float32(module):
+    if isinstance(module, nn.BatchNorm2d):
+        module.float()
+    for child in module.children():
+        convert_bn_to_float32(child)
 
 class MEDIARFormer(MAnet):
     """MEDIAR-Former Model"""
@@ -18,8 +22,8 @@ class MEDIARFormer(MAnet):
         self,
         encoder_name="mit_b4",  # Default encoder
         encoder_weights=None,  # Pre-trained weights
-        encoder_channels=(256, 256, 256),  # encoder configuration #if sclap=0 adapt to 4 dims
-        decoder_channels=(256, 256, 256, 256),  # Decoder configuration
+        encoder_channels=(256, 256, 256, 256),  # encoder configuration #if sclap=0 adapt to 4 dims
+        decoder_channels=(256, 256, 256, 256, 256),  # Decoder configuration
         decoder_pab_channels=256,  # Decoder Pyramid Attention Block channels
         in_channels=3,  # Number of input channels
         classes=3,  # Number of output classes
@@ -28,7 +32,7 @@ class MEDIARFormer(MAnet):
         super().__init__(
             encoder_name="mit_b4",
             encoder_weights=None,
-            encoder_depth=4,
+            encoder_depth=5,
             decoder_channels=decoder_channels,
             decoder_pab_channels=decoder_pab_channels,
             in_channels=in_channels,
@@ -37,6 +41,8 @@ class MEDIARFormer(MAnet):
 
         # swap SegFormer encoder for Hiera
         self.encoder = HieraEncoderWrapper(hiera_cfg="sam2_hiera_l.yaml")
+
+
         self.decoder = CustomMAnetDecoder(
             encoder_channels=self.encoder.out_channels,
             decoder_channels=decoder_channels,
@@ -44,6 +50,8 @@ class MEDIARFormer(MAnet):
             use_batchnorm=True,  # Use batch normalization in decoder
             pab_channels=decoder_pab_channels,
         )
+
+        convert_bn_to_float32(self.decoder)
 
         # remove segmentation head
         self.segmentation_head = None

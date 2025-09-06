@@ -8,48 +8,41 @@ from segmentation_models_pytorch.base import modules as md
 class PAB(nn.Module):
     def __init__(self, in_channels, out_channels, pab_channels=64):
         super(PAB, self).__init__()
-        # Series of 1x1 conv to generate attention feature maps
         self.pab_channels = pab_channels
         self.in_channels = in_channels
         self.top_conv = nn.Conv2d(in_channels, pab_channels, kernel_size=1)
         self.center_conv = nn.Conv2d(in_channels, pab_channels, kernel_size=1)
         self.bottom_conv = nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1)
-        self.map_softmax = nn.Softmax(dim=1)
         self.out_conv = nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1)
 
     def forward(self, x):
         bsize, _, h, w = x.size()
-        
-        # Apply convs
-        x_top = self.top_conv(x)          # [B, C, H, W]
-        x_center = self.center_conv(x)    # [B, C, H, W]
-        x_bottom = self.bottom_conv(x)    # [B, in_channels, H, W]
-        
-        # Flatten spatial dimensions
-        x_top = x_top.flatten(2).float()               # [B, C, HW]
+
+        # Convs (safe in fp16)
+        x_top = self.top_conv(x)
+        x_center = self.center_conv(x)
+        x_bottom = self.bottom_conv(x)
+
+        # Flatten and cast to fp32 for matmul
+        x_top = x_top.flatten(2).float()                     # [B, C, HW]
         x_center = x_center.flatten(2).transpose(1, 2).float()  # [B, HW, C]
         x_bottom = x_bottom.flatten(2).transpose(1, 2).float()  # [B, HW, C]
-        
-        # Scaled dot-product attention
-        sp_map = torch.matmul(x_center, x_top) #/ (self.pab_channels ** 0.5)  # [B, HW, HW]
-        sp_map = torch.softmax(sp_map, dim=-1)  # softmax along last dim
-        
-        # Apply attention to bottom features
-        sp_map = torch.matmul(sp_map, x_bottom)  # [B, HW, C]
-        
-        # Reshape back to image
-        sp_map = sp_map.transpose(1, 2).reshape(bsize, self.in_channels, h, w)
-        
-        # Residual connection and final conv
-        x = x + sp_map.to(x.dtype)
-        x = self.out_conv(x)
-        
-        return x
 
+        # Attention map in fp32
+        sp_map = torch.matmul(x_center, x_top) / (self.pab_channels ** 0.5)
+        sp_map = torch.softmax(sp_map, dim=-1)               # [B, HW, HW]
+        sp_map = torch.matmul(sp_map, x_bottom)              # [B, HW, C]
+
+        # Back to fp16 if input was fp16
+        sp_map = sp_map.to(x.dtype).transpose(1, 2).reshape(bsize, self.in_channels, h, w)
+
+        # Residual + conv
+        x = x + sp_map
+        x = self.out_conv(x)
+        return x
 
 class MFAB(nn.Module):
     def __init__(self, in_channels, skip_channels, out_channels, use_batchnorm=True, reduction=16):
-        # MFAB is just a modified version of SE-blocks, one for skip, one for input
         super(MFAB, self).__init__()
         self.hl_conv = nn.Sequential(
             md.Conv2dReLU(
@@ -66,6 +59,7 @@ class MFAB(nn.Module):
                 use_batchnorm=use_batchnorm,
             ),
         )
+
         reduced_channels = max(1, skip_channels // reduction)
         self.SE_ll = nn.Sequential(
             nn.AdaptiveAvgPool2d(1),
@@ -81,8 +75,9 @@ class MFAB(nn.Module):
             nn.Conv2d(reduced_channels, skip_channels, 1),
             nn.Sigmoid(),
         )
+
         self.conv1 = md.Conv2dReLU(
-            skip_channels + skip_channels,  # we transform C-prime form high level to C from skip connection
+            skip_channels + skip_channels,
             out_channels,
             kernel_size=3,
             padding=1,
@@ -97,6 +92,7 @@ class MFAB(nn.Module):
         )
 
     def forward(self, x, skip=None):
+        
         x = self.hl_conv(x)
         x = F.interpolate(x, scale_factor=2, mode="nearest")
         attention_hl = self.SE_hl(x)
@@ -167,7 +163,9 @@ class CustomMAnetDecoder(nn.Module):
         skip_channels = list(encoder_channels[1:]) + [0]
         out_channels = decoder_channels
 
-        self.center = DecoderBlock(head_channels, 0, head_channels, use_batchnorm=use_batchnorm, upsample=False)
+        #self.center = DecoderBlock(head_channels, 0, head_channels, use_batchnorm=use_batchnorm, upsample=False)
+        
+        self.center = PAB(head_channels, head_channels, pab_channels=pab_channels)  
 
         # combine decoder keyword arguments
         kwargs = dict(use_batchnorm=use_batchnorm)  # no attention type here

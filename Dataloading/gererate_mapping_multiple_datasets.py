@@ -58,18 +58,17 @@ if __name__ == "__main__":
         "--train_img_paths",
         nargs="+",
         default=[
-            "../../Datasets/CTC/sim3d/fewshot/fs_train_img",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/Cellpose_Data/train_CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/DSBowl2018/data-science-bowl-2018/stage1_train/CTC_format/01_tiff",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/A172/CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/BT474/CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/BV2/CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/Huh7/CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/MCF7/CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SHSY5Y/CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SkBr3/CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SKOV3/CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/omnipose/datasets/CTC_format/01"
+            "../../Datasets/pretraining_mediar/CellposeDataset/01",
+            "../../Datasets/pretraining_mediar/DataScienceBowl/01_tiff",
+            "../../Datasets/pretraining_mediar/livecell_A172/01",
+            "../../Datasets/pretraining_mediar/livecell_BT474/01",
+            "../../Datasets/pretraining_mediar/livecell_BV2/01",
+            "../../Datasets/pretraining_mediar/livecell_Huh7/01",
+            "../../Datasets/pretraining_mediar/livecell_MCF7/01",
+            "../../Datasets/pretraining_mediar/livecell_SHSY5Y/01",
+            "../../Datasets/pretraining_mediar/livecell_SkBr3/01",
+            "../../Datasets/pretraining_mediar/livecell_SKOV3/01",
+            "../../Datasets/pretraining_mediar/OmniposeDataset/01"
         ],
         help="List of image directories"
     )
@@ -77,18 +76,17 @@ if __name__ == "__main__":
         "--train_label_paths",
         nargs="+",
         default=[
-            "../../Datasets/CTC/sim3d/fewshot/fs_train_masks",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/Cellpose_Data/train_CTC_format/01_ST/SEG",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/DSBowl2018/data-science-bowl-2018/stage1_train/CTC_format/01_GT_tiff/SEG",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/A172/CTC_format/01_ST/SEG",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/BT474/CTC_format/01_ST/SEG",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/BV2/CTC_format/01",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/Huh7/CTC_format/01_ST/SEG",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/MCF7/CTC_format/01_ST/SEG",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SHSY5Y/CTC_format/01_ST/SEG",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SkBr3/CTC_format/01_ST/SEG",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SKOV3/CTC_format/01_ST/SEG",
-            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/omnipose/datasets/CTC_format/01_ST/SEG"
+            "../../Datasets/pretraining_mediar/CellposeDataset/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/DataScienceBowl/01_GT_tiff/SEG",
+            "../../Datasets/pretraining_mediar/livecell_A172/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_BT474/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_BV2/01",
+            "../../Datasets/pretraining_mediar/livecell_Huh7/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_MCF7/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_SHSY5Y/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_SkBr3/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_SKOV3/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/OmniposeDataset/01_ST/SEG"
         ],
         help="List of label directories"
     )

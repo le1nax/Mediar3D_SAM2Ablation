@@ -4,7 +4,7 @@
             "root": "./",
             "mapping_file": "./train_tools/data_utils/mapping_labeled_dic_sim.json",
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
-            "batch_size": 4, 
+            "batch_size": 7, 
             "valid_portion": 0.1,
             "precompute_flows": false
         },

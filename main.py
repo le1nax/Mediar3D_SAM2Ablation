@@ -53,7 +53,7 @@ def _get_setups(args):
     # Set trainer
     trainer_args = args.train_setups.trainer
     trainer = TRAINER[trainer_args.name](
-        model, dataloaders, optimizer, scheduler, **trainer_args.params
+        model, dataloaders, optimizer, scheduler, args.data_setups.labeled.incomplete_annotations, **trainer_args.params
     )
 
     # Check if no validation
@@ -133,7 +133,8 @@ def main(args):
 
 # Parser arguments for terminal execution
 parser = argparse.ArgumentParser(description="Config file processing")
-parser.add_argument("--config_path", default="./config/step1_pretraining/phase1.json", type=str)
+#parser.add_argument("--config_path", default="./config/step1_pretraining/phase1.json", type=str)
+parser.add_argument("--config_path", default="./config/step2_finetuning/finetuning1.json", type=str)
 args = parser.parse_args()
 
 #######################################################################################

@@ -37,6 +37,41 @@ def pad_to_multiple(tensor, multiple=32):
 
     return nn.functional.pad(tensor, (pad_left, pad_right, pad_top, pad_bottom), mode="constant", value=0)
 
+
+def remove_zero_padding_2d(tensor: torch.Tensor, threshold: float = 1e-6):
+    """
+    Crop a 2D (C, H, W) tensor to remove zero-padded borders.
+
+    Args:
+        tensor (torch.Tensor): Input tensor (C, H, W)
+        threshold (float): Values with abs <= threshold are considered zero
+
+    Returns:
+        cropped (torch.Tensor): Cropped tensor
+        slices (tuple): Slices used for cropping
+    """
+    if tensor.ndim != 3:
+        raise ValueError("Tensor must be 3D (C, H, W)")
+
+    arr = tensor.cpu().numpy()
+
+    # Detect nonzero pixels across channels using threshold
+    nonzero = np.any(np.abs(arr) > threshold, axis=0)
+
+    if not np.any(nonzero):
+        # No nonzero pixels → return original
+        return tensor, None
+
+    # Find bounding box
+    ys, xs = np.nonzero(nonzero)
+    y_min, y_max = ys.min(), ys.max() + 1
+    x_min, x_max = xs.min(), xs.max() + 1
+
+    slices = (slice(None), slice(y_min, y_max), slice(x_min, x_max))
+    cropped = arr[slices]
+
+    return torch.from_numpy(cropped).to(tensor.device), slices
+
 def plot_image(image, title='Image', slice_idx=None, cmap='gray'):
     """
     Plot a 2D image or a slice from a 3D image.
@@ -213,6 +248,7 @@ class Trainer(BaseTrainer):
         dataloaders,
         optimizer,
         scheduler=None,
+        incomplete_annotations=False,
         criterion=None,
         num_epochs=100,
         device="cuda:0",
@@ -235,7 +271,7 @@ class Trainer(BaseTrainer):
             amp,
             algo_params,
         )
-
+        self.incomplete_annotations = incomplete_annotations
         self.current_bsize = current_bsize
         self.mse_loss = nn.MSELoss(reduction="mean")
         self.bce_loss = nn.BCEWithLogitsLoss(reduction="mean")
@@ -283,43 +319,43 @@ class Trainer(BaseTrainer):
         return dilated
    
 
-    # def mediar_criterion(self, outputs, labels_onehot_flows, dilation_iters=10):
-    #     """Loss function between true labels and prediction outputs with partial annotations support."""
+    def mediar_criterion_incomplete_annotations(self, outputs, labels_onehot_flows, dilation_iters=10):
+        """Loss function between true labels and prediction outputs with partial annotations support."""
 
-    #     # --- Ensure tensor ---
-    #     if isinstance(labels_onehot_flows, np.ndarray):
-    #         labels_onehot_flows = torch.from_numpy(labels_onehot_flows).to(self.device)
-    #     else:
-    #         labels_onehot_flows = labels_onehot_flows.to(self.device)
+        # --- Ensure tensor ---
+        if isinstance(labels_onehot_flows, np.ndarray):
+            labels_onehot_flows = torch.from_numpy(labels_onehot_flows).to(self.device)
+        else:
+            labels_onehot_flows = labels_onehot_flows.to(self.device)
 
-    #     # --- Build ground truth tensors ---
-    #     gt_cellprob = (labels_onehot_flows[:, 1] > 0.5).float()   # (B,H,W)
-    #     gt_flows = labels_onehot_flows[:, 2:].float()             # (B,2,H,W)
+        # --- Build ground truth tensors ---
+        gt_cellprob = (labels_onehot_flows[:, 1] > 0.5).float()   # (B,H,W)
+        gt_flows = labels_onehot_flows[:, 2:].float()             # (B,2,H,W)
 
-    #     # --- Supervision mask (initially: only where annotations exist) ---
-    #     supervision_mask = gt_cellprob.clone()
+        # --- Supervision mask (initially: only where annotations exist) ---
+        supervision_mask = gt_cellprob.clone()
 
-    #     # --- Special case: background-only slices (no labels) ---
-    #     if supervision_mask.sum() == 0:
-    #         # Use full image as supervision mask
-    #         supervision_mask = torch.ones_like(supervision_mask, device=self.device)
+        # --- Special case: background-only slices (no labels) ---
+        if supervision_mask.sum() == 0:
+            # Use full image as supervision mask
+            supervision_mask = torch.ones_like(supervision_mask, device=self.device)
 
-    #     # --- Dilate mask if needed ---
-    #     elif dilation_iters > 0:
-    #         mask_np = supervision_mask.cpu().numpy()
-    #         mask_np = np.stack([binary_dilation(m, iterations=dilation_iters) for m in mask_np])
-    #         supervision_mask = torch.from_numpy(mask_np).to(self.device).float()
+        # --- Dilate mask if needed ---
+        elif dilation_iters > 0:
+            mask_np = supervision_mask.cpu().numpy()
+            mask_np = np.stack([binary_dilation(m, iterations=dilation_iters) for m in mask_np])
+            supervision_mask = torch.from_numpy(mask_np).to(self.device).float()
 
-    #     # --- Cell Recognition Loss (BCE masked) ---
-    #     raw_bce = F.binary_cross_entropy_with_logits(outputs[:, -1], gt_cellprob, reduction="none")
-    #     cellprob_loss = (raw_bce * supervision_mask).sum() / (supervision_mask.sum() + 1e-6)
+        # --- Cell Recognition Loss (BCE masked) ---
+        raw_bce = F.binary_cross_entropy_with_logits(outputs[:, -1], gt_cellprob, reduction="none")
+        cellprob_loss = (raw_bce * supervision_mask).sum() / (supervision_mask.sum() + 1e-6)
 
-    #     # --- Cell Distinction Loss (Flow masked MSE) ---
-    #     raw_mse = F.mse_loss(outputs[:, :2], 5.0 * gt_flows, reduction="none")  # (B,2,H,W)
-    #     mask_flows = supervision_mask.unsqueeze(1)  # (B,1,H,W)
-    #     gradflow_loss = (raw_mse * mask_flows).sum() / (mask_flows.sum() + 1e-6)
+        # --- Cell Distinction Loss (Flow masked MSE) ---
+        raw_mse = F.mse_loss(outputs[:, :2], 5.0 * gt_flows, reduction="none")  # (B,2,H,W)
+        mask_flows = supervision_mask.unsqueeze(1)  # (B,1,H,W)
+        gradflow_loss = (raw_mse * mask_flows).sum() / (mask_flows.sum() + 1e-6)
 
-    #     return cellprob_loss, 0.05 * gradflow_loss
+        return cellprob_loss, 0.05 * gradflow_loss
     
 
     def mediar_criterion(self, outputs, labels_onehot_flows):
@@ -356,14 +392,33 @@ class Trainer(BaseTrainer):
             label = labels[b, 0]  # [H, W]
             nonzero = (label > 0).nonzero(as_tuple=False)
 
-            # case 1: empty label -> keep full image
+
+
+            # case 1: empty label -> remove zero padding using image crop
             if nonzero.shape[0] == 0:
-                cropped_images.append(images[b])
-                cropped_labels.append(labels[b])
-                if center_masks is not None:
-                    cropped_center_masks.append(center_masks[b])
-                if flows is not None:
-                    cropped_flows.append(flows[b])
+                #plot_image(images[b].cpu().numpy(), title=f"Cropped image {b} before removing zero padding")
+                cropped_img, slices = remove_zero_padding_2d(images[b])
+                #plot_image(cropped_img.cpu().numpy(), title=f"Cropped image {b} after removing zero padding")
+                cropped_images.append(cropped_img)
+
+                if slices is not None:
+                    cropped_labels.append(labels[b][slices])
+                    if center_masks is not None:
+                        cropped_center_masks.append(center_masks[b][slices])
+                    if flows is not None:
+                        cropped_flows.append(flows[b][slices])
+                else:
+                    # nothing nonzero, keep unchanged
+                    cropped_labels.append(labels[b])
+                    if center_masks is not None:
+                        cropped_center_masks.append(center_masks[b])
+                    if flows is not None:
+                        cropped_flows.append(flows[b])
+
+                #print(cropped_img.shape)
+                #if(cropped_img.shape[1] >1900 or cropped_img.shape[2]>1900):
+                #    print(f"Warning: image {b} still very large after removing zero padding: {cropped_img.shape}")
+
                 continue
 
             # # case 2: non-empty, maybe keep full image
@@ -380,6 +435,8 @@ class Trainer(BaseTrainer):
             y_min, y_max = nonzero[:, 0].min().item(), nonzero[:, 0].max().item()
             x_min, x_max = nonzero[:, 1].min().item(), nonzero[:, 1].max().item()
 
+
+
             buffer = 20
             H, W = label.shape
             y_start = max(y_min - buffer, 0)
@@ -387,6 +444,10 @@ class Trainer(BaseTrainer):
             x_start = max(x_min - buffer, 0)
             x_end   = min(x_max + buffer, W)
 
+            #if( y_end - y_start >1900 or x_end - x_start>1900):
+             #   print(f"Warning: image {b} still very large after ROI crop: {y_end - y_start} x {x_end - x_start}")
+            #plot_image(images[b, :, y_start:y_end, x_start:x_end].cpu().numpy())
+            #print(images[b, :, y_start:y_end, x_start:x_end].shape)
             cropped_images.append(images[b, :, y_start:y_end, x_start:x_end])
             cropped_labels.append(labels[b, :, y_start:y_end, x_start:x_end])
             if center_masks is not None:
@@ -505,7 +566,8 @@ class Trainer(BaseTrainer):
 
             #plot_image(images[0].cpu().numpy())
             #plot_image(labels[0].cpu().numpy())
-            #images, labels, flows = self._crop_to_ROI(images, labels, flows)
+            if self.incomplete_annotations:
+                images, labels, flows = self._crop_to_ROI(images, labels, flows)
             #plot_image(images[0].cpu().numpy())
             #plot_image(labels[0].cpu().numpy())
             
@@ -529,7 +591,10 @@ class Trainer(BaseTrainer):
                         
                     
                     # Calculate loss
-                    loss_prob, loss_flow = self.mediar_criterion(outputs, labels_onehot_flows)
+                    if self.incomplete_annotations:
+                        loss_prob, loss_flow = self.mediar_criterion_incomplete_annotations(outputs, labels_onehot_flows, dilation_iters=10)
+                    else:
+                        loss_prob, loss_flow = self.mediar_criterion(outputs, labels_onehot_flows)
                     loss = loss_prob + loss_flow
                     self.loss_flow.append(loss_flow)
                     self.loss_cellprob.append(loss_prob)

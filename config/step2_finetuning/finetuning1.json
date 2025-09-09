@@ -5,9 +5,10 @@
             "mapping_file": "./train_tools/data_utils/mapping_labeled_dic_sim.json",
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
             "amplified": false,
-            "batch_size": 4, 
+            "batch_size": 3, 
             "valid_portion": 0.2,
-            "precompute_flows": false
+            "precompute_flows": false,
+            "incomplete_annotations": true
         },
         "public":{
             "enabled": false,
@@ -27,15 +28,15 @@
             "params": {},
             "pretrained":{
                 "enabled": false,
-                "weights": "../../W_B/MEDIAR_PT/from_phase1.pth",
+                "weights": "../../W_B/MediarHiera_PT/hiera_pt_zeroval.pth",
                 "strict": false
             }
         },
         "trainer": {
             "name": "mediar",
             "params": {            
-                "num_epochs": 200,
-                "valid_frequency": 1,
+                "num_epochs": 50,
+                "valid_frequency": 10,
                 "device": "cuda:0",
                 "amp": false,
                 "algo_params": {"with_public": false}

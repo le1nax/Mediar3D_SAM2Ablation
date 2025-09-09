@@ -276,41 +276,109 @@ class Predictor(BasePredictor):
         
 
 
-    def run_3D(self, imgs): ###@todo channel adapt, batch size adapt
-        
-        #permute images  3012 3102 3201 (put 3 in first becazse window_inference wants NCHW)
-        sstr = ["YX", "ZY", "ZX"]
-        pm = [(3, 0, 1, 2), (3, 1, 0, 2), (3, 2, 0, 1)] 
+    def run_3D(self, imgs):
+        """
+        Memory-efficient 3D inference (slice-by-slice).
+
+        Accepts imgs in either:
+        - (C, Z, Y, X)  <-- preferred (channel-first)
+        - (Z, Y, X, C)  <-- will be converted automatically
+
+        Returns:
+        yf: torch.Tensor shape (4, Z, Y, X) on CPU (float32).
+        Channels: 3 flow maps + probability map (aggregated / averaged).
+        """
+
+        # --- normalize to (C, Z, Y, X) ---
+        if imgs.ndim != 4:
+            raise ValueError(f"Expected 4D tensor, got shape {imgs.shape}")
+        if imgs.shape[0] in (1, 2, 3, 4):
+            vol = imgs.contiguous()
+        elif imgs.shape[-1] in (1, 2, 3, 4):
+            vol = imgs.permute(3, 0, 1, 2).contiguous()
+        else:
+            # fallback assume channel-first
+            vol = imgs.contiguous()
+
+        C, Z, Y, X = vol.shape
+
+        # accumulators on CPU (float32 for numeric safety)
+        yf = torch.zeros((4, Z, Y, X), dtype=torch.float32, device="cpu")
+
+        # permutations adapted for channel-first input (produce (C, num_planes, H, W))
+        pm = [
+            (0, 1, 2, 3),  # Z-slices -> (C, Z, Y, X)
+            (0, 2, 1, 3),  # Y-slices -> (C, Y, Z, X)
+            (0, 3, 1, 2),  # X-slices -> (C, X, Z, Y)
+        ]
+
         ipm = [(0, 1, 2), (1, 0, 2), (1, 2, 0)]
+
+        # which global flow channels to add local in-plane flows to (same as your original)
         cp = [(1, 2), (0, 2), (0, 1)]
+
         cpy = [(0, 1), (0, 1), (0, 1)]
-        shape = imgs.shape[:-1]
-        yf = torch.zeros((4, *shape), dtype=torch.float32, device="cpu")
-        for p in range(3):
-            xsl = imgs.permute(pm[p]) ##images has now CZHW order
-            # per image
-            print("running %s: %d planes of size (%d, %d)" %
-                            (sstr[p], shape[pm[p][1]], shape[pm[p][2]], shape[pm[p][3]]))
+
+        model_device = next(self.model.parameters()).device
+
+        with torch.no_grad():
+            for p in range(3):
+                # if p != 1:
+                #     continue
+                xsl = vol.permute(pm[p]).contiguous()  # (C, num_planes, H, W)
+                num_planes = xsl.shape[1]
+                H = xsl.shape[2]; W = xsl.shape[3]
+                
+                print(f"[run_3D] plane {p}: num_planes={num_planes}, plane_size=({H},{W})")
+
+                for idx in range(num_planes):
+                    slice_img = xsl[:, idx, :, :].unsqueeze(0).to(model_device)  # (1,C,H,W)
+                    out = self._window_inference(slice_img).squeeze()  # (Cout, H, W) or (H, W)
+                    if out.dim() == 2:
+                        out = out.unsqueeze(0)
+                    out_cpu = out.detach().cpu()  # move result to cpu 
+                    # if(p == 1):
+                    #     show_QC_results(slice_img[0,0].cpu().numpy(), out_cpu[-1].cpu().numpy(), out_cpu[-1].cpu().numpy())
+
+                    # assume first two channels are in-plane flows, last channel is prob
+                    if out_cpu.shape[0] < 2:
+                        raise RuntimeError(f"_window_inference returned unexpected channel count: {out_cpu.shape[0]}")
+                    flow0 = out_cpu[0]        # corresponds to slice H axis
+                    flow1 = out_cpu[1]        # corresponds to slice W axis
+                    prob  = out_cpu[-1]       # last channel as probability (works for 3- or 4-channel outputs)
+
+                    if p == 0:
+                        # Z-slice: idx is z, H=X, W=Y  -> add to yf[:, z, :, :]
+                        yf[cp[p][0], idx, :, :] += flow0
+                        yf[cp[p][1], idx, :, :] += flow1
+                        yf[3, idx, :, :]        += prob
+
+                    elif p == 1:
+                        # Y-slice: idx is y, H=Z, W=Y -> flow0 maps to Z axis, flow1 to Y axis
+                        # flow0 shape: (Z, Y) -> fits yf[:, :, idx, :]
+                        yf[cp[p][0], :, idx, :] += flow0
+                        yf[cp[p][1], :, idx, :] += flow1
+                        yf[3, :, idx, :]        += prob
+                    else:  # p == 2
+                        # X-slice: idx is x, H=Z, W=X -> flow0 maps to Z axis, flow1 to X axis
+                        # flow0 shape: (Z, X) -> fits yf[:, :, :, idx]
+                        yf[cp[p][0], :, :, idx] += flow0
+                        yf[cp[p][1], :, :, idx] += flow1
+                        yf[3, :, :, idx]        += prob
+
+                    # if p == 0:
+                    #     show_QC_results(slice_img[0,0].cpu().numpy(), yf[3, idx, :, :].cpu().numpy(), yf[3, idx, :, :].cpu().numpy())
+                    # elif p == 1:
+                    #     show_QC_results(slice_img[0,0].cpu().numpy(),yf[3, :, idx, :].cpu().numpy(), yf[3, :, idx, :].cpu().numpy())
+                    # else:  # p == 2
+                    #     show_QC_results(slice_img[0,0].cpu().numpy(),yf[3, :, :, idx].cpu().numpy(), yf[3, :, :, idx].cpu().numpy())
+                    # free memory 
+
+                    del slice_img, out, out_cpu, flow0, flow1, prob
+                    torch.cuda.empty_cache()
+                #show_QC_results(slice_img[0,0].cpu().numpy(), yf[-1, 2].cpu().numpy(), yf[-1,2].cpu().numpy())
             
-            outputs = []
-            for z in range(shape[pm[p][1]]):  # iterate over Z
-                slice_img = xsl[:, z, :, :].unsqueeze(0)  # shape (1, C, H, W) 
-                out = self._window_inference(slice_img).squeeze() #shape (3, HW)
-                outputs.append(out)
-                #show_QC_results(slice_img[0,0].cpu().numpy(), out[-1].cpu().numpy(), out[-1].cpu().numpy())
-
-
-            # Stack outputs along Z
-            y = torch.stack(outputs, dim=1)  #shape(4, Z, H, W)
-
-            y_p = y[-1].permute(ipm[p])
-            yf[-1] += y_p
-            #pltval= self._sigmoid(yf[-1,30,:,:].cpu().squeeze())
-            #self.plot_imageSlider(image=pltval)
-            for j in range(2):
-                yf[cp[p][j]] += y[cpy[p][j]].permute(ipm[p])
-            y = None; del y
-    
+            # show_QC_results(slice_img[0,30].cpu().numpy(), yf[-1, 30].cpu().numpy(), yf[-1,30].cpu().numpy())
         return yf
     
     @torch.no_grad()
@@ -447,8 +515,8 @@ class Predictor(BasePredictor):
                     ] = pred_mask
 
             pred_mask = pred_pad[:H, :W]
-        # if(cellcenters is not None):
-        #     pred_mask = filter_false_positives(pred_mask, cellcenters)
+        if(cellcenters is not None):
+            pred_mask = filter_false_positives(pred_mask, cellcenters)
         return pred_mask
     
     

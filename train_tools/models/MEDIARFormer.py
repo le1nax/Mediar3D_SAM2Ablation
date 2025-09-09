@@ -4,6 +4,7 @@ import torch.nn as nn
 from segmentation_models_pytorch import MAnet
 from segmentation_models_pytorch.base.modules import Activation
 
+from .CustomLightWeightDecoder import CustomLeightWeightDecoder
 from .CustomDecoder import CustomMAnetDecoder
 from .HieraEncoder import HieraEncoderWrapper
 
@@ -23,7 +24,7 @@ class MEDIARFormer(MAnet):
         encoder_name="mit_b4",  # Default encoder
         encoder_weights=None,  # Pre-trained weights
         encoder_channels=(256, 256, 256, 256),  # encoder configuration #if sclap=0 adapt to 4 dims
-        decoder_channels=(256, 256, 256, 256, 256),  # Decoder configuration
+        decoder_channels=(256, 256, 256, 256),  # Decoder configuration
         decoder_pab_channels=256,  # Decoder Pyramid Attention Block channels
         in_channels=3,  # Number of input channels
         classes=3,  # Number of output classes
@@ -43,12 +44,11 @@ class MEDIARFormer(MAnet):
         self.encoder = HieraEncoderWrapper(hiera_cfg="sam2_hiera_l.yaml")
 
 
-        self.decoder = CustomMAnetDecoder(
+        self.decoder = CustomLeightWeightDecoder(
             encoder_channels=self.encoder.out_channels,
             decoder_channels=decoder_channels,
             n_blocks=len(decoder_channels),
             use_batchnorm=True,  # Use batch normalization in decoder
-            pab_channels=decoder_pab_channels,
         )
 
         convert_bn_to_float32(self.decoder)

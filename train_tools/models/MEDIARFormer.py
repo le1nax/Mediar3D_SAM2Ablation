@@ -33,7 +33,7 @@ class MEDIARFormer(MAnet):
         super().__init__(
             encoder_name="mit_b4",
             encoder_weights=None,
-            encoder_depth=5,
+            encoder_depth=4,
             decoder_channels=decoder_channels,
             decoder_pab_channels=decoder_pab_channels,
             in_channels=in_channels,

@@ -58,8 +58,18 @@ if __name__ == "__main__":
         "--train_img_paths",
         nargs="+",
         default=[
-            "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train",
-            "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background",
+            "../../Datasets/CTC/sim3d/01",
+            "../../Datasets/pretraining_mediar/CellposeDataset/01",
+            "../../Datasets/pretraining_mediar/DataScienceBowl/01_tiff",
+            "../../Datasets/pretraining_mediar/livecell_A172/01",
+            "../../Datasets/pretraining_mediar/livecell_BT474/01",
+            "../../Datasets/pretraining_mediar/livecell_BV2/01",
+            "../../Datasets/pretraining_mediar/livecell_Huh7/01",
+            "../../Datasets/pretraining_mediar/livecell_MCF7/01",
+            "../../Datasets/pretraining_mediar/livecell_SHSY5Y/01",
+            "../../Datasets/pretraining_mediar/livecell_SkBr3/01",
+            "../../Datasets/pretraining_mediar/livecell_SKOV3/01",
+            "../../Datasets/pretraining_mediar/OmniposeDataset/01"
         ],
         help="List of image directories"
     )
@@ -67,8 +77,18 @@ if __name__ == "__main__":
         "--train_label_paths",
         nargs="+",
         default=[
-            "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train",
-            "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background",
+            "../../Datasets/CTC/sim3d/01_GT",
+            "../../Datasets/pretraining_mediar/CellposeDataset/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/DataScienceBowl/01_GT_tiff/SEG",
+            "../../Datasets/pretraining_mediar/livecell_A172/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_BT474/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_BV2/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_Huh7/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_MCF7/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_SHSY5Y/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_SkBr3/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/livecell_SKOV3/01_ST/SEG",
+            "../../Datasets/pretraining_mediar/OmniposeDataset/01_ST/SEG"
         ],
         help="List of label directories"
     )

@@ -58,7 +58,6 @@ if __name__ == "__main__":
         "--train_img_paths",
         nargs="+",
         default=[
-            "../../Datasets/CTC/sim3d/01",
             "../../Datasets/pretraining_mediar/CellposeDataset/01",
             "../../Datasets/pretraining_mediar/DataScienceBowl/01_tiff",
             "../../Datasets/pretraining_mediar/livecell_A172/01",
@@ -77,7 +76,6 @@ if __name__ == "__main__":
         "--train_label_paths",
         nargs="+",
         default=[
-            "../../Datasets/CTC/sim3d/01_GT",
             "../../Datasets/pretraining_mediar/CellposeDataset/01_ST/SEG",
             "../../Datasets/pretraining_mediar/DataScienceBowl/01_GT_tiff/SEG",
             "../../Datasets/pretraining_mediar/livecell_A172/01_ST/SEG",

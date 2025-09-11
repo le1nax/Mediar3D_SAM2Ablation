@@ -4,8 +4,8 @@
             "root": "./",
             "mapping_file": "./train_tools/data_utils/mapping_labeled_dic_sim.json",
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
-            "batch_size": 7, 
-            "valid_portion": 0.1,
+            "batch_size": 9, 
+            "valid_portion": 0.0,
             "precompute_flows": false
         },
         "public":{
@@ -25,7 +25,7 @@
             "name": "mediar",
             "params": {            
                 "num_epochs": 80,
-                "valid_frequency": 10,
+                "valid_frequency": 999999,
                 "device": "cuda:0",
                 "amp": true,
                 "algo_params": {"with_public": false}

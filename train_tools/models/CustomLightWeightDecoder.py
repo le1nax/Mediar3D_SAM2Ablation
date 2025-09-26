@@ -47,6 +47,8 @@ class CustomLeightWeightDecoder(nn.Module):
                 f"Model depth is {n_blocks}, but you provide `decoder_channels` for {len(decoder_channels)} blocks."
             )
 
+        print("this is the custom decoder")
+
         # reverse channels to start from head of encoder
         encoder_channels = encoder_channels[::-1]
 

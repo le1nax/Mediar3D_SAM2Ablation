@@ -6,7 +6,8 @@
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
             "batch_size": 9, 
             "valid_portion": 0.0,
-            "precompute_flows": false
+            "precompute_flows": false,
+            "incomplete_annotations": false
         },
         "public":{
             "enabled": false,

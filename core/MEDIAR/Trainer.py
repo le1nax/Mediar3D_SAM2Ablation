@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from matplotlib.widgets import Slider
 import matplotlib.colors as mcolors
+from core.utils import print_learning_device, print_with_logging, log_device
 
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "../../")))
@@ -184,16 +185,16 @@ def compare_flows(flow_pred, flow_loaded, atol=1e-5, rtol=1e-3):
     flow_pred = flow_pred.to(flow_loaded.device)
 
     if flow_pred.shape != flow_loaded.shape:
-        print(f"Shape mismatch: predicted {flow_pred.shape}, loaded {flow_loaded.shape}")
+        log_device(f"Shape mismatch: predicted {flow_pred.shape}, loaded {flow_loaded.shape}")
         return False
 
     equal = torch.allclose(flow_pred, flow_loaded, atol=atol, rtol=rtol)
 
     if not equal:
         diff = (flow_pred - flow_loaded).abs()
-        print(f"Flow mismatch! Max diff: {diff.max().item():.6f}, Mean diff: {diff.mean().item():.6f}")
+        log_device(f"Flow mismatch! Max diff: {diff.max().item():.6f}, Mean diff: {diff.mean().item():.6f}")
     else:
-        print("Flows match.")
+        log_device("Flows match.")
     
     return equal
 
@@ -415,9 +416,9 @@ class Trainer(BaseTrainer):
                     if flows is not None:
                         cropped_flows.append(flows[b])
 
-                #print(cropped_img.shape)
+                #log_device(cropped_img.shape)
                 #if(cropped_img.shape[1] >1900 or cropped_img.shape[2]>1900):
-                #    print(f"Warning: image {b} still very large after removing zero padding: {cropped_img.shape}")
+                #    log_device(f"Warning: image {b} still very large after removing zero padding: {cropped_img.shape}")
 
                 continue
 
@@ -445,9 +446,9 @@ class Trainer(BaseTrainer):
             x_end   = min(x_max + buffer, W)
 
             #if( y_end - y_start >1900 or x_end - x_start>1900):
-             #   print(f"Warning: image {b} still very large after ROI crop: {y_end - y_start} x {x_end - x_start}")
+             #   log_device(f"Warning: image {b} still very large after ROI crop: {y_end - y_start} x {x_end - x_start}")
             #plot_image(images[b, :, y_start:y_end, x_start:x_end].cpu().numpy())
-            #print(images[b, :, y_start:y_end, x_start:x_end].shape)
+            #log_device(images[b, :, y_start:y_end, x_start:x_end].shape)
             cropped_images.append(images[b, :, y_start:y_end, x_start:x_end])
             cropped_labels.append(labels[b, :, y_start:y_end, x_start:x_end])
             if center_masks is not None:
@@ -564,8 +565,8 @@ class Trainer(BaseTrainer):
                 images = torch.cat([images, images_pub], dim=0)
                 labels = torch.cat([labels, labels_pub], dim=0)
 
-            #plot_image(images[0].cpu().numpy())
-            #plot_image(labels[0].cpu().numpy())
+            plot_image(images[0].cpu().numpy())
+           # plot_image(labels[0].cpu().numpy())
             if self.incomplete_annotations:
                 images, labels, flows = self._crop_to_ROI(images, labels, flows)
             #plot_image(images[0].cpu().numpy())
@@ -604,7 +605,7 @@ class Trainer(BaseTrainer):
                         outputs, labels = self._post_process(outputs.detach(), center_masks, labels)
                         for b in range(self.current_bsize):
                             iou_score, f1_score = self._get_metrics(outputs[b], labels[b])
-                            print(f"  [Train QC]  F1: {f1_score:.3f}, IoU: {iou_score:.3f}")
+                            log_device(f"  [Train QC]  F1: {f1_score:.3f}, IoU: {iou_score:.3f}")
 
                     # Calculate valid statistics
                     if phase != "train":
@@ -780,38 +781,6 @@ class Trainer(BaseTrainer):
 
         return pred_mask
         
-    def run_3D(self, imgs): ###@todo channel adapt, batch size adapt
-        
-        #permute images  3012 3102 3201 (put 3 in first becazse window_inference wants NCHW)
-        sstr = ["YX", "ZY", "ZX"]
-        pm = [(3, 0, 1, 2), (3, 1, 0, 2), (3, 2, 0, 1)] 
-        ipm = [(0, 1, 2), (1, 0, 2), (1, 2, 0)]
-        cp = [(1, 2), (0, 2), (0, 1)]
-        cpy = [(0, 1), (0, 1), (0, 1)]
-        shape = imgs.shape[:-1]
-        yf = torch.zeros((4, *shape), dtype=torch.float32, device=self.device)
-        for p in range(3):
-            xsl = imgs.permute(pm[p]) ##images has now CZHW order
-            # per image
-            print("running %s: %d planes of size (%d, %d)" %
-                            (sstr[p], shape[pm[p][1]], shape[pm[p][2]], shape[pm[p][3]]))
-            
-            outputs = []
-            for z in range(shape[pm[p][1]]):  # iterate over Z
-                slice_img = xsl[:, z, :, :].unsqueeze(0)  # shape (1, C, H, W) 
-                out = self._window_inference(slice_img) #shape (3, HW)
-                outputs.append(out.squeeze()) #remove 1st batch dim
-
-            # Stack outputs along Z
-            y = torch.stack(outputs, dim=1)  #shape(3, Z, H, W)
-
-            y_p = y[-1].permute(ipm[p])
-            yf[-1] += y_p
-            for j in range(2):
-                yf[cp[p][j]] += y[cpy[p][j]].permute(ipm[p])
-            y = None; del y
-    
-        return yf
 
     def _post_process(self, outputs, cellcenters=None,labels=None):
         """Predict cell instances using the gradient tracking"""

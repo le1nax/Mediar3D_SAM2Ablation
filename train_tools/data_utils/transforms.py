@@ -20,14 +20,14 @@ train_transforms = Compose(
             percentiles=[0.0, 99.5],
         ),
         EnsureChannelFirstd(keys=["img", "label", "cellcenter", "flow"], channel_dim=-1, allow_missing_keys=True),
-        RemoveRepeatedChanneld(keys=["label"], repeats=3, allow_missing_keys=True),
+        RemoveRepeatedChanneld(keys=["label"], repeats=3),
         ScaleIntensityd(keys=["img"], allow_missing_keys=True),
 
         RandZoomd(
             keys=["img", "label", "cellcenter", "flow"],
             prob=0.5,
-            min_zoom=(0.25, 0.25),
-            max_zoom=(1.5, 1.5),
+            min_zoom=0.25,
+            max_zoom=1.5,
             mode=["area", "nearest", "nearest", "area"],
             keep_size=False,
             allow_missing_keys=True,
@@ -43,10 +43,9 @@ train_transforms = Compose(
         RandGaussianSmoothd(keys=["img"], prob=0.25, sigma_x=(1, 2)),
         RandHistogramShiftd(keys=["img"], prob=0.25, num_control_points=3),
         RandGaussianSharpend(keys=["img"], prob=0.25),
-        EnsureTyped(keys=["img", "label", "cellcenter", "flow"], allow_missing_keys=True),
+       EnsureTyped(keys=["img", "label", "cellcenter", "flow"], allow_missing_keys=True),
     ]
 )
-
 masked_train_transforms = Compose(
     [
         CustomLoadImaged(keys=["img", "label", "cellcenter"], image_only=True, allow_missing_keys=True),

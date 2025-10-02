@@ -1,808 +1,1288 @@
 {
   "official": [
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_000713.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_000713_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_00.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_00.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_001771.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_001771_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_01.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_01.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_001776.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_001776_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_02.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_02.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_001797.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_001797_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_03.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_03.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_002620.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_002620_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_04.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_04.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_002703.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_002703_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_05.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_05.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_002813.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_002813_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_06.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_06.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_003544.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_003544_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_07.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_07.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_003603.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_003603_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_08.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_08.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_003727.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_003727_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_09.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_09.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_004628.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_004628_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_10.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_10.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_004814.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_004814_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_11.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_11.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_005745.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_005745_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_12.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_12.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_006686.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_006686_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_13.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_13.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_006701.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_006701_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img/image_14.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks/image_14.tif"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_006826.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_006826_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/540_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/540_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_008629.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_008629_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/541_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/541_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_009575.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_009575_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/542_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/542_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_009749.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_009749_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/543_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/543_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_009823.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_009823_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/544_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/544_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_010693.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_010693_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/545_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/545_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_010793.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_010793_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/546_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/546_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_011598.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_011598_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/547_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/547_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_011726.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_011726_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/548_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/548_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_012820.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_012820_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/549_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/549_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_013851.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_013851_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/550_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/550_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_014580.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_014580_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/551_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/551_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_014583.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_014583_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/552_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/552_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_015770.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_015770_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/553_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/553_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_016579.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_016579_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/554_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/554_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_016584.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_016584_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/555_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/555_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_016627.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_016627_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/556_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/556_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_016653.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_016653_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/557_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/557_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_016751.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_016751_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/558_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/558_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_016793.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_016793_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/559_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/559_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_017520.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_017520_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/560_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/560_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_017800.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_017800_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/561_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/561_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_018612.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_018612_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/562_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/562_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_018823.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_018823_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/563_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/563_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_019546.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_019546_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/564_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/564_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_019795.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_019795_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/565_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/565_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_020836.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_020836_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/566_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/566_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_021535.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_021535_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/567_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/567_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_022745.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_022745_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/568_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/568_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_022746.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_022746_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/569_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/569_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_023558.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_023558_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/570_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/570_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_024500.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_024500_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/571_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/571_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_024785.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_024785_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/572_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/572_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_026684.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_026684_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/573_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/573_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_026807.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_026807_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/574_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/574_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_027515.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_027515_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/575_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/575_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_027690.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_027690_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/576_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/576_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_028452.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_028452_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/577_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/577_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_028725.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_028725_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/578_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/578_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_028736.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_028736_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/579_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/579_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_029517.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_029517_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/580_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/580_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_029669.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_029669_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/581_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/581_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_030437.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_030437_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/582_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/582_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_031738.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_031738_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/583_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/583_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_032585.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_032585_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/584_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/584_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_032722.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_032722_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/585_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/585_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_032756.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_032756_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/586_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/586_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_033416.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_033416_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/587_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/587_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_033461.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_033461_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/588_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/588_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_033478.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_033478_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/589_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/589_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_033662.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_033662_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/590_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/590_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_034614.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_034614_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/591_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/591_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_034650.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_034650_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/592_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/592_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_034720.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_034720_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/593_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/593_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_035433.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_035433_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/594_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/594_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_035620.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_035620_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/595_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/595_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_036498.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_036498_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/596_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/596_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_036644.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_036644_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/597_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/597_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_036687.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_036687_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/598_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/598_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_036698.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_036698_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/599_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/599_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_036746.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_036746_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/600_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/600_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_037659.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_037659_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/601_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/601_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_038395.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_038395_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/602_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/602_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_038413.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_038413_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/603_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/603_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_039597.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_039597_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/604_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/604_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_041492.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_041492_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/605_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/605_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_042653.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_042653_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/606_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/606_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_044474.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_044474_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/607_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/607_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_044503.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_044503_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/608_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/608_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_044571.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_044571_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/609_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/609_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_044678.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_044678_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/610_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/610_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_045598.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_045598_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/611_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/611_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_047590.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_047590_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/612_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/612_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_048589.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_048589_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/613_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/613_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_048606.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_048606_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/614_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/614_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_050619.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_050619_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/615_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/615_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_051483.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_051483_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/616_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/616_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_051601.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_051601_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/617_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/617_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_051658.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_051658_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/618_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/618_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_053677.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_053677_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/619_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/619_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_054635.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_054635_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/620_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/620_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_056370.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_056370_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/621_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/621_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_057354.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_057354_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/622_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/622_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_057386.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_057386_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/623_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/623_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train/cell_058312.tif",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train/cell_058312_label.tif"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/624_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/624_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0000.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0000_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/625_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/625_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0001.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0001_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/626_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/626_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0002.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0002_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/627_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/627_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0003.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0003_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/628_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/628_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0004.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0004_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/629_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/629_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0005.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0005_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/630_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/630_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0006.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0006_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/631_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/631_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0007.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0007_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/632_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/632_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0008.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0008_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/633_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/633_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0009.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0009_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/634_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/634_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0010.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0010_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/635_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/635_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0011.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0011_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/636_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/636_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0012.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0012_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/637_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/637_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0013.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0013_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/638_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/638_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0014.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0014_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/639_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/639_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0015.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0015_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/640_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/640_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0016.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0016_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/641_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/641_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0017.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0017_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/642_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/642_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0018.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0018_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/643_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/643_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0019.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0019_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/644_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/644_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0020.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0020_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/645_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/645_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0021.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0021_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/646_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/646_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0022.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0022_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/647_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/647_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0023.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0023_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/648_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/648_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0024.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0024_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/649_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/649_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0025.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0025_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/650_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/650_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0026.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0026_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/651_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/651_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0027.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0027_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/652_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/652_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0028.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0028_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/653_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/653_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0029.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0029_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/654_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/654_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0030.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0030_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/655_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/655_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0031.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0031_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/656_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/656_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0032.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0032_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/657_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/657_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0033.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0033_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/658_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/658_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0034.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0034_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/659_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/659_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0035.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0035_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/660_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/660_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0036.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0036_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/661_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/661_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0037.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0037_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/662_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/662_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0038.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0038_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/663_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/663_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0039.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0039_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/664_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/664_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0040.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0040_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/665_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/665_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0041.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0041_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/666_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/666_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0042.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0042_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/667_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/667_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0043.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0043_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/668_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/668_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0044.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0044_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/669_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/669_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0045.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0045_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/670_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/670_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0046.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0046_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/671_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/671_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0047.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0047_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/672_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/672_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0048.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0048_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/673_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/673_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0049.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0049_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/674_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/674_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0050.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0050_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/675_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/675_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0051.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0051_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/676_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/676_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0052.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0052_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/677_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/677_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0053.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0053_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/678_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/678_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0054.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0054_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/679_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/679_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0055.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0055_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/680_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/680_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0056.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0056_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/681_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/681_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0057.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0057_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/682_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/682_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0058.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0058_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/683_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/683_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0059.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0059_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/684_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/684_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0060.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0060_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/685_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/685_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0061.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0061_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/686_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/686_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0062.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0062_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/687_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/687_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0063.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0063_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/688_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/688_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0064.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0064_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/689_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/689_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0065.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0065_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/690_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/690_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0066.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0066_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/691_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/691_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0067.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0067_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/692_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/692_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0068.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0068_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/693_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/693_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0069.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0069_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/694_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/694_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0070.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0070_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/695_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/695_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0071.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0071_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/696_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/696_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0072.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0072_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/697_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/697_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0073.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0073_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/698_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/698_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0074.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0074_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/699_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/699_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0075.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0075_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/700_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/700_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0076.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0076_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/701_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/701_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0077.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0077_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/702_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/702_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0078.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0078_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/703_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/703_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0079.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0079_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/704_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/704_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0080.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0080_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/705_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/705_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0081.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0081_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/706_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/706_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0082.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0082_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/707_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/707_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0083.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0083_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/708_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/708_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0084.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0084_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/709_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/709_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0085.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0085_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/710_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/710_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0086.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0086_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/711_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/711_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0087.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0087_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/712_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/712_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0088.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0088_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/713_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/713_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0089.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0089_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/714_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/714_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0090.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0090_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/715_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/715_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0091.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0091_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/716_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/716_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0092.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0092_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/717_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/717_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0093.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0093_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/718_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/718_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0094.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0094_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/719_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/719_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0095.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0095_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/720_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/720_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0096.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0096_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/721_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/721_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0097.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0097_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/722_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/722_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0098.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0098_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/723_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/723_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0099.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0099_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/724_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/724_masks.png"
     },
     {
-      "img": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background/slice_0100.tiff",
-      "label": "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background/slice_0100_label.tiff"
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/725_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/725_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/726_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/726_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/727_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/727_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/728_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/728_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/729_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/729_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/730_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/730_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/731_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/731_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/732_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/732_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/733_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/733_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/734_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/734_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/735_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/735_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/736_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/736_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/737_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/737_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/738_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/738_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/739_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/739_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/740_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/740_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/741_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/741_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/742_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/742_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/743_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/743_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/744_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/744_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/745_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/745_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/746_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/746_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/747_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/747_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/748_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/748_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/749_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/749_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/750_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/750_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/751_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/751_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/752_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/752_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/753_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/753_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/754_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/754_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/755_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/755_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/756_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/756_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/757_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/757_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/758_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/758_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/759_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/759_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/760_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/760_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/761_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/761_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/762_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/762_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/763_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/763_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/764_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/764_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/765_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/765_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/766_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/766_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/767_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/767_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/768_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/768_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/769_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/769_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/770_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/770_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/771_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/771_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/772_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/772_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/773_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/773_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/774_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/774_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/775_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/775_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/776_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/776_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/777_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/777_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/778_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/778_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/779_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/779_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/780_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/780_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/781_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/781_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/782_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/782_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/783_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/783_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/784_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/784_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/785_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/785_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/786_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/786_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/787_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/787_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/788_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/788_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/789_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/789_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/790_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/790_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/791_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/791_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/792_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/792_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/793_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/793_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/794_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/794_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img/795_img.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks/795_masks.png"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/01_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/01_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/01_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/01_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/01_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/01_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/01_4.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/01_4.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/01_5.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/01_5.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/01_6.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/01_6.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/01_7.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/01_7.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/02_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/02_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/02_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/02_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/02_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/02_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/03_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/03_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/03_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/03_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/03_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/03_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/03_4.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/03_4.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/03_5.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/03_5.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/04_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/04_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/04_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/04_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/04_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/04_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/04_4.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/04_4.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/04_5.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/04_5.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/04_6.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/04_6.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/04_7.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/04_7.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/04_8.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/04_8.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/05_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/05_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/05_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/05_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/05_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/05_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/05_4.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/05_4.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/06_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/06_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/06_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/06_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/06_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/06_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/07_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/07_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/07_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/07_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/07_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/07_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/08_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/08_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/08_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/08_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/08_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/08_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/08_4.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/08_4.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/09_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/09_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/09_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/09_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/09_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/09_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/09_4.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/09_4.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/09_5.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/09_5.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/09_6.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/09_6.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/10_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/10_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/10_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/10_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/10_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/10_3.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/10_4.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/10_4.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/11_1.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/11_1.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/11_2.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/11_2.tif"
+    },
+    {
+      "img": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img/11_3.png",
+      "label": "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks/11_3.tif"
     }
   ]
 }

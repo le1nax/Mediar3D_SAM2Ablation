@@ -2,6 +2,8 @@ import torch
 import numpy as np
 import os, json, random
 from pprint import pprint
+from core.utils import print_learning_device, print_with_logging, log_device
+
 
 __all__ = ["ConfLoader", "directory_setter", "random_seeder", "pprint_config"]
 
@@ -65,6 +67,6 @@ def random_seeder(seed):
     torch.backends.cudnn.benchmark = False
 
 def pprint_config(opt):
-    print("\n" + "=" * 50 + " Configuration " + "=" * 50)
+    log_device("\n" + "=" * 50 + " Configuration " + "=" * 50)
     pprint(opt, compact=True)
-    print("=" * 115 + "\n")
+    log_device("=" * 115 + "\n")

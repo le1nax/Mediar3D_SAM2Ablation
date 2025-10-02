@@ -48,7 +48,6 @@ def add_mapping_to_json(json_file, map_dict):
     with open(json_file, "w") as file:
         json.dump(map_dict, file, indent=2)
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Mapping files and paths")
     parser.add_argument("--pred_path", default="../../Datasets/dummy_dataset/01_img", type=str)
@@ -58,23 +57,32 @@ if __name__ == "__main__":
         "--train_img_paths",
         nargs="+",
         default=[
-            "../../Datasets/CTC/Fluo-N3DL-TRIF/01_img_train",
-            "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_images_background",
+
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img",
+
         ],
         help="List of image directories"
     )
+    
+    
     parser.add_argument(
         "--train_label_paths",
         nargs="+",
         default=[
-            "../../Datasets/CTC/Fluo-N3DL-TRIF/01_label_train",
-            "../../Datasets/CTC/Fluo-N3DL-TRIF/01_test_labels_background",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks",
+
         ],
         help="List of label directories"
     )
     parser.add_argument("--data", default="dic_sim", type=str)
 
     args = parser.parse_args()
+    
+
 
     MAP_DIR = "./train_tools/data_utils/"
     os.makedirs(MAP_DIR, exist_ok=True)
@@ -94,3 +102,17 @@ if __name__ == "__main__":
 
     map_labeled = {"official": all_data_dicts}
     add_mapping_to_json(os.path.join(MAP_DIR, f"mapping_labeled_{args.data}.json"), map_labeled)
+
+    # --- After creating all_data_dicts ---
+    dataset_names = set()
+    for item in all_data_dicts:
+        # take the parent folder name of the image path
+        dataset_name = os.path.basename(os.path.dirname(item["img"]))
+        dataset_names.add(dataset_name)
+
+    dataset_names = sorted(list(dataset_names))
+
+    print("\nDetected datasets from mapping file:")
+    for name in dataset_names:
+        print(f"  '{name}': <YOUR_RATIO>,")
+    print("\n# Copy-paste the above into your custom_ratios dict and fill in probabilities.\n")

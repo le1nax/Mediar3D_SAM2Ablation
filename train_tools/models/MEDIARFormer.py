@@ -4,6 +4,7 @@ import torch.nn as nn
 from segmentation_models_pytorch import MAnet
 from segmentation_models_pytorch.base.modules import Activation
 
+from .CustomLightWeightDecoder import CustomLeightWeightDecoder
 from .CustomDecoder import CustomMAnetDecoder
 from .HieraEncoder import HieraEncoderWrapper
 

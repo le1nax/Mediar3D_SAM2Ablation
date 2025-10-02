@@ -114,5 +114,5 @@ if __name__ == "__main__":
 
     print("\nDetected datasets from mapping file:")
     for name in dataset_names:
-        print(f"  '{name}': <YOUR_RATIO>,")
+        print(f"  '{name}': ,")
     print("\n# Copy-paste the above into your custom_ratios dict and fill in probabilities.\n")

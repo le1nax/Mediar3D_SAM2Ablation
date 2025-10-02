@@ -4,6 +4,7 @@
             "root": "./",
             "mapping_file": "./train_tools/data_utils/mapping_labeled_dic_sim.json",
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
+<<<<<<< HEAD
             "batch_size": 1, 
             "valid_portion": 0.8,
             "precompute_flows": false,
@@ -13,6 +14,12 @@
                     "cpm15_img": 0.5,
                     "cyto2_img": 0.49
             }
+=======
+            "batch_size": 9, 
+            "valid_portion": 0.0,
+            "precompute_flows": false,
+            "incomplete_annotations": false
+>>>>>>> 0a02f12ef22926f96c7565c646c4f58a8c0d739c
         },
         "public":{
             "enabled": false,
@@ -31,8 +38,13 @@
             "name": "mediar",
             "params": {            
                 "num_epochs": 80,
+<<<<<<< HEAD
                 "valid_frequency": 10,
                 "device": "cuda", 
+=======
+                "valid_frequency": 9999999,
+                "device": "cuda:0",
+>>>>>>> 0a02f12ef22926f96c7565c646c4f58a8c0d739c
                 "amp": true,
                 "algo_params": {"with_public": false}
             }

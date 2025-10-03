@@ -565,7 +565,7 @@ class Trainer(BaseTrainer):
                 images = torch.cat([images, images_pub], dim=0)
                 labels = torch.cat([labels, labels_pub], dim=0)
 
-            plot_image(images[0].cpu().numpy())
+           # plot_image(images[0].cpu().numpy())
            # plot_image(labels[0].cpu().numpy())
             if self.incomplete_annotations:
                 images, labels, flows = self._crop_to_ROI(images, labels, flows)

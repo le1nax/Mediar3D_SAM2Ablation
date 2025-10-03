@@ -1,17 +1,17 @@
 {
     "pred_setups":{
         "name": "mediar",
-        "input_path": "../../Datasets/CTC/Fluo-N3DH-CHO/02_test",
+        "input_path": "../../Datasets/testing/img",
         "cellcenters_path": "",
-        "output_path": "../../Datasets/CTC/Fluo-N3DH-CHO/02_test_res_hiera_zeroshot",
+        "output_path": "../../Datasets/testing/res",
         "make_submission": false,
-        "model_path": "../../W_B/MediarHiera_PT/hiera_pt_zeroval.pth",
+        "model_path": "../../W_B/Hiera_PT/pretrained_hiera_0val_4gpus_5bs_2025-10-02_15-57-50.pth",
         "device": "cuda:0",
         "model":{
             "name": "mediar-former",
             "params": {}
         },
         "exp_name": "mediar_p1_base",
-        "algo_params": {"use_tta": false, "do_3D": true, "cellprob_threshold": 0.5, "plot_prob": false}
+        "algo_params": {"use_tta": false, "do_3D": false, "cellprob_threshold": 0.000, "plot_prob": false}
     }
 }

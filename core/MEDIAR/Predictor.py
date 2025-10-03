@@ -19,6 +19,34 @@ from core.MEDIAR.utils import compute_masks, compute_masks3D, filter_false_posit
 
 __all__ = ["Predictor"]
 
+def plot_image(image, title='Image', slice_idx=None, cmap='gray'):
+    """
+    Plot a 2D image or a slice from a 3D image.
+
+    Parameters:
+        image (np.ndarray): Image data (2D or 3D).
+        title (str): Plot title.
+        slice_idx (int): Index of the slice to show if image is 3D. If None, shows middle slice.
+        cmap (str): Colormap to use.
+    """
+    if image.ndim == 2:
+        plt.imshow(image, cmap=cmap)
+        plt.title(title)
+        plt.axis('off')
+        plt.show()
+
+    elif image.ndim == 3:
+        if slice_idx is None:
+            slice_idx = image.shape[0] // 2
+        plt.imshow(image[slice_idx], cmap=cmap)
+        plt.title(f"{title} (slice {slice_idx})")
+        plt.axis('off')
+        plt.show()
+
+    else:
+        raise ValueError("Image must be 2D or 3D numpy array.")
+    
+
 
 def show_QC_results(src_image, pred_image, gt_image):
     """
@@ -337,8 +365,9 @@ class Predictor(BasePredictor):
                     if out.dim() == 2:
                         out = out.unsqueeze(0)
                     out_cpu = out.detach().cpu()  # move result to cpu 
-                    # if(p == 1):
-                    #     show_QC_results(slice_img[0,0].cpu().numpy(), out_cpu[-1].cpu().numpy(), out_cpu[-1].cpu().numpy())
+                    #out_cpu = out[-1]
+                    if(p == 0):
+                        plot_image(out_cpu[-1].cpu().numpy())
 
                     # assume first two channels are in-plane flows, last channel is prob
                     if out_cpu.shape[0] < 2:
@@ -366,8 +395,8 @@ class Predictor(BasePredictor):
                         yf[cp[p][1], :, :, idx] += flow1
                         yf[3, :, :, idx]        += prob
 
-                    # if p == 0:
-                    #     show_QC_results(slice_img[0,0].cpu().numpy(), yf[3, idx, :, :].cpu().numpy(), yf[3, idx, :, :].cpu().numpy())
+                    #if p == 0:
+                        #show_QC_results(slice_img[0,0].cpu().numpy(), yf[3, idx, :, :].cpu().numpy(), yf[3, idx, :, :].cpu().numpy())
                     # elif p == 1:
                     #     show_QC_results(slice_img[0,0].cpu().numpy(),yf[3, :, idx, :].cpu().numpy(), yf[3, :, idx, :].cpu().numpy())
                     # else:  # p == 2

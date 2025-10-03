@@ -135,19 +135,19 @@ def main(args):
     # Save path
     model_path = os.path.join(save_dir, f"pretrained_hiera_01val_3gpus_5bs_{current_time}.pth")
     log_device(f"Saving model to: {model_path}")
-    try:
-        os.makedirs(save_dir, exist_ok=True)  # ensure directory exists
-        torch.save(trainer.model.state_dict(), model_path)
-        log_device(f"Model successfully saved to {model_path}")
+    if not dist.is_initialized() or dist.get_rank() == 0:
+        try:
+            torch.save(trainer.model.state_dict(), model_path)
+            log_device(f"Model successfully saved to {model_path}")
 
-    except FileNotFoundError as e:
-        log_device(f"FileNotFoundError: {e}")
+        except FileNotFoundError as e:
+            log_device(f"FileNotFoundError: {e}")
 
-    except PermissionError as e:
-        log_device(f"PermissionError: {e}")
+        except PermissionError as e:
+            log_device(f"PermissionError: {e}")
 
-    except Exception as e:
-        log_device(f"Unexpected error while saving model: {e}")
+        except Exception as e:
+            log_device(f"Unexpected error while saving model: {e}")
 
     # # Conduct prediction using the trained model
     # predictor = PREDICTOR[args.train_setups.trainer.name](

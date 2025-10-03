@@ -10,7 +10,20 @@ from monai.data.image_reader import ImageReader, NumpyReader
 from monai.transforms import LoadImage, LoadImaged
 from monai.utils.enums import PostFix
 from monai.data.meta_tensor import MetaTensor
+from monai.transforms import MapTransform
 from pathlib import Path
+
+
+import os
+import numpy as np
+from pathlib import Path
+import tifffile as tif
+from monai.config import PathLike
+
+import numpy as np
+from monai.transforms import MapTransform, Transform
+from monai.config import KeysCollection
+from typing import Any, Dict, Sequence, Union
 
 
 
@@ -23,40 +36,87 @@ __all__ = [
     "CustomLoadImageDict",
     "CustomLoadImage",
 ]
+from pathlib import Path
+import os
+import numpy as np
+import torch
+from monai.transforms import LoadImaged
+import tifffile as tif
+from imageio import imread
 
+class SimpleLoadImaged(LoadImaged):
+    """
+    Minimal loader with shape handling:
+    - supports tif/tiff/png/jpg/jpeg/bmp
+    - ensures channel-last
+    - outputs float32 numpy arrays (safe for torch)
+    """
 
-# class CustomLoadImage(LoadImage):
-#     """
-#     Load image file or files from provided path based on reader.
-#     If reader is not specified, this class automatically chooses readers
-#     based on the supported suffixes and in the following order:
+    def __init__(self, keys, image_only=True, allow_missing_keys=False, dtype=np.float32, *args, **kwargs):
+        super().__init__(keys, image_only=image_only, allow_missing_keys=allow_missing_keys, *args, **kwargs)
+        self.target_dtype = dtype
 
-#         - User-specified reader at runtime when calling this loader.
-#         - User-specified reader in the constructor of `LoadImage`.
-#         - Readers from the last to the first in the registered list.
-#         - Current default readers: (nii, nii.gz -> NibabelReader), (png, jpg, bmp -> PILReader),
-#           (npz, npy -> NumpyReader), (nrrd -> NrrdReader), (DICOM file -> ITKReader).
+    def move_channel_last(self, axis, obj):
+        order = [j for j in range(obj.ndim) if j != axis] + [axis]
+        if isinstance(obj, torch.Tensor):
+            return obj.permute(*order)
+        elif isinstance(obj, np.ndarray):
+            return np.transpose(obj, order)
+        else:
+            raise TypeError(f"Unsupported type: {type(obj)}")
 
-#     [!Caution] This overriding replaces the original ITK with Custom UnifiedITKReader.
-#     """
+    def _read_one(self, fname: str):
+        ext = os.path.splitext(fname)[1].lower()
+        if ext in [".tif", ".tiff"]:
+            img = tif.imread(fname)
+        elif ext in [".png", ".jpg", ".jpeg", ".bmp"]:
+            img = imread(fname)
+        else:
+            raise ValueError(f"Unsupported image format: {ext}")
 
-#     def __init__(
-#         self,
-#         reader=None,
-#         image_only: bool = False,
-#         dtype: DtypeLike = np.float32,
-#         ensure_channel_first: bool = False,
-#         *args,
-#         **kwargs,
-#     ) -> None:
-#         super(CustomLoadImage, self).__init__(
-#             reader, image_only, dtype, ensure_channel_first, *args, **kwargs
-#         )
+        # convert to float32 if needed
+        img = img.astype(np.float32)
 
-#         # Adding TIFFReader. Although ITK Reader supports ".tiff" files, sometimes fails to load
-#         self.readers = []
-#         self.register(UnifiedITKReader(*args, **kwargs))
+        # --- shape/channel handling ---
+        if img.ndim == 2:
+            img = np.repeat(img[..., None], 3, axis=-1)  # (H,W,3)
+        elif img.ndim == 3:
+            if img.shape[0] > 3 and img.shape[-1] > 3:
+                img = img[..., None]  # (Z,H,W,1)
+            else:
+                for p in range(3):
+                    if img.shape[p] == 1:
+                        img = np.repeat(img, 3, axis=p)
+                        img = self.move_channel_last(p, img)
+                    elif img.shape[p] == 3:
+                        img = self.move_channel_last(p, img)
+        elif img.ndim == 4:
+            if img.shape[0] > 3 and img.shape[-1] > 3:
+                img = img[..., :3]  # trim to RGB
+            else:
+                for p in range(4):
+                    if img.shape[p] == 1:
+                        img = np.repeat(img, 3, axis=p)
+                        img = self.move_channel_last(p, img)
+                    elif img.shape[p] == 3:
+                        img = self.move_channel_last(p, img)
 
+        return img
+
+    def __call__(self, data):
+        for key in self.keys:
+            if key not in data:
+                continue
+
+            val = data[key]
+            if isinstance(val, np.ndarray):
+                continue
+
+            if isinstance(val, (str, Path)):
+                data[key] = self._read_one(str(val))
+                data["name"] = str(val)
+
+        return data
 
 class CustomLoadImage(LoadImage):
     def __init__(self, *args, **kwargs):
@@ -88,15 +148,17 @@ class CustomLoadImaged(LoadImaged):
 
             # If it's a path (string/Path), then load
             if isinstance(val, (str, Path)):
-                try:
-                    loaded = self._loader(val)
-                    if self._loader.image_only and isinstance(loaded, dict):
-                        loaded = loaded["image"]
-                    data[key] = loaded
-                except Exception as e:
-                    if self.allow_missing_keys:
-                        continue
-                    raise e
+                # try:
+                loaded = self._loader(val)
+                if self._loader.image_only and isinstance(loaded, dict):
+                    loaded = loaded["image"]
+
+                data["name"] = val
+                data[key] = loaded
+                # except Exception as e:
+                #     if self.allow_missing_keys:
+                #         continue
+                #     raise e
 
         return data
     
@@ -153,6 +215,7 @@ class UnifiedITKReader(NumpyReader):
                 "spatial_shape": _obj.shape,  # shape before EnsureChannelFirst
                 "filename_or_obj": name,
             }
+            
             if len(_obj.shape) == 2:
                 meta["dimensionality"] = 2
                 _obj = np.repeat(np.expand_dims(_obj, axis=-1), 3, axis=-1) # (H, W, 3)
@@ -187,6 +250,7 @@ class UnifiedITKReader(NumpyReader):
                             meta["dimensionality"] = 3
                             _obj = self.move_channel_last(p, _obj)
             img_.append(_obj)
+
 
         return img_ if len(filenames) > 1 else img_[0]
 

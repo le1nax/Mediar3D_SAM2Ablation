@@ -33,7 +33,7 @@ class MEDIARFormer(MAnet):
         super().__init__(
             encoder_name="mit_b4",
             encoder_weights=None,
-            encoder_depth=4,
+            encoder_depth=5,
             decoder_channels=decoder_channels,
             decoder_pab_channels=decoder_pab_channels,
             in_channels=in_channels,
@@ -44,12 +44,11 @@ class MEDIARFormer(MAnet):
         self.encoder = HieraEncoderWrapper(hiera_cfg="sam2_hiera_l.yaml")
 
 
-        self.decoder = CustomMAnetDecoder(
+        self.decoder = CustomLeightWeightDecoder(
             encoder_channels=self.encoder.out_channels,
             decoder_channels=decoder_channels,
             n_blocks=len(decoder_channels),
             use_batchnorm=True,  # Use batch normalization in decoder
-            pab_channels=decoder_pab_channels,
         )
 
         convert_bn_to_float32(self.decoder)

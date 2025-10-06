@@ -28,7 +28,7 @@
             "params": {},
             "pretrained":{
                 "enabled": false,
-                "weights": "../../W_B/MediarHiera_PT/hiera_pt_zeroval.pth",
+                "weights": "../../W_B/MediarHiera_PT/Hiera_lw_010val.pth",
                 "strict": false
             }
         },

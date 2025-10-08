@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+from torch import distributed as dist
 from tqdm import tqdm
 from monai.inferers import sliding_window_inference
 from monai.metrics import CumulativeAverage
@@ -16,7 +17,7 @@ import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "../")))
 
-from core.utils import print_learning_device, print_with_logging
+from core.utils import print_learning_device, print_with_logging, log_device
 from train_tools.measures import evaluate_metrics_cellseg
 
 
@@ -76,7 +77,7 @@ class BaseTrainer:
         valid_losses = []
 
         # Freeze encoder
-        print(f">>> Freezing encoder for first {freeze_epochs} epochs")
+        log_device(f">>> Freezing encoder for first {freeze_epochs} epochs")
         for param in self.model.encoder.parameters():
             param.requires_grad = False
 
@@ -86,11 +87,11 @@ class BaseTrainer:
         )
 
         for epoch in range(1, self.num_epochs + 1):
-            print(f"[Round {epoch}/{self.num_epochs}]")
+            log_device(f"[Round {epoch}/{self.num_epochs}]")
 
             # Unfreeze encoder if needed
             if epoch == freeze_epochs + 1:
-                print(f">>> Unfreezing encoder at epoch {epoch}")
+                log_device(f">>> Unfreezing encoder at epoch {epoch}")
                 for param in self.model.encoder.parameters():
                     param.requires_grad = True
 
@@ -99,7 +100,7 @@ class BaseTrainer:
                 
             if epoch % self.valid_frequency == 0 or epoch == 1:
                 if not self.no_valid:
-                    print(">>> Valid Epoch")
+                    log_device(">>> Valid Epoch")
                     valid_results = self._epoch_phase("valid")
                     print_with_logging(valid_results, epoch)
 
@@ -111,7 +112,7 @@ class BaseTrainer:
                         current_f1_score = valid_results["Valid_F1_Score"]
                         self._update_best_model(current_f1_score)
                 else:
-                    print(">>> TuningSet Epoch")
+                    log_device(">>> TuningSet Epoch")
                     tuning_cell_counts = self._tuningset_evaluation()
                     tuning_count_dict = {"TuningSet_Cell_Count": tuning_cell_counts}
                     print_with_logging(tuning_count_dict, epoch)
@@ -119,9 +120,9 @@ class BaseTrainer:
                     current_cell_count = tuning_cell_counts
                     self._update_best_model(current_cell_count)
 
-            print("-" * 50)
-            # Train Epoch Phase
-            print(">>> Train Epoch")
+            log_device("-" * 50)
+            if not dist.is_initialized() or dist.get_rank() == 0:
+                log_device(">>> Train Epoch")
             train_results = self._epoch_phase("train")
             print_with_logging(train_results, epoch)
 
@@ -162,13 +163,13 @@ class BaseTrainer:
         valid_losses = []
 
         for epoch in range(1, self.num_epochs + 1):
-            print(f"[Round {epoch}/{self.num_epochs}]")
+            log_device(f"[Round {epoch}/{self.num_epochs}]")
 
 
             if epoch % self.valid_frequency == 0 and not epoch == 1:
                 if not self.no_valid:
                     # Valid Epoch Phase
-                    print(">>> Valid Epoch")
+                    log_device(">>> Valid Epoch")
                     valid_results = self._epoch_phase("valid")
                     print_with_logging(valid_results, epoch)
 
@@ -180,7 +181,7 @@ class BaseTrainer:
                         current_f1_score = valid_results["Valid_F1_Score"]
                         self._update_best_model(current_f1_score)
                 else:
-                    print(">>> TuningSet Epoch")
+                    log_device(">>> TuningSet Epoch")
                     tuning_cell_counts = self._tuningset_evaluation()
                     tuning_count_dict = {"TuningSet_Cell_Count": tuning_cell_counts}
                     print_with_logging(tuning_count_dict, epoch)
@@ -189,8 +190,10 @@ class BaseTrainer:
                     self._update_best_model(current_cell_count)
 
             # Train Epoch Phase
-            print(">>> Train Epoch")
+            if not dist.is_initialized() or dist.get_rank() == 0:
+                log_device(">>> Train Epoch")
             train_results = self._epoch_phase("train")
+            
             print_with_logging(train_results, epoch)
             
             train_loss = train_results.get("Train_Dice_Loss", None)
@@ -200,7 +203,7 @@ class BaseTrainer:
             if self.scheduler is not None:
                 self.scheduler.step()
 
-            print("-" * 50)
+            log_device("-" * 50)
 
             self.best_f1_score = 0
 
@@ -283,7 +286,7 @@ class BaseTrainer:
             cell_counts_total.append(count)
 
         cell_counts_total_sum = np.sum(cell_counts_total)
-        print("Cell Counts Total: (%d)" % (cell_counts_total_sum))
+        log_device("Cell Counts Total: (%d)" % (cell_counts_total_sum))
 
         return cell_counts_total_sum
 
@@ -320,7 +323,7 @@ class BaseTrainer:
         if current_f1_score > self.best_f1_score:
             self.best_weights = copy.deepcopy(self.model.state_dict())
             self.best_f1_score = current_f1_score
-            print(
+            log_device(
                 "\n>>>> Update Best Model with score: {}\n".format(self.best_f1_score)
             )
         else:

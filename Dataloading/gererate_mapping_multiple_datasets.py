@@ -48,7 +48,6 @@ def add_mapping_to_json(json_file, map_dict):
     with open(json_file, "w") as file:
         json.dump(map_dict, file, indent=2)
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Mapping files and paths")
     parser.add_argument("--pred_path", default="../../Datasets/dummy_dataset/01_img", type=str)
@@ -58,41 +57,92 @@ if __name__ == "__main__":
         "--train_img_paths",
         nargs="+",
         default=[
-            "../../Datasets/pretraining_mediar/CellposeDataset/01",
-            "../../Datasets/pretraining_mediar/DataScienceBowl/01_tiff",
-            "../../Datasets/pretraining_mediar/livecell_A172/01",
-            "../../Datasets/pretraining_mediar/livecell_BT474/01",
-            "../../Datasets/pretraining_mediar/livecell_BV2/01",
-            "../../Datasets/pretraining_mediar/livecell_Huh7/01",
-            "../../Datasets/pretraining_mediar/livecell_MCF7/01",
-            "../../Datasets/pretraining_mediar/livecell_SHSY5Y/01",
-            "../../Datasets/pretraining_mediar/livecell_SkBr3/01",
-            "../../Datasets/pretraining_mediar/livecell_SKOV3/01",
-            "../../Datasets/pretraining_mediar/OmniposeDataset/01"
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/Cellpose_Data/train_CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/DSBowl2018/data-science-bowl-2018/stage1_train/CTC_format/01_tiff",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/A172/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/BT474/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/BV2/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/Huh7/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/MCF7/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SHSY5Y/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SkBr3/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SKOV3/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/omnipose/datasets/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/BCCD_test_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/BCCD_train_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cellpose_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cellpose_test_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/CoNIC_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm17_test_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm17_train_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/DeepBacs_test_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/DeepBacs_train_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/IHC_TMA_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/lynsec_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/neurips_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/nuinsseg_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/panNuke2_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/panNuke_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/tissuenet_test_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/tissuenet_train_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/tissuenet_val_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/yeast_BF_img",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/yeast_PhC_img"
+
         ],
         help="List of image directories"
     )
+    
+    
     parser.add_argument(
         "--train_label_paths",
         nargs="+",
         default=[
-            "../../Datasets/pretraining_mediar/CellposeDataset/01_ST/SEG",
-            "../../Datasets/pretraining_mediar/DataScienceBowl/01_GT_tiff/SEG",
-            "../../Datasets/pretraining_mediar/livecell_A172/01_ST/SEG",
-            "../../Datasets/pretraining_mediar/livecell_BT474/01_ST/SEG",
-            "../../Datasets/pretraining_mediar/livecell_BV2/01_ST/SEG",
-            "../../Datasets/pretraining_mediar/livecell_Huh7/01_ST/SEG",
-            "../../Datasets/pretraining_mediar/livecell_MCF7/01_ST/SEG",
-            "../../Datasets/pretraining_mediar/livecell_SHSY5Y/01_ST/SEG",
-            "../../Datasets/pretraining_mediar/livecell_SkBr3/01_ST/SEG",
-            "../../Datasets/pretraining_mediar/livecell_SKOV3/01_ST/SEG",
-            "../../Datasets/pretraining_mediar/OmniposeDataset/01_ST/SEG"
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/Cellpose_Data/train_CTC_format/01_ST/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/DSBowl2018/data-science-bowl-2018/stage1_train/CTC_format/01_GT_tiff/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/A172/CTC_format/01_ST/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/BT474/CTC_format/01_ST/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/BV2/CTC_format/01",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/Huh7/CTC_format/01_ST/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/MCF7/CTC_format/01_ST/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SHSY5Y/CTC_format/01_ST/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SkBr3/CTC_format/01_ST/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/livecell/images/livecell_train_val_images/SKOV3/CTC_format/01_ST/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/omnipose/datasets/CTC_format/01_ST/SEG",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/BCCD_test_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/BCCD_train_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cellpose_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cellpose_test_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/CoNIC_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm15_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm17_test_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cpm17_train_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/cyto2_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/DeepBacs_test_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/DeepBacs_train_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/IHC_TMA_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/lynsec_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/neurips_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/nuinsseg_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/panNuke2_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/panNuke_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/tissuenet_test_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/tissuenet_train_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/tissuenet_val_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/TNBC_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/yeast_BF_masks",
+            "/netshares/BiomedicalImageAnalysis/Resources/dataset_collection/cellpose_pretraining_data/yeast_PhC_masks"
         ],
         help="List of label directories"
     )
     parser.add_argument("--data", default="dic_sim", type=str)
 
     args = parser.parse_args()
+    
+
 
     MAP_DIR = "./train_tools/data_utils/"
     os.makedirs(MAP_DIR, exist_ok=True)
@@ -112,3 +162,17 @@ if __name__ == "__main__":
 
     map_labeled = {"official": all_data_dicts}
     add_mapping_to_json(os.path.join(MAP_DIR, f"mapping_labeled_{args.data}.json"), map_labeled)
+
+    # --- After creating all_data_dicts ---
+    dataset_names = set()
+    for item in all_data_dicts:
+        # take the parent folder name of the image path
+        dataset_name = os.path.basename(os.path.dirname(item["img"]))
+        dataset_names.add(dataset_name)
+
+    dataset_names = sorted(list(dataset_names))
+
+    print("\nDetected datasets from mapping file:")
+    for name in dataset_names:
+        print(f"  '{name}': <YOUR_RATIO>,")
+    print("\n# Copy-paste the above into your custom_ratios dict and fill in probabilities.\n")

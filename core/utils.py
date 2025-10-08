@@ -1,27 +1,17 @@
 import torch
 import wandb
 import pprint
+import torch.distributed as dist
 
 __all__ = ["print_learning_device", "print_with_logging"]
 
 
 def print_learning_device(device):
-    """Get and print the learning device information."""
-    if device == "cpu":
-        device_name = device
-
-    else:
-        if isinstance(device, str):
-            device_idx = int(device[-1])
-        elif isinstance(device, torch._device):
-            device_idx = device.index
-
-        device_name = torch.cuda.get_device_name(device_idx)
-
-    print("")
-    print("=" * 50)
-    print("Train start on device: {}".format(device_name))
-    print("=" * 50)
+    try:
+        device_idx = int(device.split(":")[1])
+    except Exception:
+        device_idx = "N/A"
+    log_device(f"Training on device {device} (GPU index {device_idx})")
 
 
 def print_with_logging(results, step):
@@ -31,10 +21,16 @@ def print_with_logging(results, step):
         results (dict): results dictionary
         step (int): epoch index
     """
-    # Print the results dictionary
-    pp = pprint.PrettyPrinter(compact=True)
-    pp.pprint(results)
-    print()
+    if not dist.is_initialized() or dist.get_rank() == 0:
+        # Print the results dictionary
+        pp = pprint.PrettyPrinter(compact=True)
+        pp.pprint(results)
+        print()
 
-    # Log on the w&b server
-    wandb.log(results, step=step)
+        # Log on the w&b server
+        wandb.log(results, step=step)
+
+def log_device(message):
+    """Log a message only from the main process in a distributed setting."""
+    if not dist.is_initialized() or dist.get_rank() == 0:
+            print(message)

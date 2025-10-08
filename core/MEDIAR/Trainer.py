@@ -540,6 +540,13 @@ class Trainer(BaseTrainer):
                     flows = [torch.from_numpy(tiff.imread(f)).float().to(self.device) for f in flows]
                 if isinstance(flows, list):
                     flows = torch.stack(flows, dim=0)
+            
+            import gc, tracemalloc, psutil
+            mem = psutil.virtual_memory()
+            current, peak = tracemalloc.get_traced_memory()
+            print(f"[It] CPU: {mem.used/1e9:.2f} GB | Python objects: {current/1e6:.1f} MB (peak {peak/1e6:.1f} MB)")
+    
+            
 
 
             center_masks = batch_data.get("cellcenter", None)

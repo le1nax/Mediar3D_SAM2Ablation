@@ -4,11 +4,11 @@
             "root": "./",
             "mapping_file": "./train_tools/data_utils/mapping_labeled_dic_sim.json",
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
-            "amplified": false,
-            "batch_size": 3, 
-            "valid_portion": 0.2,
+            "batch_size": 1, 
+            "valid_portion": 0.1,
             "precompute_flows": false,
-            "incomplete_annotations": true
+            "incomplete_annotations": true,
+            "sampling_ratios": false
         },
         "public":{
             "enabled": false,
@@ -28,7 +28,7 @@
             "params": {},
             "pretrained":{
                 "enabled": false,
-                "weights": "../../W_B/MediarHiera_PT/hiera_pt_zeroval.pth",
+                "weights": "../../W_B/Hiera_PT/pretrained_hiera_0val_4gpus_5bs_2025-10-02_15-57-51_unwrapped.pth",
                 "strict": false
             }
         },

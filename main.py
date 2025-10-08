@@ -6,7 +6,7 @@ from datetime import datetime
 import torch.distributed as dist
 
 import os
-os.environ["WANDB_MODE"] = "disabled"
+#os.environ["WANDB_MODE"] = "disabled"
 
 def log_device(*args, **kwargs):
     """Drop-in replacement for print, only prints from rank 0 (or non-distributed)."""
@@ -126,18 +126,23 @@ def main(args):
     # trainer.train()
     trainer.train()
 
-    save_dir = "../../W_B/Hiera_PT"
+    save_dir = "../../W_B/Hiera_FT/"
     os.makedirs(save_dir, exist_ok=True)  # make sure it exists
 
     # Current time string: e.g. '2025-07-11_18-25-42'
     current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     # Save path
-    model_path = os.path.join(save_dir, f"pretrained_hiera_01val_3gpus_5bs_{current_time}.pth")
+    model_path = os.path.join(save_dir, f"FT_condor_50e_sim_{current_time}.pth")
     log_device(f"Saving model to: {model_path}")
     if not dist.is_initialized() or dist.get_rank() == 0:
         try:
-            torch.save(trainer.model.state_dict(), model_path)
+            state_dict = (
+            trainer.model.module.state_dict()  # unwrap if DDP
+            if isinstance(trainer.model, torch.nn.parallel.DistributedDataParallel)
+            else trainer.model.state_dict()
+            )
+            torch.save(state_dict, model_path)
             log_device(f"Model successfully saved to {model_path}")
 
         except FileNotFoundError as e:
@@ -166,8 +171,8 @@ def main(args):
 
 # Parser arguments for terminal execution
 parser = argparse.ArgumentParser(description="Config file processing")
-parser.add_argument("--config_path", default="./config/step1_pretraining/phase1.json", type=str)
-#parser.add_argument("--config_path", default="./config/step2_finetuning/finetuning1.json", type=str)
+#parser.add_argument("--config_path", default="./config/step1_pretraining/phase1.json", type=str)
+parser.add_argument("--config_path", default="./config/step2_finetuning/finetuning1.json", type=str)
 args = parser.parse_args()
 
 #######################################################################################

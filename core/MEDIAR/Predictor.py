@@ -365,9 +365,9 @@ class Predictor(BasePredictor):
                     if out.dim() == 2:
                         out = out.unsqueeze(0)
                     out_cpu = out.detach().cpu()  # move result to cpu 
-                    #out_cpu = out[-1]
-                    if(p == 0):
-                        plot_image(out_cpu[-1].cpu().numpy())
+                    # #out_cpu = out[-1]
+                    # if(p == 0):
+                    #     plot_image(out_cpu[-1].cpu().numpy())
 
                     # assume first two channels are in-plane flows, last channel is prob
                     if out_cpu.shape[0] < 2:

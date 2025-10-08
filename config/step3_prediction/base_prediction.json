@@ -1,17 +1,17 @@
 {
     "pred_setups":{
         "name": "mediar",
-        "input_path": "../../Datasets/testing/img",
+        "input_path": "../../Datasets/CTC/sim3d/02_test",
         "cellcenters_path": "",
-        "output_path": "../../Datasets/testing/res",
+        "output_path": "../../Datasets/CTC/sim3d/02_test_res_hiera_condor_zs",
         "make_submission": false,
-        "model_path": "../../W_B/Hiera_PT/pretrained_hiera_0val_4gpus_5bs_2025-10-02_15-57-50.pth",
+        "model_path": "../../W_B/Hiera_PT/pretrained_hiera_0val_4gpus_5bs_2025-10-02_15-57-51_unwrapped.pth",
         "device": "cuda:0",
         "model":{
             "name": "mediar-former",
             "params": {}
         },
         "exp_name": "mediar_p1_base",
-        "algo_params": {"use_tta": false, "do_3D": false, "cellprob_threshold": 0.000, "plot_prob": false}
+        "algo_params": {"use_tta": false, "do_3D": true, "cellprob_threshold": 0.1, "plot_prob": false}
     }
 }

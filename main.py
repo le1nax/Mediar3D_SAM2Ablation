@@ -33,12 +33,12 @@ def _get_setups(args, device, distributed=False, rank=0, world_size=1):
         weights = torch.load(model_args.pretrained.weights, map_location="cpu")
         print("\nLoading pretrained model....")
         model.load_state_dict(weights, strict=model_args.pretrained.strict)
-    if args.data_setups.labeled.sampling_ratios:
+    if hasattr(args.data_setups.labeled, "sampling_ratios") and args.data_setups.labeled.sampling_ratios:
         dataloaders = get_dataloaders_labeled_sampled(
             **args.data_setups.labeled,
-        distributed=distributed,
-        rank=rank,
-        world_size=world_size,
+            distributed=distributed,
+            rank=rank,
+            world_size=world_size,
         )
     else:
         dataloaders = get_dataloaders_labeled(

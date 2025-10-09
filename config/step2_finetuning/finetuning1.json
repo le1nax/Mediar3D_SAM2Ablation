@@ -4,11 +4,11 @@
             "root": "./",
             "mapping_file": "./train_tools/data_utils/mapping_labeled_dic_sim.json",
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
-            "batch_size": 4, 
+            "amplified": false,
+            "batch_size": 1, 
             "valid_portion": 0.1,
             "precompute_flows": false,
-            "incomplete_annotations": true,
-            "sampling_ratios": false
+            "incomplete_annotations": false
         },
         "public":{
             "enabled": false,
@@ -27,7 +27,7 @@
             "name": "mediar-former",
             "params": {},
             "pretrained":{
-                "enabled": false,
+                "enabled": true,
                 "weights": "../../W_B/Hiera_PT/pretrained_hiera_0val_4gpus_5bs_2025-10-02_15-57-51_unwrapped.pth",
                 "strict": false
             }
@@ -39,8 +39,13 @@
                 "valid_frequency": 10,
                 "device": "cuda:0",
                 "amp": false,
-                "algo_params": {"with_public": false}
-            }
+                        "algo_params": {
+                            "with_public": false,
+                            "save_dir": "../../W_B/Hiera_FT/sim_ROI_checkpoints_hiera",
+                            "model_name": "HieraFT_condor_blasto_",
+                            "save_at_rois": [10, 100, 1000, 10000, 100000]
+                        }
+                    }
         },
         "optimizer":{
             "name": "adamw",

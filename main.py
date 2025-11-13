@@ -33,13 +33,14 @@ def _get_setups(args, device, distributed=False, rank=0, world_size=1):
     if model_args.pretrained.enabled:
         weights = torch.load(model_args.pretrained.weights, map_location="cpu")
         print("\nLoading pretrained model....")
-        model.load_state_dict(weights, strict=model_args.pretrained.strict)
-    if args.data_setups.labeled.sampling_ratios:
+    model.load_state_dict(weights, strict=model_args.pretrained.strict)
+    sampling_ratios = args.data_setups.labeled.get("sampling_ratios", None)
+    if sampling_ratios:
         dataloaders = get_dataloaders_labeled_sampled(
             **args.data_setups.labeled,
-        distributed=distributed,
-        rank=rank,
-        world_size=world_size,
+            distributed=distributed,
+            rank=rank,
+            world_size=world_size,
         )
     else:
         dataloaders = get_dataloaders_labeled(
@@ -126,14 +127,15 @@ def main(args):
     # trainer.train()
     trainer.train()
 
-    save_dir = "../../W_B/Hiera_FT/"
+    save_dir = args.train_setups.trainer.params.algo_params.save_dir
+    model_name = args.train_setups.trainer.params.algo_params.model_name
     os.makedirs(save_dir, exist_ok=True)  # make sure it exists
 
     # Current time string: e.g. '2025-07-11_18-25-42'
     current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     # Save path
-    model_path = os.path.join(save_dir, f"Hiera_FT_Blastospim_50e_{current_time}.pth")
+    model_path = os.path.join(save_dir, f"{model_name}_50e_{current_time}.pth")
     log_device(f"Saving model to: {model_path}")
     if not dist.is_initialized() or dist.get_rank() == 0:
         try:

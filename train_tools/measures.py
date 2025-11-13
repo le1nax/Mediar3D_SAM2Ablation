@@ -8,11 +8,14 @@ Adapted from the following references:
 import numpy as np
 from skimage import segmentation
 from scipy.optimize import linear_sum_assignment
+from scipy.ndimage import convolve
+from scipy.sparse import csr_matrix 
 from numba import jit
 
 
 
 __all__ = ["evaluate_f1_score_cellseg", "evaluate_f1_score"]
+
 
 def evaluate_metrics_cellseg(pred_mask, gt_mask, threshold=0.5):
     """
@@ -45,6 +48,380 @@ def evaluate_metrics_cellseg(pred_mask, gt_mask, threshold=0.5):
     f1_score = (2 * precision * recall) / (precision + recall) if (precision + recall) != 0 else 0.0
 
     return iou, precision, recall, f1_score
+
+
+def _intersection_over_union(masks_true, masks_pred):
+    """Calculate the intersection over union of all mask pairs.
+
+    Parameters:
+        masks_true (np.ndarray, int): Ground truth masks, where 0=NO masks; 1,2... are mask labels.
+        masks_pred (np.ndarray, int): Predicted masks, where 0=NO masks; 1,2... are mask labels.
+
+    Returns:
+        iou (np.ndarray, float): Matrix of IOU pairs of size [x.max()+1, y.max()+1].
+
+    How it works:
+        The overlap matrix is a lookup table of the area of intersection
+        between each set of labels (true and predicted). The true labels
+        are taken to be along axis 0, and the predicted labels are taken 
+        to be along axis 1. The sum of the overlaps along axis 0 is thus
+        an array giving the total overlap of the true labels with each of
+        the predicted labels, and likewise the sum over axis 1 is the
+        total overlap of the predicted labels with each of the true labels.
+        Because the label 0 (background) is included, this sum is guaranteed
+        to reconstruct the total area of each label. Adding this row and
+        column vectors gives a 2D array with the areas of every label pair
+        added together. This is equivalent to the union of the label areas
+        except for the duplicated overlap area, so the overlap matrix is
+        subtracted to find the union matrix. 
+    """
+    if masks_true.size != masks_pred.size:
+        raise ValueError("masks_true.size != masks_pred.size")
+    mask = (masks_true > 0) | (masks_pred > 0)
+    overlap = csr_matrix(
+        (np.ones(mask.sum(), int),
+        (masks_true[mask].ravel(), masks_pred[mask].ravel())),
+        shape=(masks_true.max() + 1, masks_pred.max() + 1)
+    )
+    overlap = overlap.toarray()
+    n_pixels_pred = np.sum(overlap, axis=0, keepdims=True)
+    n_pixels_true = np.sum(overlap, axis=1, keepdims=True)
+    iou = overlap / (n_pixels_pred + n_pixels_true - overlap)
+    iou[np.isnan(iou)] = 0.0
+    return iou
+
+def dice_per_annotated_cell_3d(pred, gt):
+    """
+    Compute Dice for each annotated GT cell in 3D instance segmentation.
+    pred, gt: 3D numpy arrays (Z, Y, X)
+    """
+    dice_scores = []
+    
+    for cell_id in np.unique(gt):
+        if cell_id == 0:
+            continue  # skip background
+
+        gt_mask = (gt == cell_id).astype(np.uint8)
+        # Find which predicted labels overlap with this GT cell
+        overlap_labels, counts = np.unique(pred[gt_mask > 0], return_counts=True)
+        overlap_labels = overlap_labels[overlap_labels != 0]  # remove background
+
+        if len(overlap_labels) == 0:
+            dice_scores.append(0.0)  # missed cell
+            continue
+
+        # Take predicted instance with the maximum overlap
+        best_pred_label = overlap_labels[np.argmax(counts)]
+        pred_mask = (pred == best_pred_label).astype(np.uint8)
+
+        intersection = np.sum(gt_mask * pred_mask)
+        dice = 2 * intersection / (np.sum(gt_mask) + np.sum(pred_mask) + 1e-8)
+        dice_scores.append(dice)
+
+    return np.mean(dice_scores), dice_scores
+
+
+def _true_positive(iou, th):
+    """Calculate the true positive at threshold th.
+
+    Args:
+        iou (float, np.ndarray): Array of IOU pairs.
+        th (float): Threshold on IOU for positive label.
+
+    Returns:
+        tp (float): Number of true positives at threshold.
+
+    How it works:
+        (1) Find minimum number of masks.
+        (2) Define cost matrix; for a given threshold, each element is negative
+            the higher the IoU is (perfect IoU is 1, worst is 0). The second term
+            gets more negative with higher IoU, but less negative with greater
+            n_min (but that's a constant...).
+        (3) Solve the linear sum assignment problem. The costs array defines the cost
+            of matching a true label with a predicted label, so the problem is to 
+            find the set of pairings that minimizes this cost. The scipy.optimize
+            function gives the ordered lists of corresponding true and predicted labels. 
+        (4) Extract the IoUs from these pairings and then threshold to get a boolean array
+            whose sum is the number of true positives that is returned. 
+    """
+    n_min = min(iou.shape[0], iou.shape[1])
+    costs = -(iou >= th).astype(float) - iou / (2 * n_min)
+    true_ind, pred_ind = linear_sum_assignment(costs)
+    match_ok = iou[true_ind, pred_ind] >= th
+    tp = match_ok.sum()
+    return tp
+
+import numpy as np
+from scipy.optimize import linear_sum_assignment
+
+def fast_iou_matrix(masks_true, masks_pred):
+    labels_true = masks_true.ravel()
+    labels_pred = masks_pred.ravel()
+    valid = (labels_true > 0) | (labels_pred > 0)
+    labels_true = labels_true[valid]
+    labels_pred = labels_pred[valid]
+
+    # compute overlap using bincount (faster than CSR)
+    n_true = masks_true.max() + 1
+    n_pred = masks_pred.max() + 1
+    overlap = np.bincount(
+        labels_true * n_pred + labels_pred,
+        minlength=n_true * n_pred
+    ).reshape(n_true, n_pred)
+
+    # compute IoU
+    n_pixels_pred = np.sum(overlap, axis=0, keepdims=True)
+    n_pixels_true = np.sum(overlap, axis=1, keepdims=True)
+    union = n_pixels_pred + n_pixels_true - overlap
+    iou = np.divide(overlap, union, out=np.zeros_like(overlap, float), where=union > 0)
+    return iou[1:, 1:]  # remove background
+
+
+def true_positives(iou, th):
+    if iou.size == 0:
+        return 0
+    costs = -(iou >= th).astype(float) - iou / (2 * min(iou.shape))
+    true_ind, pred_ind = linear_sum_assignment(costs)
+    return np.sum(iou[true_ind, pred_ind] >= th)
+
+
+def average_precision_final(masks_true, masks_pred, threshold=0.5):
+    if not isinstance(masks_true, list):
+        masks_true = [masks_true]
+        masks_pred = [masks_pred]
+
+    thresholds = np.atleast_1d(threshold)
+    ap = np.zeros((len(masks_true), len(thresholds)), float)
+
+    for n, (gt, pred) in enumerate(zip(masks_true, masks_pred)):
+        iou = fast_iou_matrix(gt, pred)
+        n_true, n_pred = gt.max(), pred.max()
+        for k, th in enumerate(thresholds):
+            tp = true_positives(iou, th)
+            fp = n_pred - tp
+            fn = n_true - tp
+            ap[n, k] = tp / (tp + fp + fn) if (tp + fp + fn) > 0 else 0
+
+    return ap.squeeze()
+
+
+def average_precision(masks_true, masks_pred, threshold=[0.5, 0.75, 0.9]):
+    """ 
+    Average precision estimation: AP = TP / (TP + FP + FN)
+
+    This function is based heavily on the *fast* stardist matching functions
+    (https://github.com/mpicbg-csbd/stardist/blob/master/stardist/matching.py)
+
+    Args:
+        masks_true (list of np.ndarrays (int) or np.ndarray (int)): 
+            where 0=NO masks; 1,2... are mask labels
+        masks_pred (list of np.ndarrays (int) or np.ndarray (int)): 
+            np.ndarray (int) where 0=NO masks; 1,2... are mask labels
+
+    Returns:
+        ap (array [len(masks_true) x len(threshold)]): 
+            average precision at thresholds
+        tp (array [len(masks_true) x len(threshold)]): 
+            number of true positives at thresholds
+        fp (array [len(masks_true) x len(threshold)]): 
+            number of false positives at thresholds
+        fn (array [len(masks_true) x len(threshold)]): 
+            number of false negatives at thresholds
+    """
+    not_list = False
+    if not isinstance(masks_true, list):
+        masks_true = [masks_true]
+        masks_pred = [masks_pred]
+        not_list = True
+    if not isinstance(threshold, list) and not isinstance(threshold, np.ndarray):
+        threshold = [threshold]
+
+    if len(masks_true) != len(masks_pred):
+        raise ValueError(
+            "metrics.average_precision requires len(masks_true)==len(masks_pred)")
+
+    ap = np.zeros((len(masks_true), len(threshold)), np.float32)
+    tp = np.zeros((len(masks_true), len(threshold)), np.float32)
+    fp = np.zeros((len(masks_true), len(threshold)), np.float32)
+    fn = np.zeros((len(masks_true), len(threshold)), np.float32)
+    n_true = np.array(list(map(np.max, masks_true)))
+    n_pred = np.array(list(map(np.max, masks_pred)))
+
+    for n in range(len(masks_true)):
+        #_,mt = np.reshape(np.unique(masks_true[n], return_index=True), masks_pred[n].shape)
+        if n_pred[n] > 0:
+            iou = _intersection_over_union(masks_true[n], masks_pred[n])[1:, 1:]
+            for k, th in enumerate(threshold):
+                tp[n, k] = _true_positive(iou, th)
+        fp[n] = n_pred[n] - tp[n]
+        fn[n] = n_true[n] - tp[n]
+        ap[n] = tp[n] / (tp[n] + fp[n] + fn[n])
+
+    if not_list:
+        ap, tp, fp, fn = ap[0], tp[0], fp[0], fn[0]
+    return ap
+
+def compute_CTC_SEG(gt_mask, pred_mask):
+    gt_labels = np.unique(gt_mask)
+    gt_labels = gt_labels[gt_labels != 0]
+    pred_labels = np.unique(pred_mask)
+    pred_labels = pred_labels[pred_labels != 0]
+
+    per_object_J = {}
+
+    for gt_id in gt_labels:
+        R = gt_mask == gt_id
+        J_val = 0.0
+
+        for pred_id in pred_labels:
+            S = pred_mask == pred_id
+            inter = np.logical_and(R, S).sum()
+            if inter <= 0.5 * R.sum():
+                continue  # not enough overlap to count as a match
+
+            union = np.logical_or(R, S).sum()
+            J_val = inter / union
+            break  # since no other prediction can pass the >0.5 test
+
+        per_object_J[int(gt_id)] = J_val
+
+    seg_score = np.mean(list(per_object_J.values())) if per_object_J else 0.0
+    return seg_score, per_object_J
+
+from scipy.sparse import coo_matrix
+
+def compute_AP_fast(gt_mask, pred_mask, iou_threshold=0.5):
+    """
+    Fast AP at given IoU threshold for 2D/3D instance masks, works with non-contiguous labels.
+    """
+    gt_mask = gt_mask.astype(np.int64)
+    pred_mask = pred_mask.astype(np.int64)
+
+    gt_labels = np.unique(gt_mask)
+    gt_labels = gt_labels[gt_labels != 0]
+    pred_labels = np.unique(pred_mask)
+    pred_labels = pred_labels[pred_labels != 0]
+
+    if len(gt_labels) == 0 and len(pred_labels) == 0:
+        return 1.0
+    if len(gt_labels) == 0 or len(pred_labels) == 0:
+        return 0.0
+
+    # Flatten
+    gt_flat = gt_mask.ravel()
+    pred_flat = pred_mask.ravel()
+
+    # Sparse co-occurrence matrix
+    data = np.ones_like(gt_flat, dtype=np.int64)
+    overlap = coo_matrix(
+        (data, (gt_flat, pred_flat)),
+        shape=(gt_mask.max() + 1, pred_mask.max() + 1)
+    ).tocsc()
+
+    # Compute sizes
+    gt_sizes = np.bincount(gt_flat)[0 : gt_mask.max() + 1]
+    pred_sizes = np.bincount(pred_flat)[0 : pred_mask.max() + 1]
+
+    # Build IoU matrix
+    iou_matrix = np.zeros((len(gt_labels), len(pred_labels)), dtype=np.float32)
+    for i, gt_id in enumerate(gt_labels):
+        row = overlap.getrow(gt_id)
+        pred_ids = row.indices[row.indices != 0]  # remove background
+        intersections = row.data[row.indices != 0]
+        if intersections.size > 0:
+            unions = gt_sizes[gt_id] + pred_sizes[pred_ids] - intersections
+            iou_matrix[i, [np.where(pred_labels == pid)[0][0] for pid in pred_ids]] = intersections / unions
+
+    # Greedy matching
+    matched_gt = set()
+    matched_pred = set()
+    tp = 0
+
+    for i, _ in enumerate(gt_labels):
+        j_best = np.argmax(iou_matrix[i])
+        if iou_matrix[i, j_best] >= iou_threshold:
+            tp += 1
+            matched_gt.add(i)
+            matched_pred.add(j_best)
+
+    fp = len(pred_labels) - len(matched_pred)
+    fn = len(gt_labels) - len(matched_gt)
+
+    precision = tp / (tp + fp + 1e-8)
+    recall = tp / (tp + fn + 1e-8)
+    ap = 2 * precision * recall / (precision + recall + 1e-8) if tp > 0 else 0.0
+
+    return ap
+
+def compute_CTC_SEG_fast(gt_mask, pred_mask):
+    """
+    Fast SEG computation for large 3D volumes.
+    Computes overlaps in one pass using sparse matrices.
+
+    Parameters
+    ----------
+    gt_mask : np.ndarray, int
+        Ground truth labeled mask (3D).
+    pred_mask : np.ndarray, int
+        Predicted labeled mask (3D).
+
+    Returns
+    -------
+    seg_score : float
+        Mean Jaccard index (SEG measure).
+    per_object_J : dict
+        Mapping: GT object ID -> Jaccard index.
+    """
+    gt_mask = gt_mask.astype(np.int64)
+    pred_mask = pred_mask.astype(np.int64)
+
+    gt_labels = np.unique(gt_mask)
+    gt_labels = gt_labels[gt_labels != 0]
+    pred_labels = np.unique(pred_mask)
+    pred_labels = pred_labels[pred_labels != 0]
+
+    # Flatten the arrays
+    gt_flat = gt_mask.ravel()
+    pred_flat = pred_mask.ravel()
+
+    # Build sparse co-occurrence matrix of overlaps
+    data = np.ones_like(gt_flat, dtype=np.int64)
+    overlap = coo_matrix(
+        (data, (gt_flat, pred_flat)),
+        shape=(gt_mask.max() + 1, pred_mask.max() + 1)
+    ).tocsc()
+
+    # Precompute voxel counts per label
+    gt_sizes = np.bincount(gt_flat)[0 : gt_mask.max() + 1]
+    pred_sizes = np.bincount(pred_flat)[0 : pred_mask.max() + 1]
+
+    per_object_J = {}
+
+    for gt_id in gt_labels:
+        gt_size = gt_sizes[gt_id]
+        row = overlap.getrow(gt_id)
+
+        # Get nonzero overlaps (pred IDs and counts)
+        pred_ids = row.indices
+        intersections = row.data
+
+        if intersections.size == 0:
+            per_object_J[gt_id] = 0.0
+            continue
+
+        # Apply >0.5*|R| criterion
+        valid = intersections > 0.5 * gt_size
+        if not np.any(valid):
+            per_object_J[gt_id] = 0.0
+            continue
+
+        inter = intersections[valid][0]
+        pred_id = pred_ids[valid][0]
+        union = gt_size + pred_sizes[pred_id] - inter
+        per_object_J[gt_id] = inter / union
+
+    seg_score = np.mean(list(per_object_J.values())) if per_object_J else 0.0
+    return seg_score, per_object_J
 
 
 def evaluate_f1_score_cellseg(masks_true, masks_pred, threshold=0.5):

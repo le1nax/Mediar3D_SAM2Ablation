@@ -466,7 +466,8 @@ class Predictor(BasePredictor):
 
         # return pred_mask
 
-    def _post_process3D(self, pred_mask, cellcenters): ## @todo
+  
+    def _post_process3D(self, pred_mask, cellcenters=None): ## @todo
 
         """Generate cell instance masks."""
         dP, cellprob = pred_mask[:3], self._sigmoid(pred_mask[-1])
@@ -479,7 +480,7 @@ class Predictor(BasePredictor):
 
         #self.plot_image(cellprob[30])
 
-        if np.prod(H * W) < (5000 * 5000):
+        if np.prod(Z * H * W) < (1000* 1000 * 1000):
             pred_mask = compute_masks3D(
                 dP,
                 cellprob,
@@ -490,66 +491,66 @@ class Predictor(BasePredictor):
             )
 
         else: 
+
+            pred_mask = compute_masks3D(
+                dP,
+                cellprob,
+                cellprob_threshold=cellprob_threshold,
+                flow_threshold=0.4,
+                do_3D=True,
+                device=torch.device("cpu")
+            )
             ##@todo
-            print("\n[Whole Slide] Grid Prediction starting...")
-            roi_size = 2000
+            # print("\n[Whole Slide] Grid Prediction starting...")
+            # # --- 3D grid postprocessing ---
+            # roi_size_z, roi_size_y, roi_size_x = 64, 2000, 2000  # adjust as needed
 
-            # Get patch grid by roi_size
-            if H % roi_size != 0:
-                n_H = H // roi_size + 1
-                new_H = roi_size * n_H
-            else:
-                n_H = H // roi_size
-                new_H = H
+            # # Original volume sizes
+            # Z, H, W = pred_mask.shape[-3:]
 
-            if W % roi_size != 0:
-                n_W = W // roi_size + 1
-                new_W = roi_size * n_W
-            else:
-                n_W = W // roi_size
-                new_W = W
+            # # Compute number of tiles
+            # n_Z = (Z + roi_size_z - 1) // roi_size_z
+            # n_H = (H + roi_size_y - 1) // roi_size_y
+            # n_W = (W + roi_size_x - 1) // roi_size_x
 
-            # Allocate values on the grid
-            pred_pad = np.zeros((new_H, new_W), dtype=np.uint32)
-            dP_pad = np.zeros((2, new_H, new_W), dtype=np.float32)
-            cellprob_pad = np.zeros((new_H, new_W), dtype=np.float32)
+            # # Pad volumes
+            # pred_pad = np.zeros((Z + roi_size_z * n_Z - Z,
+            #                     H + roi_size_y * n_H - H,
+            #                     W + roi_size_x * n_W - W), dtype=np.uint32)
+            # dP_pad = np.zeros((3, pred_pad.shape[0], pred_pad.shape[1], pred_pad.shape[2]), dtype=np.float32)
+            # cellprob_pad = np.zeros(pred_pad.shape, dtype=np.float32)
 
-            dP_pad[:, :H, :W], cellprob_pad[:H, :W] = dP, cellprob
+            # # Copy original data into padded arrays
+            # dP_pad[:, :Z, :H, :W] = dP
+            # cellprob_pad[:Z, :H, :W] = cellprob
 
-            for i in range(n_H):
-                for j in range(n_W):
-                    print("Pred on Grid (%d, %d) processing..." % (i, j))
-                    dP_roi = dP_pad[
-                        :,
-                        roi_size * i : roi_size * (i + 1),
-                        roi_size * j : roi_size * (j + 1),
-                    ]
-                    cellprob_roi = cellprob_pad[
-                        roi_size * i : roi_size * (i + 1),
-                        roi_size * j : roi_size * (j + 1),
-                    ]
+            # # Iterate over tiles
+            # for i in range(n_Z):
+            #     for j in range(n_H):
+            #         for k in range(n_W):
+            #             z_start, z_end = i * roi_size_z, (i + 1) * roi_size_z
+            #             y_start, y_end = j * roi_size_y, (j + 1) * roi_size_y
+            #             x_start, x_end = k * roi_size_x, (k + 1) * roi_size_x
 
-                    pred_mask = compute_masks(
-                        dP_roi,
-                        cellprob_roi,
-                        use_gpu=True,
-                        flow_threshold=0.4,
-                        device=self.device,
-                        cellprob_threshold=0.5,
-                    )[0]
+            #             dP_roi = dP_pad[:, z_start:z_end, y_start:y_end, x_start:x_end]
+            #             cellprob_roi = cellprob_pad[z_start:z_end, y_start:y_end, x_start:x_end]
 
-                    pred_pad[
-                        roi_size * i : roi_size * (i + 1),
-                        roi_size * j : roi_size * (j + 1),
-                    ] = pred_mask
+            #             pred_mask_roi = compute_masks3D(
+            #                 dP_roi,
+            #                 cellprob_roi,
+            #                 cellprob_threshold=cellprob_threshold,
+            #                 flow_threshold=0.4,
+            #                 do_3D=True,
+            #                 device=self.device
+            #             )
 
-            pred_mask = pred_pad[:H, :W]
+            #             pred_pad[z_start:z_end, y_start:y_end, x_start:x_end] = pred_mask_roi
+
+            # # Crop back to original size
+            # pred_mask = pred_pad[:Z, :H, :W]
         if(cellcenters is not None):
             pred_mask = filter_false_positives(pred_mask, cellcenters)
         return pred_mask
-    
-    
-
 
 """
 Adapted from the following references:

@@ -66,8 +66,8 @@ def filter_false_positives_intermediate(pred_mask, cellcenters):
 
 
 # === Load files ===
-mask_path = Path("../../Datasets/CTC/test_images/zc2dg/fs_inference_res_100e_Mediarclean/cell_0000_label.tiff")
-center_path = Path("../../Datasets/CTC/test_images/zc2dg/fs_inference_cellcenters/cell_0000_cellcenter.tiff")
+mask_path = Path("/work/scratch/geiger/Datasets/CTC/test_images/zc2dg/final_results/condor/test/pretrained_mediar_00val_3gpus_5bs_2025-10-05_05-53-09_unwrapped/th0.6/cell_0001_label.tiff")
+center_path = Path("/work/scratch/geiger/Datasets/CTC/test_images/zc2dg/cellcenters/cell_0001_cellcenter.tiff")
 
 masks = io.imread(mask_path)
 cellcenters = io.imread(center_path)
@@ -76,6 +76,6 @@ cellcenters = io.imread(center_path)
 filtered = filter_false_positives_intermediate(masks, cellcenters)
 
 # === Save result ===
-save_path = Path("../../Datasets/CTC/test_images/zc2dg/fs_inference_res_100e_Mediarclean/cell_0000_label.tiff")
+save_path = Path("/work/scratch/geiger/Datasets/CTC/test_images/zc2dg/final_results/condor/test/pretrained_mediar_00val_3gpus_5bs_2025-10-05_05-53-09_unwrapped/th0.6/cell_0001_post_processed.tiff")
 save_path.parent.mkdir(parents=True, exist_ok=True)
 io.imsave(save_path, filtered.astype(np.uint16))

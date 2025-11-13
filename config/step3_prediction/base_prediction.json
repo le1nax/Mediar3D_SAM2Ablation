@@ -1,17 +1,17 @@
 {
     "pred_setups":{
         "name": "mediar",
-        "input_path": "../../Datasets/Blasto/Blast_035/cropped/img",
+        "input_path": "/work/scratch/geiger/Datasets/testing/img",
         "cellcenters_path": "",
-        "output_path": "../../Datasets/Blasto/Blast_035/cropped/res_hiera_pretrained_zs",
+        "output_path": "/work/scratch/geiger/Datasets/testing/results_hiera",
         "make_submission": false,
-        "model_path": "../../W_B/Hiera_PT/pretrained_hiera_0val_4gpus_5bs_2025-10-02_15-57-51_unwrapped.pth",
+        "model_path": "/work/scratch/geiger/W_B/Hiera_PT/pretrained_hiera_0val_4gpus_5bs_2025-10-02_15-57-51_unwrapped.pth",
         "device": "cuda:0",
         "model":{
             "name": "mediar-former",
             "params": {}
         },
         "exp_name": "mediar_p1_base",
-        "algo_params": {"use_tta": false, "do_3D": true, "cellprob_threshold": 0.5, "plot_prob": false}
+        "algo_params": {"use_tta": false, "do_3D": true, "cellprob_threshold": 0.001, "plot_prob": false}
     }
 }

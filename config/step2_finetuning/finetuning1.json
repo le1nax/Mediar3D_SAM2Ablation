@@ -4,11 +4,10 @@
             "root": "./",
             "mapping_file": "./train_tools/data_utils/mapping_labeled_dic_sim.json",
             "tuning_mapping_file": "./train_tools/data_utils/mapping_tuning_dic_sim.json",
-            "amplified": false,
             "batch_size": 1, 
             "valid_portion": 0.1,
             "precompute_flows": false,
-            "incomplete_annotations": false
+            "incomplete_annotations": true
         },
         "public":{
             "enabled": false,
@@ -41,9 +40,10 @@
                 "amp": false,
                         "algo_params": {
                             "with_public": false,
-                            "save_dir": "../../W_B/Hiera_FT/sim_ROI_checkpoints_hiera",
-                            "model_name": "HieraFT_condor_blasto_",
-                            "save_at_rois": [10, 100, 1000, 10000, 100000]
+                            "save_dir": "../../W_B/Hiera_FT/CondorHiera_TRIF/roi_crop_wback",
+                            "model_name": "CondorHiera_TRIF_roicrop_wback",
+                            "save_at_rois": [10, 100, 1000, 10000, 100000],
+                            "instance_cropping": false
                         }
                     }
         },

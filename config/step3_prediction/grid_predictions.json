@@ -1,0 +1,22 @@
+{
+    "pred_setups":{
+        "name": "mediar",
+        "input_path": "/work/scratch/geiger/Datasets/Blasto/final_test/cropped_images",
+        "ground_truth_path": "/work/scratch/geiger/Datasets/Blasto/final_test/cropped_masks",
+        "output_path": "/work/scratch/geiger/Datasets/Blasto/final_test/final_results/hiera_lower_thresh",
+        "make_submission": false,
+        "model_path": "/work/scratch/geiger/W_B/Hiera_FT/Blasto_ROI_checkpoints_hiera",
+        "device": "cuda:0",
+        "model":{
+            "name": "mediar-former",
+            "params": {}
+        },
+        "exp_name": "mediar_p1_base",
+        "algo_params": {"use_tta": false,
+                         "do_3D": true,     
+                         "cellprob_thresholds": [0.0001, 0.001, 0.01],
+                         "plot_prob": false}
+    }
+}
+
+ 

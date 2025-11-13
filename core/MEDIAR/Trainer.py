@@ -747,7 +747,14 @@ class Trainer(BaseTrainer):
             #plot_image(images[0].cpu().numpy())
             #plot_image(labels[0].cpu().numpy())
             if self.incomplete_annotations:
-                images, labels, flows = self._crop_to_single_instance(images, labels, flows)
+                flip = random.choice([True, False])
+
+                if(self.instance_cropping) and flip:
+                    images, labels, flows = self._crop_to_single_instance(images, labels, flows)
+                else:
+                    images, labels, flows = self._crop_to_ROI(images, labels, flows)
+
+    
             #plot_image(images[0].cpu().numpy())
             #plot_image(labels[0].cpu().numpy())
             
@@ -831,7 +838,7 @@ class Trainer(BaseTrainer):
                         self.optimizer.step()
 
                     ## Save model if certain ROI reached.
-                    if self.ROI_counter >= self.next_ROI_checkpoint and self.next_ROI_checkpoint is not None:
+                    if self.next_ROI_checkpoint is not None and self.ROI_counter >= self.next_ROI_checkpoint:
                         save_path = os.path.join(self.save_dir, f"{self.model_name}_ROI_{self.ROI_counter}_epoch{len(self.loss_history['epoch'])}.pth")
                         torch.save(self.model.state_dict(), save_path)
                         print(f"  Saved intermediate model at ROI {self.ROI_counter} to {save_path}")

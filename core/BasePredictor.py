@@ -46,6 +46,9 @@ class BasePredictor:
         total_times = []
 
         for img_name in self.img_names:
+            if "no_gt" in img_name:
+                continue
+
             img_data = self._get_img_data(img_name)
             img_data = img_data.to(self.device)
 
@@ -123,7 +126,9 @@ class BasePredictor:
             self.pred_transforms = get_pred_transforms_3D()
         else:
             self.pred_transforms = get_pred_transforms()
-        os.makedirs(self.output_path, exist_ok=True)
+
+        if self.output_path is not None:
+            os.makedirs(self.output_path, exist_ok=True)
 
         now = datetime.now(timezone("Europe/Berlin"))
         dt_string = now.strftime("%m%d_%H%M")

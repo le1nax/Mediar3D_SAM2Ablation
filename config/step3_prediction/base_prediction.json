@@ -1,11 +1,11 @@
 {
     "pred_setups":{
         "name": "mediar",
-        "input_path": "/work/scratch/geiger/Datasets/testing/img",
+        "input_path": "/home/homesOnMaster/dgeiger/datasets/cells/testing",
         "cellcenters_path": "",
-        "output_path": "/work/scratch/geiger/Datasets/testing/results_hiera",
+        "output_path": "/home/homesOnMaster/dgeiger/datasets/cells/predictions",
         "make_submission": false,
-        "model_path": "/work/scratch/geiger/W_B/Hiera_PT/pretrained_hiera_0val_4gpus_5bs_2025-10-02_15-57-51_unwrapped.pth",
+        "model_path": "/home/homesOnMaster/dgeiger/WB/Mediar/pretrained_hiera_01val_3gpus_5bs_2025-10-04_10-16-41.pth",
         "device": "cuda:0",
         "model":{
             "name": "mediar-former",

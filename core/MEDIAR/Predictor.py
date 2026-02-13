@@ -470,12 +470,16 @@ class Predictor(BasePredictor):
     def _post_process3D(self, pred_mask, cellcenters=None): ## @todo
 
         """Generate cell instance masks."""
-        dP, cellprob = pred_mask[:3], self._sigmoid(pred_mask[-1])
+        raw_prob = pred_mask[-1]
+        print(f"[DEBUG] Raw prob channel — min: {raw_prob.min():.4f}, max: {raw_prob.max():.4f}, mean: {raw_prob.mean():.4f}")
+        dP, cellprob = pred_mask[:3], self._sigmoid(raw_prob)
         Z, H, W = pred_mask.shape[-3], pred_mask.shape[-2], pred_mask.shape[-1]
         if hasattr(self, "cellprob_threshold") and self.cellprob_threshold is not None:
             cellprob_threshold = self.cellprob_threshold
         else:
             cellprob_threshold = 0.5
+        print(f"[DEBUG] After sigmoid — cellprob min: {cellprob.min():.6f}, max: {cellprob.max():.6f}, "
+              f"voxels above threshold ({cellprob_threshold}): {(cellprob > cellprob_threshold).sum()} / {cellprob.size}")
         os.makedirs(self.output_path, exist_ok=True)
 
         #self.plot_image(cellprob[30])

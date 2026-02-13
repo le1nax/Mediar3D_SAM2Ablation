@@ -1,4 +1,5 @@
 import torch
+import logging
 import numpy as np
 import time, os
 import tifffile as tif
@@ -6,6 +7,8 @@ from pathlib import Path
 from datetime import datetime
 from zipfile import ZipFile
 from pytz import timezone
+
+logger = logging.getLogger(__name__)
 
 from train_tools.data_utils.transforms import get_pred_transforms
 from train_tools.data_utils.transforms import get_pred_transforms_3D
@@ -73,6 +76,9 @@ class BasePredictor:
                     cellcenters_file = os.path.join(self.cellcenters_path, f"{base}_cellcenter{ext}")
                     cellcenters=tif.imread(cellcenters_file)
                 pred_mask = self._post_process3D(pred_mask.squeeze(0).cpu().numpy(), cellcenters)
+
+            if np.max(pred_mask) == 0:
+                logger.warning("Empty mask predicted for %s — no cells detected", img_name)
 
             self.write_pred_mask(
                 pred_mask, self.output_path, img_name, self.make_submission

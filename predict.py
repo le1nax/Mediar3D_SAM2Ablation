@@ -36,7 +36,18 @@ def main(args):
 
     else:
         weights = torch.load(args.pred_setups.model_path, map_location="cpu")
-        model.load_state_dict(weights, strict=False)
+        # Strip "module." prefix from DDP-saved checkpoints
+        if any(k.startswith("module.") for k in weights.keys()):
+            weights = {k.removeprefix("module."): v for k, v in weights.items()}
+        result = model.load_state_dict(weights, strict=False)
+        if result.missing_keys:
+            print(f"[WARN] Missing keys ({len(result.missing_keys)}):")
+            for k in result.missing_keys:
+                print(f"  - {k}")
+        if result.unexpected_keys:
+            print(f"[WARN] Unexpected keys ({len(result.unexpected_keys)}):")
+            for k in result.unexpected_keys:
+                print(f"  - {k}")
 
         predictor = PREDICTOR[args.pred_setups.name](
             model,
